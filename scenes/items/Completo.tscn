@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/Interactable.gd" id="1_inter"]
+[ext_resource type="Resource" path="res://resources/items/completo.tres" id="2_data"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bun"]
+albedo_color = Color(0.92, 0.72, 0.35, 1)
+emission_enabled = true
+emission = Color(0.8, 0.55, 0.2, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sausage"]
+albedo_color = Color(0.82, 0.22, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_palta"]
+albedo_color = Color(0.38, 0.72, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mayo"]
+albedo_color = Color(0.96, 0.96, 0.92, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_comp"]
+size = Vector3(0.38, 0.25, 0.25)
+
+[node name="Completo" type="RigidBody3D"]
+collision_layer = 2
+collision_mask = 1
+freeze = true
+script = ExtResource("1_inter")
+item_data = ExtResource("2_data")
+
+[node name="Bun" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+size = Vector3(0.34, 0.14, 0.16)
+material = SubResource("StandardMaterial3D_bun")
+
+[node name="Sausage" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+size = Vector3(0.32, 0.06, 0.08)
+material = SubResource("StandardMaterial3D_sausage")
+
+[node name="Palta" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+size = Vector3(0.28, 0.04, 0.09)
+material = SubResource("StandardMaterial3D_palta")
+
+[node name="Mayo" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.185, 0)
+size = Vector3(0.24, 0.025, 0.03)
+material = SubResource("StandardMaterial3D_mayo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+shape = SubResource("BoxShape3D_comp")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+billboard = 1
+text = "🌭 Completo"
+font_size = 32
+outline_size = 4
+outline_color = Color(0.1, 0.05, 0, 1)
