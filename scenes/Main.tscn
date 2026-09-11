@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://c23luysxd33pj"]
+[gd_scene load_steps=18 format=3 uid="uid://c23luysxd33pj"]
 
 [ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
 [ext_resource type="PackedScene" path="res://scenes/UI.tscn" id="2_ui"]
@@ -35,6 +35,23 @@ albedo_color = Color(0.15, 0.15, 0.18, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceiling"]
 albedo_color = Color(0.2, 0.18, 0.16, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_front"]
+albedo_color = Color(0.25, 0.2, 0.17, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sidewalk"]
+albedo_color = Color(0.6, 0.6, 0.6, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_menu"]
+albedo_color = Color(0.1, 0.25, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_post"]
+albedo_color = Color(0.4, 0.4, 0.4, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awning"]
+albedo_color = Color(0.7, 0.2, 0.2, 1)
 
 ; === ROOT ===
 [node name="Main" type="Node3D"]
@@ -97,6 +114,75 @@ material = SubResource("StandardMaterial3D_shelf")
 [node name="ShelfBack" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 3.3)
 size = Vector3(3.5, 1.0, 0.1)
+material = SubResource("StandardMaterial3D_shelf")
+
+; === DECORATIVE ELEMENTS ===
+[node name="WallFrontLeft" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.5, -3.5)
+use_collision = true
+size = Vector3(3.0, 3, 0.2)
+material = SubResource("StandardMaterial3D_wall_front")
+
+[node name="WallFrontRight" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, -3.5)
+use_collision = true
+size = Vector3(3.0, 3, 0.2)
+material = SubResource("StandardMaterial3D_wall_front")
+
+[node name="Awning" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.5, -4.0)
+size = Vector3(5, 0.1, 1.5)
+material = SubResource("StandardMaterial3D_awning")
+
+[node name="Sidewalk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, -6.5)
+use_collision = true
+size = Vector3(8, 0.15, 6)
+material = SubResource("StandardMaterial3D_sidewalk")
+
+[node name="QueuePostLeft" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.4, -2.0)
+use_collision = true
+radius = 0.05
+height = 0.8
+material = SubResource("StandardMaterial3D_post")
+
+[node name="QueuePostRight" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.4, -2.0)
+use_collision = true
+radius = 0.05
+height = 0.8
+material = SubResource("StandardMaterial3D_post")
+
+[node name="MainSign" type="Label3D" parent="."]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
+text = "🫓 EMPANADAS 🫓"
+font_size = 80
+modulate = Color(1, 0.85, 0.3, 1)
+outline_size = 6
+outline_color = Color(0.1, 0.05, 0.1, 1)
+
+[node name="MenuBoard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0, 2.0, 3.35)
+size = Vector3(2.5, 1.5, 0.1)
+material = SubResource("StandardMaterial3D_menu")
+
+[node name="MenuText" type="Label3D" parent="MenuBoard"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.06)
+text = "MENÚ
+Empanada  $1500
+Sopaipilla $500
+Completo  $2000
+Bebida    $1000"
+font_size = 40
+modulate = Color(1, 0.95, 0.8, 1)
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
+[node name="UpperShelf" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 2.8)
+use_collision = true
+size = Vector3(3.5, 0.08, 0.7)
 material = SubResource("StandardMaterial3D_shelf")
 
 ; === LIGHTING ===

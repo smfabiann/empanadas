@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/UI.gd" id="1_ui"]
+[ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="2_pause"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.03, 0.02, 0.08, 0.9)
@@ -85,6 +86,19 @@ theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.3, 0.8, 0.3, 1)
 text = "Fácil"
 
+[node name="TimeLabel" type="Label" parent="HUD"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -50.0
+offset_top = 12.0
+offset_right = 50.0
+offset_bottom = 40.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.8, 0.78, 0.9, 0.8)
+text = "00:00"
+
 [node name="Crosshair" type="ColorRect" parent="HUD"]
 anchors_preset = 8
 anchor_left = 0.5
@@ -128,6 +142,17 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.9, 0.05, 0.05, 0.4)
 
+[node name="SuccessFlash" type="ColorRect" parent="HUD"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.1, 0.85, 0.2, 0.25)
+
 [node name="FloatingTextContainer" type="Control" parent="HUD"]
 anchors_preset = 8
 anchor_left = 0.5
@@ -140,6 +165,46 @@ offset_right = 50.0
 offset_bottom = 80.0
 mouse_filter = 2
 
+[node name="TutorialPanel" type="PanelContainer" parent="HUD"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -160.0
+offset_right = 220.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="TutorialVBox" type="VBoxContainer" parent="HUD/TutorialPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="TutorialTitle" type="Label" parent="HUD/TutorialPanel/TutorialVBox"]
+layout_mode = 2
+text = "🎮 CONTROLES"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
+
+[node name="TutorialText" type="Label" parent="HUD/TutorialPanel/TutorialVBox"]
+layout_mode = 2
+text = "WASD — Moverse
+Ratón — Mirar alrededor
+E — Recoger / Entregar ítem
+Q — Soltar ítem
+ESC — Pausa
+
+¡Atiende a los clientes lo más rápido posible!"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+
 [node name="GameOverPanel" type="PanelContainer" parent="HUD"]
 visible = false
 anchors_preset = 8
@@ -147,15 +212,15 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -120.0
-offset_right = 180.0
-offset_bottom = 120.0
+offset_left = -200.0
+offset_top = -160.0
+offset_right = 200.0
+offset_bottom = 160.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="HUD/GameOverPanel"]
 layout_mode = 2
-theme_override_constants/separation = 12
+theme_override_constants/separation = 10
 alignment = 1
 
 [node name="GameOverLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
@@ -178,6 +243,38 @@ text = "Mejor: 0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 16
 
+[node name="Separator1" type="HSeparator" parent="HUD/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/separator_color = Color(0.4, 0.3, 0.6, 0.5)
+
+[node name="TimeStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "⏱ Tiempo: 00:00"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+
+[node name="DeliveryStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "📦 Entregas: 0/0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+
+[node name="ComboStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "🔥 Mejor Combo: 0"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+
+[node name="DifficultyStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+layout_mode = 2
+text = "📈 Dificultad: Fácil"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+
 [node name="RetryButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
@@ -187,3 +284,20 @@ text = "▶ Reintentar"
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "◀ Menú Principal"
+
+[node name="AlphaLabel" type="Label" parent="HUD"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -25.0
+offset_right = -8.0
+offset_bottom = -5.0
+horizontal_alignment = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.5, 0.4, 0.65, 0.5)
+text = "ALPHA v0.1"
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_pause")]

@@ -7,6 +7,11 @@ const MOUSE_SENSITIVITY := 0.002
 const PITCH_LIMIT := deg_to_rad(80.0)
 const MOVE_SPEED := 3.5
 
+# --- Head bob ---
+const BOB_FREQUENCY := 10.0
+const BOB_AMPLITUDE := 0.03
+var _bob_timer: float = 0.0
+
 @onready var camera: Camera3D = $Camera3D
 @onready var ray: RayCast3D = $Camera3D/RayCast3D
 @onready var hold_point: Marker3D = $Camera3D/HoldPoint
@@ -70,6 +75,15 @@ func _handle_movement(delta: float) -> void:
 
 	# Movimiento completamente libre con colisiones
 	move_and_slide()
+
+	# Head bob al caminar
+	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
+	if horizontal_speed > 0.5 and is_on_floor():
+		_bob_timer += delta * BOB_FREQUENCY
+		camera.position.y = 1.6 + sin(_bob_timer) * BOB_AMPLITUDE
+	else:
+		_bob_timer = 0.0
+		camera.position.y = lerpf(camera.position.y, 1.6, delta * 10.0)
 
 
 func _update_interaction_prompt() -> void:

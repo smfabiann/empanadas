@@ -94,7 +94,34 @@ theme_override_colors/font_color = Color(0.6, 0.55, 0.7, 1)
 
 [node name="ControlsLabel" type="Label" parent="VBoxContainer"]
 layout_mode = 2
-text = "E = Recoger/Entregar  |  Q = Soltar  |  Ratón = Mirar"
+text = "WASD = Mover  |  Ratón = Mirar  |  E = Recoger/Entregar  |  Q = Soltar  |  ESC = Pausa"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.4, 0.38, 0.5, 1)
+
+[node name="VersionLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.5, 0.4, 0.65, 0.7)
+theme_override_font_sizes/font_size = 12
+text = "ALPHA v0.1"
+
+[node name="CreditsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.35, 0.3, 0.45, 0.5)
+theme_override_font_sizes/font_size = 10
+text = "Taller de Juegos — 2026"
+horizontal_alignment = 1
