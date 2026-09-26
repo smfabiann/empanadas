@@ -184,11 +184,23 @@ func receive_item(item_node: Interactable) -> void:
 
 	# Reacción visual
 	if is_correct:
-		label.text = "¡Gracias!"
+		label.text = "😊 ¡Gracias! ✅"
 		SFXManager.play_correct()
+		# Bounce de felicidad
+		var tween := create_tween()
+		tween.tween_property(self, "scale", Vector3(1.15, 0.9, 1.15), 0.1)
+		tween.tween_property(self, "scale", Vector3(0.95, 1.1, 0.95), 0.1)
+		tween.tween_property(self, "scale", Vector3.ONE, 0.15).set_ease(Tween.EASE_OUT)
 	else:
-		label.text = "¡Esto no es!"
+		label.text = "😠 ¡Esto no es! ❌"
 		SFXManager.play_incorrect()
+		# Sacudida de enojo
+		var tween := create_tween()
+		var orig_x := global_position.x
+		tween.tween_property(self, "global_position:x", orig_x + 0.1, 0.05)
+		tween.tween_property(self, "global_position:x", orig_x - 0.1, 0.05)
+		tween.tween_property(self, "global_position:x", orig_x + 0.05, 0.05)
+		tween.tween_property(self, "global_position:x", orig_x, 0.05)
 
 	patience_bar_pivot.visible = false
 

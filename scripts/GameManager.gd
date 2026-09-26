@@ -1,6 +1,6 @@
 extends Node
 ## Autoload singleton que gestiona el estado global del juego.
-## Maneja: score, vidas, combos, dificultad progresiva y high score persistente.
+## Maneja: score, vidas, combos, dificultad progresiva, estadísticas y high score persistente.
 
 signal ui_updated(score: int, lives: int)
 signal game_over_reached()
@@ -8,11 +8,20 @@ signal combo_updated(combo: int, multiplier: int)
 signal difficulty_changed(level: int)
 signal item_delivered()
 signal order_result(is_correct: bool, points: int)
+signal time_updated(elapsed: float)
 
 # --- Estado del juego ---
 var score: int = 0
 var lives: int = 3
 var game_active: bool = true
+
+# --- Timer ---
+var elapsed_time: float = 0.0
+
+# --- Estadísticas ---
+var total_deliveries: int = 0
+var correct_deliveries: int = 0
+var best_combo: int = 0
 
 # --- Combo ---
 var combo: int = 0
@@ -35,6 +44,12 @@ func _ready() -> void:
 	_load_high_score()
 
 
+func _process(delta: float) -> void:
+	if game_active:
+		elapsed_time += delta
+		time_updated.emit(elapsed_time)
+
+
 func handle_order(is_correct: bool) -> void:
 	"""Procesa el resultado de una entrega."""
 	if not game_active:
@@ -47,10 +62,15 @@ func handle_order(is_correct: bool) -> void:
 		combo_multiplier = mini(combo, MAX_MULTIPLIER)
 		points = 10 * combo_multiplier
 		score += points
+		correct_deliveries += 1
+		if combo > best_combo:
+			best_combo = combo
 	else:
 		combo = 0
 		combo_multiplier = 1
 		lives -= 1
+
+	total_deliveries += 1
 
 	item_delivered.emit()
 	combo_updated.emit(combo, combo_multiplier)
@@ -99,6 +119,10 @@ func reset_game() -> void:
 	combo = 0
 	combo_multiplier = 1
 	difficulty_level = 0
+	elapsed_time = 0.0
+	total_deliveries = 0
+	correct_deliveries = 0
+	best_combo = 0
 	game_active = true
 	ui_updated.emit(score, lives)
 	combo_updated.emit(combo, combo_multiplier)
