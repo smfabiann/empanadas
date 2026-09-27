@@ -1,9 +1,11 @@
-[gd_scene load_steps=18 format=3 uid="uid://c23luysxd33pj"]
+[gd_scene format=3 uid="uid://c23luysxd33pj"]
 
+[ext_resource type="PackedScene" uid="uid://dtdqocd2hb5r" path="res://scenes/map/shop.tscn" id="1_c01mt"]
 [ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://2xor5082k24s" path="res://scenes/map/shelf.tscn" id="1_vcsgt"]
 [ext_resource type="PackedScene" path="res://scenes/UI.tscn" id="2_ui"]
-[ext_resource type="Script" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
-[ext_resource type="Script" path="res://scripts/ItemSpawner.gd" id="4_itemspawner"]
+[ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
+[ext_resource type="Script" uid="uid://blrgh8r02xs6f" path="res://scripts/ItemSpawner.gd" id="4_itemspawner"]
 
 [sub_resource type="Environment" id="Environment_2a6q0"]
 background_mode = 1
@@ -15,247 +17,158 @@ fog_enabled = true
 fog_light_color = Color(0.05, 0.03, 0.08, 1)
 fog_density = 0.015
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
-albedo_color = Color(0.22, 0.18, 0.15, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_c01mt"]
+size = Vector3(0.05, 0.275, 7.978037)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_back"]
-albedo_color = Color(0.28, 0.22, 0.18, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_fk6vv"]
+size = Vector3(0.05, 0.315, 4.508203)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_side"]
-albedo_color = Color(0.25, 0.2, 0.17, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_counter"]
-albedo_color = Color(0.35, 0.25, 0.15, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shelf"]
-albedo_color = Color(0.3, 0.22, 0.12, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_register"]
-albedo_color = Color(0.15, 0.15, 0.18, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceiling"]
-albedo_color = Color(0.2, 0.18, 0.16, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_front"]
-albedo_color = Color(0.25, 0.2, 0.17, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sidewalk"]
-albedo_color = Color(0.6, 0.6, 0.6, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_nxtc6"]
+size = Vector3(0.05, 0.27, 5.658036)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_menu"]
 albedo_color = Color(0.1, 0.25, 0.15, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_post"]
-albedo_color = Color(0.4, 0.4, 0.4, 1)
-metallic = 0.8
-roughness = 0.3
+[sub_resource type="PlaneMesh" id="PlaneMesh_fk6vv"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awning"]
-albedo_color = Color(0.7, 0.2, 0.2, 1)
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_c01mt"]
+data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
 
-; === ROOT ===
-[node name="Main" type="Node3D"]
+[node name="Main" type="Node3D" unique_id=1661772069]
 
-; === ENVIRONMENT ===
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="Enviroment" type="Node" parent="." unique_id=2009176575]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Enviroment" unique_id=436096474]
 environment = SubResource("Environment_2a6q0")
 
-; === FLOOR ===
-[node name="Floor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
-use_collision = true
-size = Vector3(8, 0.2, 10)
-material = SubResource("StandardMaterial3D_floor")
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment" unique_id=1813892540]
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 10, 0)
+light_color = Color(0.95, 0.85, 0.65, 1)
+light_energy = 0.1
+shadow_enabled = true
 
-; === WALLS ===
-[node name="WallBack" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 3.5)
-use_collision = true
-size = Vector3(8, 3, 0.2)
-material = SubResource("StandardMaterial3D_wall_back")
+[node name="Map" type="Node3D" parent="." unique_id=925572269]
 
-[node name="WallLeft" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, 1.5, 0)
-use_collision = true
-size = Vector3(0.2, 3, 10)
-material = SubResource("StandardMaterial3D_wall_side")
+[node name="Shop" parent="Map" unique_id=831494344 instance=ExtResource("1_c01mt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4703743, 1.7049768, -0.22162199)
 
-[node name="WallRight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 1.5, 0)
-use_collision = true
-size = Vector3(0.2, 3, 10)
-material = SubResource("StandardMaterial3D_wall_side")
+[node name="StepsCollision" type="Node3D" parent="Map/Shop" unique_id=1228593559]
 
-; === CEILING ===
-[node name="Ceiling" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.0, 0)
-size = Vector3(8, 0.15, 10)
-material = SubResource("StandardMaterial3D_ceiling")
+[node name="StaticBody3D2" type="StaticBody3D" parent="Map/Shop/StepsCollision" unique_id=1377821643]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.1743698, -1.6507076, -9.577507)
 
-; === COUNTER ===
-[node name="Counter" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
-use_collision = true
-size = Vector3(4, 1, 0.8)
-material = SubResource("StandardMaterial3D_counter")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Shop/StepsCollision/StaticBody3D2" unique_id=471322035]
+transform = Transform3D(0.6946584, -0.7193398, 0, 0.7193398, 0.6946584, 0, 0, 0, 1, 0, 0, -1.7220886)
+shape = SubResource("BoxShape3D_c01mt")
 
-[node name="Register" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.15, 0)
-size = Vector3(0.4, 0.3, 0.35)
-material = SubResource("StandardMaterial3D_register")
+[node name="StaticBody3D" type="StaticBody3D" parent="Map/Shop/StepsCollision" unique_id=505114073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17976522, -1.6535928, -7.2526736)
 
-; === SHELF (estante trasero para ítems) ===
-[node name="ShelfBase" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 2.8)
-use_collision = true
-size = Vector3(3.5, 0.08, 0.7)
-material = SubResource("StandardMaterial3D_shelf")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Shop/StepsCollision/StaticBody3D" unique_id=920825140]
+transform = Transform3D(0.6946584, -0.7193398, 0, 0.7193398, 0.6946584, 0, 0, 0, 1, 0, 0, 0.0022249222)
+shape = SubResource("BoxShape3D_fk6vv")
 
-[node name="ShelfBack" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 3.3)
-size = Vector3(3.5, 1.0, 0.1)
-material = SubResource("StandardMaterial3D_shelf")
+[node name="StaticBody3D3" type="StaticBody3D" parent="Map/Shop/StepsCollision" unique_id=1425694804]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.9590735, -1.6415551, -9.550568)
 
-; === DECORATIVE ELEMENTS ===
-[node name="WallFrontLeft" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.5, -3.5)
-use_collision = true
-size = Vector3(3.0, 3, 0.2)
-material = SubResource("StandardMaterial3D_wall_front")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Shop/StepsCollision/StaticBody3D3" unique_id=662695441]
+transform = Transform3D(0.6946584, -0.7193398, 0, 0.7193398, 0.6946584, 0, 0, 0, 1, 4.7683716e-07, 0, -2.878704)
+shape = SubResource("BoxShape3D_nxtc6")
 
-[node name="WallFrontRight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 1.5, -3.5)
-use_collision = true
-size = Vector3(3.0, 3, 0.2)
-material = SubResource("StandardMaterial3D_wall_front")
+[node name="Shelf" parent="Map" unique_id=1829361409 instance=ExtResource("1_vcsgt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33141088, 1.6088865, 2.8198018)
 
-[node name="Awning" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 2.5, -4.0)
-size = Vector3(5, 0.1, 1.5)
-material = SubResource("StandardMaterial3D_awning")
-
-[node name="Sidewalk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.12, -6.5)
-use_collision = true
-size = Vector3(8, 0.15, 6)
-material = SubResource("StandardMaterial3D_sidewalk")
-
-[node name="QueuePostLeft" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0.4, -2.0)
-use_collision = true
-radius = 0.05
-height = 0.8
-material = SubResource("StandardMaterial3D_post")
-
-[node name="QueuePostRight" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0, 0.4, -2.0)
-use_collision = true
-radius = 0.05
-height = 0.8
-material = SubResource("StandardMaterial3D_post")
-
-[node name="MainSign" type="Label3D" parent="."]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
-text = "🫓 EMPANADAS 🫓"
-font_size = 80
-modulate = Color(1, 0.85, 0.3, 1)
-outline_size = 6
-outline_color = Color(0.1, 0.05, 0.1, 1)
-
-[node name="MenuBoard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.0, 2.0, 3.35)
-size = Vector3(2.5, 1.5, 0.1)
+[node name="MenuBoard2" type="CSGBox3D" parent="Map" unique_id=1423350773]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1115592, 1.4849194, 3.1288998)
+size = Vector3(1.862915, 1.5583801, 0.1)
 material = SubResource("StandardMaterial3D_menu")
 
-[node name="MenuText" type="Label3D" parent="MenuBoard"]
+[node name="MenuText" type="Label3D" parent="Map/MenuBoard2" unique_id=2033375694]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.06)
+modulate = Color(1, 0.95, 0.8, 1)
 text = "MENÚ
 Empanada  $1500
 Sopaipilla $500
 Completo  $2000
 Bebida    $1000"
 font_size = 40
-modulate = Color(1, 0.95, 0.8, 1)
 outline_size = 4
-outline_color = Color(0, 0, 0, 1)
 
-[node name="UpperShelf" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 2.8)
-use_collision = true
-size = Vector3(3.5, 0.08, 0.7)
-material = SubResource("StandardMaterial3D_shelf")
-
-; === LIGHTING ===
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 10, 0)
-light_color = Color(0.95, 0.85, 0.65, 1)
-light_energy = 0.25
-shadow_enabled = true
-
-[node name="CeilingLight" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.9, 0.5)
+[node name="CeilingLight" type="SpotLight3D" parent="Map" unique_id=628936849]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.19571686, 3.0396004, 0.5)
 light_color = Color(1, 0.92, 0.75, 1)
 light_energy = 2.5
 shadow_enabled = true
 spot_range = 6.0
 spot_angle = 50.0
 
-[node name="ShelfLight" type="SpotLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -0.342, 0.9397, 0, -0.9397, -0.342, 0, 2.5, 2.0)
+[node name="ShelfLight" type="SpotLight3D" parent="Map" unique_id=66632339]
+transform = Transform3D(1, 0, 0, 0, -0.342, 0.9397, 0, -0.9397, -0.342, -0.19571686, 2.6396003, 2)
 light_color = Color(1, 0.9, 0.7, 1)
 light_energy = 1.5
 spot_range = 4.0
 spot_angle = 40.0
 
-[node name="ShelfOmniLight" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 2.7)
+[node name="ShelfOmniLight" type="OmniLight3D" parent="Map" unique_id=136170235]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.19571686, 1.9396003, 2.7)
 light_color = Color(1, 0.95, 0.85, 1)
 light_energy = 2.2
 omni_range = 4.5
 
-[node name="ShelfSign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 3.38)
+[node name="PlaneMesh" type="MeshInstance3D" parent="Map" unique_id=1040081921]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+mesh = SubResource("PlaneMesh_fk6vv")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Map/PlaneMesh" unique_id=2086776713]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/PlaneMesh/StaticBody3D" unique_id=115825919]
+shape = SubResource("ConcavePolygonShape3D_c01mt")
+
+[node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
+visible = false
+modulate = Color(1, 0.85, 0.3, 1)
+text = "🫓 EMPANADAS 🫓"
+font_size = 80
+outline_size = 6
+
+[node name="ShelfSign" type="Label3D" parent="." unique_id=914320530]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 2.476743, 3.38)
+modulate = Color(1, 0.85, 0.4, 1)
 text = "🏪 ESTANTE DE PRODUCTOS 🏪"
 font_size = 40
-modulate = Color(1, 0.85, 0.4, 1)
 outline_size = 4
-outline_color = Color(0.1, 0.05, 0.15, 1)
 
-; === MARKERS ===
-[node name="SpawnPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -4.5)
+[node name="SpawnPoint" type="Marker3D" parent="." unique_id=1205264049]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.5)
 
-[node name="CounterPoint" type="Marker3D" parent="."]
+[node name="CounterPoint" type="Marker3D" parent="." unique_id=1722167390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.95)
 
-[node name="ExitPoint" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4.5)
+[node name="ExitPoint" type="Marker3D" parent="." unique_id=299630482]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.5)
 
-; === ITEM SPAWN MARKERS (en el estante) ===
-[node name="ItemSpawn_Sopaipilla" type="Marker3D" parent="."]
+[node name="ItemSpawn_Sopaipilla" type="Marker3D" parent="." unique_id=1353490861]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.1, 2.7)
 
-[node name="ItemSpawn_Bebida" type="Marker3D" parent="."]
+[node name="ItemSpawn_Bebida" type="Marker3D" parent="." unique_id=1994836890]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.1, 2.7)
 
-[node name="ItemSpawn_Empanada" type="Marker3D" parent="."]
+[node name="ItemSpawn_Empanada" type="Marker3D" parent="." unique_id=143338078]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.1, 2.7)
 
-[node name="ItemSpawn_Completo" type="Marker3D" parent="."]
+[node name="ItemSpawn_Completo" type="Marker3D" parent="." unique_id=333254366]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.1, 2.7)
 
-; === PLAYER ===
-[node name="Player" parent="." instance=ExtResource("1_player")]
+[node name="Player" parent="." unique_id=332224679 instance=ExtResource("1_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
 
-; === UI ===
-[node name="UI" parent="." instance=ExtResource("2_ui")]
+[node name="UI" parent="." unique_id=519914083 instance=ExtResource("2_ui")]
 
-; === SPAWNERS ===
-[node name="NPCSpawner" type="Node" parent="."]
+[node name="NPCSpawner" type="Node" parent="." unique_id=1541630979]
 script = ExtResource("3_spawner")
 
-[node name="Timer" type="Timer" parent="NPCSpawner"]
+[node name="Timer" type="Timer" parent="NPCSpawner" unique_id=1455560433]
 
-[node name="ItemSpawner" type="Node" parent="."]
+[node name="ItemSpawner" type="Node" parent="." unique_id=541989250]
 script = ExtResource("4_itemspawner")
