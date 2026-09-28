@@ -1,6 +1,6 @@
 extends CharacterBody3D
 ## NPC que se acerca al mostrador, pide un ítem y se va.
-## Incluye: paciencia con timer visual, variación de color, reacciones.
+## Incluye: paciencia con timer visual, variación de color, reacciones y salida sin bloqueos.
 
 enum State { APPROACHING, QUEUING, WAITING, LEAVING }
 
@@ -16,13 +16,14 @@ var state: State = State.APPROACHING
 var spawn_pos: Vector3
 var counter_pos: Vector3
 var exit_pos: Vector3
-var target_pos: Vector3  # Posición objetivo actual (puede ser cola o mostrador)
-var queue_index: int = 0  # Posición en la cola (0 = en el mostrador)
+var target_pos: Vector3
+var queue_index: int = 0
 
 var requested_item: ItemData = null
 var patience_time: float = 20.0
 var patience_remaining: float = 20.0
 var is_at_counter: bool = false
+var is_leaving_cleanly: bool = false
 
 # Lista de posibles ítems a pedir
 var possible_items: Array[ItemData] = [
@@ -45,6 +46,7 @@ const NPC_COLORS: Array[Color] = [
 ]
 
 signal finished_leaving()
+signal counter_vacated()
 
 
 func _ready() -> void:
@@ -52,7 +54,8 @@ func _ready() -> void:
 	label.visible = false
 	patience_bar_pivot.visible = false
 	global_position = spawn_pos
-	target_pos = counter_pos
+	if target_pos == Vector3.ZERO:
+		target_pos = counter_pos
 
 	# Color aleatorio
 	var mat := StandardMaterial3D.new()
@@ -73,16 +76,18 @@ func _physics_process(delta: float) -> void:
 
 		State.QUEUING:
 			_move_toward_point(target_pos, delta)
-			# Esperar en cola hasta que nos muevan
+			# Si llegó a su lugar en la fila, orientar la vista al mostrador
+			if global_position.distance_to(target_pos) < 0.25:
+				look_at(global_position + Vector3(0, 0, 1), Vector3.UP)
 
 		State.WAITING:
 			_update_patience(delta)
 
 		State.LEAVING:
 			_move_toward_point(exit_pos, delta)
-			if _is_close_to(exit_pos):
-				finished_leaving.emit()
-				queue_free()
+			# Si llegó a la salida o ya cruzó hacia la vereda exterior
+			if _is_close_to(exit_pos) or global_position.z <= -4.8:
+				_fade_and_free()
 
 
 func _move_toward_point(target: Vector3, _delta: float) -> void:
@@ -152,17 +157,17 @@ func _update_patience(delta: float) -> void:
 
 func _timeout() -> void:
 	"""El NPC se cansó de esperar."""
+	if state != State.WAITING:
+		return
+		
 	label.text = "¡Me voy!"
 	patience_bar_pivot.visible = false
 
 	GameManager.npc_timeout()
 	SFXManager.play_npc_timeout()
 
-	# Esperar un momento antes de irse
 	await get_tree().create_timer(1.0).timeout
-	label.visible = false
-	state = State.LEAVING
-	is_at_counter = false
+	_start_leaving()
 
 
 func can_receive_item() -> bool:
@@ -186,7 +191,6 @@ func receive_item(item_node: Interactable) -> void:
 	if is_correct:
 		label.text = "😊 ¡Gracias! ✅"
 		SFXManager.play_correct()
-		# Bounce de felicidad
 		var tween := create_tween()
 		tween.tween_property(self, "scale", Vector3(1.15, 0.9, 1.15), 0.1)
 		tween.tween_property(self, "scale", Vector3(0.95, 1.1, 0.95), 0.1)
@@ -194,7 +198,6 @@ func receive_item(item_node: Interactable) -> void:
 	else:
 		label.text = "😠 ¡Esto no es! ❌"
 		SFXManager.play_incorrect()
-		# Sacudida de enojo
 		var tween := create_tween()
 		var orig_x := global_position.x
 		tween.tween_property(self, "global_position:x", orig_x + 0.1, 0.05)
@@ -209,10 +212,39 @@ func receive_item(item_node: Interactable) -> void:
 		item_node.get_parent().remove_child(item_node)
 	item_node.queue_free()
 
-	# Esperar un momento mostrando reacción antes de irse
-	await get_tree().create_timer(1.2).timeout
-	label.visible = false
+	await get_tree().create_timer(1.0).timeout
+	_start_leaving()
+
+
+func _start_leaving() -> void:
+	if state == State.LEAVING:
+		return
 	state = State.LEAVING
+	is_at_counter = false
+	label.visible = false
+	patience_bar_pivot.visible = false
+
+	# Desactivar máscara de colisión para que no se trabe con paredes o esquinas al salir
+	collision_mask = 0
+
+	# Notificar de inmediato que el mostrador quedó libre para que avance el siguiente cliente
+	counter_vacated.emit()
+
+	# Salvaguarda: si por cualquier motivo sigue activo tras 4 segundos, eliminar
+	get_tree().create_timer(4.0).timeout.connect(func():
+		if is_instance_valid(self):
+			_fade_and_free()
+	)
+
+
+func _fade_and_free() -> void:
+	if is_leaving_cleanly:
+		return
+	is_leaving_cleanly = true
+	finished_leaving.emit()
+	var tween := create_tween()
+	tween.tween_property(self, "scale", Vector3(0.1, 0.1, 0.1), 0.25).set_ease(Tween.EASE_IN)
+	tween.tween_callback(queue_free)
 
 
 func set_queue_position(idx: int, queue_offset: Vector3) -> void:
@@ -224,7 +256,7 @@ func set_queue_position(idx: int, queue_offset: Vector3) -> void:
 			state = State.APPROACHING
 	else:
 		target_pos = counter_pos + queue_offset * idx
-		if state == State.APPROACHING and not is_at_counter:
+		if state != State.LEAVING:
 			state = State.QUEUING
 
 

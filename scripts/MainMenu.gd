@@ -1,11 +1,11 @@
 extends Control
 ## Menú principal del juego.
-## Incluye animación de entrada para dar una presentación pulida.
+## Proporciona inicio de partida, visualización de récord y controles.
 
-@onready var high_score_label: Label = $VBoxContainer/HighScoreLabel
-@onready var play_button: Button = $VBoxContainer/PlayButton
-@onready var quit_button: Button = $VBoxContainer/QuitButton
-@onready var vbox: VBoxContainer = $VBoxContainer
+@onready var main_panel: PanelContainer = $CenterContainer/MainPanel
+@onready var high_score_label: Label = $CenterContainer/MainPanel/VBoxContainer/HighScoreLabel
+@onready var play_button: Button = $CenterContainer/MainPanel/VBoxContainer/ButtonsVBox/PlayButton
+@onready var quit_button: Button = $CenterContainer/MainPanel/VBoxContainer/ButtonsVBox/QuitButton
 
 
 func _ready() -> void:
@@ -17,22 +17,20 @@ func _ready() -> void:
 
 
 func _animate_entrance() -> void:
-	"""Anima la entrada secuencial de los elementos del menú."""
-	for i in vbox.get_child_count():
-		var child := vbox.get_child(i)
-		child.modulate.a = 0.0
-		child.position.y += 20.0
-		var tween := create_tween()
-		tween.set_parallel(true)
-		tween.tween_property(child, "modulate:a", 1.0, 0.4).set_delay(i * 0.12).set_ease(Tween.EASE_OUT)
-		tween.tween_property(child, "position:y", child.position.y - 20.0, 0.4).set_delay(i * 0.12).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	# Animamos la opacidad del panel general de manera limpia
+	# Evitamos manipular posiciones individuales de hijos dentro de contenedores VBoxContainer
+	main_panel.modulate.a = 0.0
+	var tween := create_tween()
+	tween.tween_property(main_panel, "modulate:a", 1.0, 0.35).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
 
 func _update_high_score() -> void:
 	if GameManager.high_score > 0:
-		high_score_label.text = "🏆 Mejor Puntaje: " + str(GameManager.high_score)
+		high_score_label.text = "🏆 Récord Actual: " + str(GameManager.high_score) + " pts"
+		high_score_label.visible = true
 	else:
 		high_score_label.text = ""
+		high_score_label.visible = false
 
 
 func _on_play() -> void:

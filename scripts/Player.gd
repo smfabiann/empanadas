@@ -5,11 +5,14 @@ extends CharacterBody3D
 
 const MOUSE_SENSITIVITY := 0.002
 const PITCH_LIMIT := deg_to_rad(80.0)
-const MOVE_SPEED := 3.5
+const WALK_SPEED := 3.5
+const SPRINT_SPEED := 5.8
 
-# --- Head bob ---
+# --- Head bob y FOV ---
 const BOB_FREQUENCY := 10.0
 const BOB_AMPLITUDE := 0.03
+const BASE_FOV := 75.0
+const SPRINT_FOV := 82.0
 var _bob_timer: float = 0.0
 
 @onready var camera: Camera3D = $Camera3D
@@ -22,6 +25,8 @@ var held_item: Interactable = null
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	floor_snap_length = 0.25
+	floor_constant_speed = true
 
 
 func _physics_process(delta: float) -> void:
@@ -55,6 +60,13 @@ func _handle_movement(delta: float) -> void:
 	if Input.is_physical_key_pressed(KEY_D):
 		input_vec.x += 1.0
 
+	# Sprint con la acción 'sprint' mapeada a Shift
+	var is_sprinting := (
+		(Input.is_action_pressed("sprint") or Input.is_physical_key_pressed(KEY_SHIFT))
+		and input_vec != Vector2.ZERO
+	)
+	var current_speed := SPRINT_SPEED if is_sprinting else WALK_SPEED
+
 	if input_vec != Vector2.ZERO:
 		input_vec = input_vec.normalized()
 		# Moverse relativo a la orientación horizontal del jugador
@@ -67,23 +79,29 @@ func _handle_movement(delta: float) -> void:
 		right = right.normalized()
 
 		var move_dir := (right * input_vec.x + forward * -input_vec.y)
-		velocity.x = move_dir.x * MOVE_SPEED
-		velocity.z = move_dir.z * MOVE_SPEED
+		velocity.x = move_dir.x * current_speed
+		velocity.z = move_dir.z * current_speed
 	else:
-		velocity.x = move_toward(velocity.x, 0.0, MOVE_SPEED)
-		velocity.z = move_toward(velocity.z, 0.0, MOVE_SPEED)
+		velocity.x = move_toward(velocity.x, 0.0, current_speed)
+		velocity.z = move_toward(velocity.z, 0.0, current_speed)
 
 	# Movimiento completamente libre con colisiones
 	move_and_slide()
 
-	# Head bob al caminar
+	# Head bob al caminar / correr
 	var horizontal_speed := Vector2(velocity.x, velocity.z).length()
 	if horizontal_speed > 0.5 and is_on_floor():
-		_bob_timer += delta * BOB_FREQUENCY
-		camera.position.y = 1.6 + sin(_bob_timer) * BOB_AMPLITUDE
+		var bob_freq := BOB_FREQUENCY * (1.3 if is_sprinting else 1.0)
+		var bob_amp := BOB_AMPLITUDE * (1.2 if is_sprinting else 1.0)
+		_bob_timer += delta * bob_freq
+		camera.position.y = 1.6 + sin(_bob_timer) * bob_amp
 	else:
 		_bob_timer = 0.0
 		camera.position.y = lerpf(camera.position.y, 1.6, delta * 10.0)
+
+	# Suave ajuste de FOV dinámico al correr
+	var target_fov := SPRINT_FOV if (is_sprinting and horizontal_speed > 1.0) else BASE_FOV
+	camera.fov = lerpf(camera.fov, target_fov, delta * 8.0)
 
 
 func _update_interaction_prompt() -> void:
