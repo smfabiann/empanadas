@@ -140,13 +140,13 @@ font_size = 40
 outline_size = 4
 
 [node name="SpawnPoint" type="Marker3D" parent="." unique_id=1205264049]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11.0)
 
-[node name="CounterPoint" type="Marker3D" parent="." unique_id=1722167390]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.95)
+[node name="WindowPoint" type="Marker3D" parent="." unique_id=1722167390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -4.5)
 
 [node name="ExitPoint" type="Marker3D" parent="." unique_id=299630482]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11.0)
 
 [node name="ItemSpawn_Sopaipilla" type="Marker3D" parent="." unique_id=1353490861]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.1, 2.7)
@@ -161,7 +161,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.1, 2.7)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.1, 2.7)
 
 [node name="Player" parent="." unique_id=332224679 instance=ExtResource("1_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.6, -2.3)
 
 [node name="UI" parent="." unique_id=519914083 instance=ExtResource("2_ui")]
 

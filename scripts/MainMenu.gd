@@ -25,12 +25,7 @@ func _animate_entrance() -> void:
 
 
 func _update_high_score() -> void:
-	if GameManager.high_score > 0:
-		high_score_label.text = "🏆 Récord Actual: " + str(GameManager.high_score) + " pts"
-		high_score_label.visible = true
-	else:
-		high_score_label.text = ""
-		high_score_label.visible = false
+	high_score_label.visible = false
 
 
 func _on_play() -> void:
