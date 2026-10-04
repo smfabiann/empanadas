@@ -120,6 +120,9 @@ func _update_interaction_prompt() -> void:
 			if collider is Interactable and collider.item_data:
 				ui.set_prompt("[E] Recoger " + collider.item_data.display_name, true)
 				return
+			elif collider.has_method("interact"):
+				ui.set_prompt("[E] Interactuar", true)
+				return
 
 		# Si miramos al cliente con las manos vacías, mostrar lo que pide
 		var target_npc := _get_target_npc()
@@ -170,7 +173,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _handle_interact() -> void:
-	# Caso 1: Manos vacías -> recoger ítem
+	# Caso 1: Manos vacías -> recoger ítem o usar botones
 	if held_item == null:
 		if ray.is_colliding():
 			var collider := ray.get_collider()
@@ -178,6 +181,8 @@ func _handle_interact() -> void:
 				held_item = collider as Interactable
 				ray.add_exception(held_item)
 				held_item.interact(self)
+			elif collider.has_method("interact"):
+				collider.interact(self)
 		return
 
 	# Caso 2: Sosteniendo ítem -> entregar al NPC
