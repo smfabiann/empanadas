@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene format=3 uid="uid://cegpnoa17isb7"]
 
-[ext_resource type="Script" path="res://scripts/UI.gd" id="1_ui"]
+[ext_resource type="Script" uid="uid://bh85ax5n12xkj" path="res://scripts/ui/UI.gd" id="1_ui"]
 [ext_resource type="PackedScene" path="res://scenes/ui/PauseMenu.tscn" id="2_pause"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 30.0
+content_margin_top = 30.0
+content_margin_right = 30.0
+content_margin_bottom = 30.0
 bg_color = Color(0.03, 0.02, 0.08, 0.9)
 border_width_left = 2
 border_width_top = 2
@@ -14,26 +18,28 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
-content_margin_left = 30.0
-content_margin_top = 30.0
-content_margin_right = 30.0
-content_margin_bottom = 30.0
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hud_bg"]
-bg_color = Color(0, 0, 0, 0.35)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
-content_margin_left = 8.0
-content_margin_top = 4.0
-content_margin_right = 8.0
-content_margin_bottom = 4.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_debug"]
+content_margin_left = 10.0
+content_margin_top = 8.0
+content_margin_right = 10.0
+content_margin_bottom = 8.0
+bg_color = Color(0.04, 0.03, 0.08, 0.75)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.35, 0.6, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
-[node name="UI" type="CanvasLayer"]
+
+[node name="UI" type="CanvasLayer" unique_id=1164930736]
 script = ExtResource("1_ui")
 
-[node name="HUD" type="Control" parent="."]
+[node name="HUD" type="Control" parent="." unique_id=544862726]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -42,65 +48,67 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ScoreLabel" type="Label" parent="HUD"]
+[node name="ScoreLabel" type="Label" parent="HUD" unique_id=908056054]
+layout_mode = 0
 offset_left = 20.0
 offset_top = 12.0
 offset_right = 250.0
 offset_bottom = 45.0
-theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.95, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 22
 text = "⭐ 0"
 
-[node name="LivesLabel" type="Label" parent="HUD"]
-anchors_preset = 1
+[node name="LivesLabel" type="Label" parent="HUD" unique_id=278075104]
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -160.0
 offset_top = 12.0
 offset_right = -20.0
 offset_bottom = 45.0
-horizontal_alignment = 2
-theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 22
 text = "❤️ 3"
+horizontal_alignment = 2
 
-[node name="ComboLabel" type="Label" parent="HUD"]
-anchors_preset = 1
+[node name="ComboLabel" type="Label" parent="HUD" unique_id=1620478689]
+layout_mode = 0
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -160.0
 offset_top = 48.0
 offset_right = -20.0
 offset_bottom = 78.0
-horizontal_alignment = 2
-theme_override_font_sizes/font_size = 20
 theme_override_colors/font_color = Color(1, 0.7, 0.1, 1)
+theme_override_font_sizes/font_size = 20
 text = "🔥 x2"
+horizontal_alignment = 2
 
-[node name="DifficultyLabel" type="Label" parent="HUD"]
+[node name="DifficultyLabel" type="Label" parent="HUD" unique_id=1665432636]
+layout_mode = 0
 offset_left = 20.0
 offset_top = 48.0
 offset_right = 200.0
 offset_bottom = 72.0
-theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.3, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 14
 text = "Fácil"
 
-[node name="TimeLabel" type="Label" parent="HUD"]
-anchors_preset = 5
+[node name="TimeLabel" type="Label" parent="HUD" unique_id=1014922733]
+layout_mode = 0
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -50.0
 offset_top = 12.0
 offset_right = 50.0
 offset_bottom = 40.0
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.8, 0.78, 0.9, 0.8)
+theme_override_font_sizes/font_size = 18
 text = "00:00"
+horizontal_alignment = 1
 
-[node name="Crosshair" type="ColorRect" parent="HUD"]
-anchors_preset = 8
+[node name="Crosshair" type="ColorRect" parent="HUD" unique_id=1804160848]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -111,8 +119,8 @@ offset_right = 3.0
 offset_bottom = 3.0
 color = Color(1, 1, 1, 0.6)
 
-[node name="PromptLabel" type="Label" parent="HUD"]
-anchors_preset = 8
+[node name="PromptLabel" type="Label" parent="HUD" unique_id=1771625511]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -123,15 +131,14 @@ offset_right = 300.0
 offset_bottom = 54.0
 grow_horizontal = 2
 grow_vertical = 2
-horizontal_alignment = 1
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(1, 0.95, 0.75, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 4
-text = ""
+theme_override_font_sizes/font_size = 18
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="DamageFlash" type="ColorRect" parent="HUD"]
+[node name="DamageFlash" type="ColorRect" parent="HUD" unique_id=988914053]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -142,7 +149,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.9, 0.05, 0.05, 0.4)
 
-[node name="SuccessFlash" type="ColorRect" parent="HUD"]
+[node name="SuccessFlash" type="ColorRect" parent="HUD" unique_id=828493336]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -153,8 +160,8 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.1, 0.85, 0.2, 0.25)
 
-[node name="FloatingTextContainer" type="Control" parent="HUD"]
-anchors_preset = 8
+[node name="FloatingTextContainer" type="Control" parent="HUD" unique_id=211451333]
+anchors_preset = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -165,8 +172,8 @@ offset_right = 50.0
 offset_bottom = 80.0
 mouse_filter = 2
 
-[node name="TutorialPanel" type="PanelContainer" parent="HUD"]
-anchors_preset = 8
+[node name="TutorialPanel" type="PanelContainer" parent="HUD" unique_id=772388879]
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -180,20 +187,22 @@ grow_vertical = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="TutorialVBox" type="VBoxContainer" parent="HUD/TutorialPanel"]
+[node name="TutorialVBox" type="VBoxContainer" parent="HUD/TutorialPanel" unique_id=891484025]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
-[node name="TutorialTitle" type="Label" parent="HUD/TutorialPanel/TutorialVBox"]
+[node name="TutorialTitle" type="Label" parent="HUD/TutorialPanel/TutorialVBox" unique_id=1830717463]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 22
 text = "🎮 CONTROLES"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 22
-theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
 
-[node name="TutorialText" type="Label" parent="HUD/TutorialPanel/TutorialVBox"]
+[node name="TutorialText" type="Label" parent="HUD/TutorialPanel/TutorialVBox" unique_id=904847681]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_font_sizes/font_size = 14
 text = "WASD — Moverse
 Ratón — Mirar alrededor
 E — Recoger / Entregar ítem
@@ -202,12 +211,10 @@ ESC — Pausa
 
 ¡Atiende a los clientes lo más rápido posible!"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
 
-[node name="GameOverPanel" type="PanelContainer" parent="HUD"]
+[node name="GameOverPanel" type="PanelContainer" parent="HUD" unique_id=247908652]
 visible = false
-anchors_preset = 8
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -218,75 +225,74 @@ offset_right = 200.0
 offset_bottom = 160.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/GameOverPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/GameOverPanel" unique_id=22640423]
 layout_mode = 2
 theme_override_constants/separation = 10
 alignment = 1
 
-[node name="GameOverLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="GameOverLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=1359106843]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+theme_override_font_sizes/font_size = 32
 text = "GAME OVER"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 32
-theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
 
-[node name="FinalScoreLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="FinalScoreLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=2122090197]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 20
 text = "Puntaje: 0"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 20
-theme_override_colors/font_color = Color(0.95, 0.9, 0.6, 1)
 
-[node name="HighScoreLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="HighScoreLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=1136839730]
 layout_mode = 2
+theme_override_font_sizes/font_size = 16
 text = "Mejor: 0"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 16
 
-[node name="Separator1" type="HSeparator" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="Separator1" type="HSeparator" parent="HUD/GameOverPanel/VBoxContainer" unique_id=584099022]
 layout_mode = 2
-theme_override_colors/separator_color = Color(0.4, 0.3, 0.6, 0.5)
 
-[node name="TimeStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="TimeStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=1366535904]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 14
 text = "⏱ Tiempo: 00:00"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 
-[node name="DeliveryStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="DeliveryStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=1656402556]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 14
 text = "📦 Entregas: 0/0"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 
-[node name="ComboStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="ComboStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=1067262235]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 14
 text = "🔥 Mejor Combo: 0"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 
-[node name="DifficultyStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="DifficultyStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=610708961]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
+theme_override_font_sizes/font_size = 14
 text = "📈 Dificultad: Fácil"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 14
-theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 
-[node name="RetryButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="RetryButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer" unique_id=628316910]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "▶ Reintentar"
 
-[node name="MenuButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer"]
+[node name="MenuButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer" unique_id=490200360]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "◀ Menú Principal"
 
-[node name="AlphaLabel" type="Label" parent="HUD"]
-anchors_preset = 3
+[node name="AlphaLabel" type="Label" parent="HUD" unique_id=461763810]
+layout_mode = 0
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -295,9 +301,46 @@ offset_left = -100.0
 offset_top = -25.0
 offset_right = -8.0
 offset_bottom = -5.0
-horizontal_alignment = 2
-theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(0.5, 0.4, 0.65, 0.5)
-text = "ALPHA v0.1"
+theme_override_font_sizes/font_size = 11
+text = "ALPHA v0.1.21"
+horizontal_alignment = 2
 
-[node name="PauseMenu" parent="." instance=ExtResource("2_pause")]
+[node name="DebugPanel" type="PanelContainer" parent="HUD" unique_id=295847112]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -215.0
+offset_top = 12.0
+offset_right = -15.0
+offset_bottom = 82.0
+grow_horizontal = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_debug")
+
+[node name="DebugVBox" type="VBoxContainer" parent="HUD/DebugPanel" unique_id=184920485]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="DebugTitle" type="Label" parent="HUD/DebugPanel/DebugVBox" unique_id=384729104]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.6, 0.8, 0.8)
+theme_override_font_sizes/font_size = 11
+text = "🛠 DEBUG (F3)"
+
+[node name="DebugSpawnedLabel" type="Label" parent="HUD/DebugPanel/DebugVBox" unique_id=748291039]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 13
+text = "NPCs aparecidos: 0"
+
+[node name="DebugServedLabel" type="Label" parent="HUD/DebugPanel/DebugVBox" unique_id=918237465]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 13
+text = "NPCs atendidos: 0"
+
+[node name="PauseMenu" parent="." unique_id=578554817 instance=ExtResource("2_pause")]

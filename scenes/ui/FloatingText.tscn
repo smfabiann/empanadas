@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/FloatingText.gd" id="1_ft"]
+[ext_resource type="Script" path="res://scripts/ui/FloatingText.gd" id="1_ft"]
 
 [node name="FloatingText" type="Label"]
 anchors_preset = 8

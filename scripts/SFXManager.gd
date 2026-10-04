@@ -36,6 +36,14 @@ func play_game_over() -> void:
 	_play_sequence([400.0, 350.0, 300.0, 200.0], 0.2)
 
 
+func play_gunshot() -> void:
+	_play_sequence([220.0, 110.0, 55.0], 0.06)
+
+
+func play_tense_anger() -> void:
+	_play_sequence([125.0, 105.0, 85.0, 65.0], 0.35)
+
+
 func play_npc_arrive() -> void:
 	_play_sequence([880.0, 1100.0], 0.05)
 

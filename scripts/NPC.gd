@@ -1,11 +1,22 @@
+class_name NPC
 extends CharacterBody3D
 
 enum State { APPROACHING, WAITING, LEAVING }
 
-const SPEED := 2.5
+@export var speed: float = 2.5
+## Si es true, preserva los materiales y apariencia definidos en la escena del NPC
+@export var custom_appearance: bool = false
+var SPEED: float:
+	get:
+		return speed
+	set(value):
+		speed = value
+
+var patience_drain_rate: float = 1.0
 
 @onready var label: Label3D = $Label3D
 @onready var body_mesh: CSGCylinder3D = $BodyMesh
+@onready var head: CSGSphere3D = $Head
 @onready var patience_bar_bg: CSGBox3D = $PatienceBarPivot/PatienceBarBG
 @onready var patience_bar_fill: CSGBox3D = $PatienceBarPivot/PatienceBarFill
 @onready var patience_bar_pivot: Node3D = $PatienceBarPivot
@@ -20,6 +31,8 @@ var patience_time: float = 20.0
 var patience_remaining: float = 20.0
 var is_at_counter: bool = false
 var is_leaving_cleanly: bool = false
+
+var active_event: NPCEvent = null
 
 var possible_items: Array[ItemData] = [
 	preload("res://resources/items/sopaipilla.tres"),
@@ -41,12 +54,29 @@ func _ready() -> void:
 	patience_bar_pivot.visible = false
 	global_position = spawn_pos
 
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = NPC_COLORS.pick_random()
-	body_mesh.material = mat
+	if not custom_appearance:
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = NPC_COLORS.pick_random()
+		body_mesh.material = mat
+		if head:
+			head.material = mat
 
 	patience_time = GameManager.get_patience_time()
 	patience_remaining = patience_time
+
+	if active_event:
+		_apply_active_event()
+
+
+func assign_event(event: NPCEvent) -> void:
+	active_event = event
+	if is_node_ready():
+		_apply_active_event()
+
+
+func _apply_active_event() -> void:
+	if active_event:
+		active_event.apply(self)
 
 
 func _physics_process(delta: float) -> void:
@@ -75,7 +105,7 @@ func _move_toward_point(target: Vector3, _delta: float) -> void:
 		return
 
 	direction = direction.normalized()
-	velocity = direction * SPEED
+	velocity = direction * speed
 	move_and_slide()
 
 	if direction.length() > 0.01:
@@ -103,9 +133,12 @@ func _arrive_at_counter() -> void:
 
 	look_at(global_position + Vector3(0, 0, 1), Vector3.UP)
 
+	if active_event:
+		active_event.on_arrive(self)
+
 
 func _update_patience(delta: float) -> void:
-	patience_remaining -= delta
+	patience_remaining -= delta * patience_drain_rate
 
 	var ratio := clampf(patience_remaining / patience_time, 0.0, 1.0)
 	patience_bar_fill.scale.x = ratio
@@ -130,7 +163,7 @@ func _timeout() -> void:
 	label.text = "¡Me voy!"
 	patience_bar_pivot.visible = false
 	
-	GameManager.npc_left.emit()
+	GameManager.register_npc_left()
 
 	await get_tree().create_timer(1.0).timeout
 	_start_leaving()
@@ -168,7 +201,7 @@ func receive_item(item_node: Interactable) -> void:
 		item_node.get_parent().remove_child(item_node)
 	item_node.queue_free()
 	
-	GameManager.item_delivered.emit()
+	GameManager.register_npc_served(is_correct)
 
 	await get_tree().create_timer(1.0).timeout
 	_start_leaving()
@@ -183,6 +216,9 @@ func _start_leaving() -> void:
 	patience_bar_pivot.visible = false
 
 	collision_mask = 0
+
+	if active_event:
+		active_event.on_leave(self)
 
 	get_tree().create_timer(4.0).timeout.connect(func():
 		if is_instance_valid(self):

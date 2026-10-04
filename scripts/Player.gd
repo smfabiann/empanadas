@@ -7,6 +7,7 @@ const MOUSE_SENSITIVITY := 0.002
 const PITCH_LIMIT := deg_to_rad(80.0)
 const WALK_SPEED := 3.5
 const SPRINT_SPEED := 5.8
+const JUMP_VELOCITY := 3.0
 
 # --- Head bob y FOV ---
 const BOB_FREQUENCY := 10.0
@@ -21,22 +22,24 @@ var _bob_timer: float = 0.0
 @onready var ui: CanvasLayer = get_parent().get_node_or_null("UI")
 
 var held_item: Interactable = null
+var is_dead: bool = false
 
 
 func _ready() -> void:
+	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	floor_snap_length = 0.25
 	floor_constant_speed = true
 
 
 func _physics_process(delta: float) -> void:
-	if not GameManager.game_active:
+	if not GameManager.game_active or is_dead:
 		return
 	_handle_movement(delta)
 
 
 func _process(_delta: float) -> void:
-	if not GameManager.game_active:
+	if not GameManager.game_active or is_dead:
 		if ui and ui.has_method("set_prompt"):
 			ui.set_prompt("", false)
 		return
@@ -49,6 +52,10 @@ func _handle_movement(delta: float) -> void:
 		velocity.y -= 9.8 * delta
 	else:
 		velocity.y = 0.0
+
+	# Salto (acción 'jump' configurada en el Input Map)
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 
 	var input_vec := Vector2.ZERO
 	if Input.is_physical_key_pressed(KEY_W):
@@ -153,7 +160,7 @@ func _get_target_npc() -> Node:
 
 
 func _input(event: InputEvent) -> void:
-	if not GameManager.game_active:
+	if not GameManager.game_active or is_dead:
 		return
 
 	# Rotar la vista con el ratón (360° horizontal, limitado vertical)
@@ -201,3 +208,29 @@ func _drop_held_item() -> void:
 	held_item = null
 	ray.remove_exception(item_to_drop)
 	item_to_drop.drop()
+
+
+## Anima la caída del jugador al ser abatido (cámara al suelo ladeada)
+func fall_down() -> void:
+	if is_dead:
+		return
+	is_dead = true
+
+	# Soltar inmediatamente lo que tenga en las manos
+	_drop_held_item()
+	velocity = Vector3.ZERO
+
+	# Caída al suelo: cabeza en el piso (Y = 0.22), ladeada hacia arriba/lado
+	var tween := create_tween().set_parallel(true)
+	# Caída vertical rápida
+	tween.tween_property(camera, "position:y", 0.22, 0.45)\
+		.set_trans(Tween.TRANS_QUAD)\
+		.set_ease(Tween.EASE_IN)
+	# Ladeada (roll Z = 38°) como la mejilla apoyada en el piso
+	tween.tween_property(camera, "rotation_degrees:z", 38.0, 0.5)\
+		.set_trans(Tween.TRANS_BACK)\
+		.set_ease(Tween.EASE_OUT)
+	# Ligeramente inclinada hacia arriba/suelo (pitch X = -16°)
+	tween.tween_property(camera, "rotation_degrees:x", -16.0, 0.45)\
+		.set_trans(Tween.TRANS_QUAD)\
+		.set_ease(Tween.EASE_OUT)

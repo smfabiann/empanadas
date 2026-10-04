@@ -1,0 +1,24 @@
+# Lis ta de cambios
+- Se agrego la capacidad de saltar, hecho principalmente para obstaculos pequeños en el desarrollo del mapa
+- Se arreglo la oprientacio nde la barra de paciencia de los npc
+- Se implementó el evento FastNPC: cliente más rápido y con menor paciencia (la barra se drena más rápido)
+- Se agregaron contadores de depuración en la UI (arriba a la derecha) para NPCs aparecidos y atendidos, con opción de activar/desactivar en el Inspector y tecla F3
+- **Evento Estático del Ladrón y Minijuego de Secuencia**:
+  - Se implementó el cliente especial Ladrón (`RobberNPC.tscn` y `RobberEvent.gd`), el cual aparece armado con una pistola.
+  - El arma comienza oculta y se desenfunda suavemente hacia la pose de apuntado mediante un `Tween` al llegar a la ventana.
+  - **Ambientación Dinámica**: Al aparecer el ladrón, la iluminación y ambiente de la tienda se atenúan sutilmente para generar tensión; al marcharse satisfecho, el entorno recupera de manera suave sus valores normales originales de luz y niebla.
+  - Funciona como un minijuego de secuencia: exige una lista ordenada de ítems (Completo, Bebida y Empanada) con tiempo de paciencia individual por ítem y progreso visual en el cartel.
+- **Sistema de Game Over y Cinemática de Muerte**:
+  - Al fallar un ítem o agotarse el tiempo, se activa una cinemática de ira: el ambiente se oscurece, se espesa una densa niebla negra que cubre el exterior, suena un tono de tensión y el ladrón avanza lentamente hacia el mostrador temblando de rabia.
+  - Disparo con retroceso (recoil) en el arma y sonido procedimental de disparo (`play_gunshot()`).
+  - Caída abatida del jugador: la cámara se desploma contra el suelo, quedando ladeada e inclinada, inhabilitando los controles.
+  - Pantalla de Game Over con destello rojo de impacto, estadísticas de clientes atendidos y botones de "Reintentar" y "Menú Principal".
+  - Restauración automática del fog, iluminación y estado del juego al reiniciar la partida.
+- **Reorganización del Código (`scripts/`)**:
+  - Se estructuró la carpeta `scripts/events/` (con `static/` conteniendo `RobberEvent.gd` y `RobberNPC.gd`, y `NPCEventManager.gd` en la raíz de eventos).
+  - Se creó `scripts/ui/` para agrupar los controladores de interfaz (`UI.gd`, `MainMenu.gd`, `PauseMenu.gd`, `FloatingText.gd`).
+  - Se actualizaron todas las rutas y dependencias en escenas `.tscn` para prevenir enlaces rotos.
+- **Handles 3D y Conexiones Visuales en el Editor de Godot**:
+  - Se agregaron handles visuales con `gizmo_extents` para puntos de spawn y navegación de clientes (`SpawnPoint`, `WindowPoint`, `ExitPoint`), así como para los puntos de comida en el estante.
+  - Conexión de referencias visuales mediante `@export` en el Inspector de `NPCSpawner` e `ItemSpawner`.
+  - Se agregaron markers visuales (`GunAimMarker` y `GunHiddenMarker`) en `RobberNPC.tscn` para ajustar la pose del arma directamente desde la vista 3D de Godot.

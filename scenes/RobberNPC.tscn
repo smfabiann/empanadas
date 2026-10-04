@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://cymrhp3posqvc"]
+
+[ext_resource type="Script" uid="uid://cuaqs5448xma1" path="res://scripts/events/static/RobberNPC.gd" id="1_robber"]
+[ext_resource type="PackedScene" uid="uid://br84olctn3nox" path="res://scenes/items/Gun.tscn" id="2_fynip"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_robber_body"]
+albedo_color = Color(0, 0, 0, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_robber_head"]
+albedo_color = Color(0, 0, 0, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
+radius = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_bg"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_fill"]
+albedo_color = Color(0.85, 0.2, 0.2, 1)
+
+[node name="RobberNPC" type="CharacterBody3D" node_paths=PackedStringArray("gun", "gun_aim_marker", "gun_hidden_marker") unique_id=314159265]
+collision_layer = 4
+script = ExtResource("1_robber")
+custom_appearance = true
+gun = NodePath("Gun")
+gun_aim_marker = NodePath("GunAimMarker")
+gun_hidden_marker = NodePath("GunHiddenMarker")
+
+[node name="BodyMesh" type="CSGCylinder3D" parent="." unique_id=265668372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+radius = 0.3
+height = 1.6
+material = SubResource("StandardMaterial3D_robber_body")
+
+[node name="Head" type="CSGSphere3D" parent="." unique_id=2011213419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+radius = 0.22
+radial_segments = 8
+rings = 4
+material = SubResource("StandardMaterial3D_robber_head")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2690182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
+shape = SubResource("CapsuleShape3D_npc")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=478587550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0)
+billboard = 1
+no_depth_test = true
+render_priority = 2
+modulate = Color(1, 0.2, 0.2, 1)
+font_size = 40
+outline_size = 8
+
+[node name="PatienceBarPivot" type="Node3D" parent="." unique_id=2022891483]
+transform = Transform3D(1.91, 0, 0, 0, -1.91, 2.8840196e-07, 0, -2.8840196e-07, -1.91, 0, 1.015012, -0.4141082)
+
+[node name="PatienceBarBG" type="CSGBox3D" parent="PatienceBarPivot" unique_id=107966569]
+size = Vector3(0.6, 0.06, 0.04)
+material = SubResource("StandardMaterial3D_bar_bg")
+
+[node name="PatienceBarFill" type="CSGBox3D" parent="PatienceBarPivot" unique_id=1207582909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.58, 0.04, 0.04)
+material = SubResource("StandardMaterial3D_bar_fill")
+
+[node name="Gun" parent="." unique_id=819492027 instance=ExtResource("2_fynip")]
+transform = Transform3D(-0.245, 0, -3.6993974e-08, 0, 0.245, 0, 3.6993974e-08, 0, -0.245, 0, 0, 0)
+
+[node name="GunAimMarker" type="Marker3D" parent="." unique_id=198420391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 1.285, -0.425)
+gizmo_extents = 0.35
+
+[node name="GunHiddenMarker" type="Marker3D" parent="." unique_id=739104821]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.2, 0.8, 0)
+gizmo_extents = 0.35
