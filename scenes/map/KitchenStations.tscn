@@ -1,0 +1,258 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/IngredientStation.gd" id="1_station"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_counter_station"]
+size = Vector3(0.48, 0.45, 0.48)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trash"]
+size = Vector3(0.5, 0.8, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_panera"]
+albedo_color = Color(0.45, 0.3, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pan"]
+albedo_color = Color(0.92, 0.72, 0.35, 1)
+emission_enabled = true
+emission = Color(0.8, 0.55, 0.2, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_metal"]
+albedo_color = Color(0.75, 0.75, 0.8, 1)
+metallic = 0.85
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sausage"]
+albedo_color = Color(0.82, 0.22, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_palta"]
+albedo_color = Color(0.35, 0.7, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mayo_bottle"]
+albedo_color = Color(0.96, 0.96, 0.94, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ketchup_bottle"]
+albedo_color = Color(0.88, 0.15, 0.12, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trash_can"]
+albedo_color = Color(0.2, 0.22, 0.25, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_trash_rim"]
+albedo_color = Color(0.12, 0.13, 0.15, 1)
+
+[node name="KitchenStations" type="Node3D"]
+
+[node name="Station_Bread" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.45, 1.1, 2.7)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+station_type = "bread"
+station_name = "Pan"
+
+[node name="Collision" type="CollisionShape3D" parent="Station_Bread"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_counter_station")
+
+[node name="Visual" type="Node3D" parent="Station_Bread"]
+
+[node name="Basket" type="CSGBox3D" parent="Station_Bread/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+size = Vector3(0.42, 0.1, 0.36)
+material = SubResource("StandardMaterial3D_panera")
+
+[node name="BreadRoll1" type="CSGBox3D" parent="Station_Bread/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.12, 0)
+size = Vector3(0.14, 0.1, 0.3)
+material = SubResource("StandardMaterial3D_pan")
+
+[node name="BreadRoll2" type="CSGBox3D" parent="Station_Bread/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08, 0.12, 0)
+size = Vector3(0.14, 0.1, 0.3)
+material = SubResource("StandardMaterial3D_pan")
+
+[node name="Label3D" type="Label3D" parent="Station_Bread"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+billboard = 1
+text = "🥖 PAN (Base)"
+font_size = 26
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)
+
+[node name="Station_Sausage" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.75, 1.1, 2.7)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+station_type = "sausage"
+station_name = "Vienesa"
+
+[node name="Collision" type="CollisionShape3D" parent="Station_Sausage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_counter_station")
+
+[node name="Visual" type="Node3D" parent="Station_Sausage"]
+
+[node name="Pot" type="CSGCylinder3D" parent="Station_Sausage/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+radius = 0.18
+height = 0.16
+material = SubResource("StandardMaterial3D_metal")
+
+[node name="Sausage1" type="CSGBox3D" parent="Station_Sausage/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 0.16, 0)
+size = Vector3(0.06, 0.05, 0.26)
+material = SubResource("StandardMaterial3D_sausage")
+
+[node name="Sausage2" type="CSGBox3D" parent="Station_Sausage/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.16, 0)
+size = Vector3(0.06, 0.05, 0.26)
+material = SubResource("StandardMaterial3D_sausage")
+
+[node name="Label3D" type="Label3D" parent="Station_Sausage"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+billboard = 1
+text = "🌭 VIENESAS (Base)"
+font_size = 26
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)
+
+[node name="Station_Palta" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.05, 1.1, 2.7)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+station_type = "palta"
+station_name = "Palta"
+
+[node name="Collision" type="CollisionShape3D" parent="Station_Palta"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_counter_station")
+
+[node name="Visual" type="Node3D" parent="Station_Palta"]
+
+[node name="Bowl" type="CSGCylinder3D" parent="Station_Palta/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+radius = 0.17
+height = 0.14
+material = SubResource("StandardMaterial3D_metal")
+
+[node name="PaltaFill" type="CSGCylinder3D" parent="Station_Palta/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+radius = 0.15
+height = 0.06
+material = SubResource("StandardMaterial3D_palta")
+
+[node name="Label3D" type="Label3D" parent="Station_Palta"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+billboard = 1
+text = "🥑 PALTA"
+font_size = 26
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)
+
+[node name="Station_Mayo" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.65, 1.1, 2.7)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+station_type = "mayo"
+station_name = "Mayonesa"
+
+[node name="Collision" type="CollisionShape3D" parent="Station_Mayo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_counter_station")
+
+[node name="Visual" type="Node3D" parent="Station_Mayo"]
+
+[node name="Bottle" type="CSGCylinder3D" parent="Station_Mayo/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+radius = 0.08
+height = 0.24
+material = SubResource("StandardMaterial3D_mayo_bottle")
+
+[node name="Cap" type="CSGCylinder3D" parent="Station_Mayo/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+radius = 0.025
+height = 0.06
+material = SubResource("StandardMaterial3D_mayo_bottle")
+
+[node name="Label3D" type="Label3D" parent="Station_Mayo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+billboard = 1
+text = "⚪ MAYO"
+font_size = 26
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)
+
+[node name="Station_Ketchup" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.35, 1.1, 2.7)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+station_type = "ketchup"
+station_name = "Kétchup"
+
+[node name="Collision" type="CollisionShape3D" parent="Station_Ketchup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+shape = SubResource("BoxShape3D_counter_station")
+
+[node name="Visual" type="Node3D" parent="Station_Ketchup"]
+
+[node name="Bottle" type="CSGCylinder3D" parent="Station_Ketchup/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+radius = 0.08
+height = 0.24
+material = SubResource("StandardMaterial3D_ketchup_bottle")
+
+[node name="Cap" type="CSGCylinder3D" parent="Station_Ketchup/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.26, 0)
+radius = 0.025
+height = 0.06
+material = SubResource("StandardMaterial3D_ketchup_bottle")
+
+[node name="Label3D" type="Label3D" parent="Station_Ketchup"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
+billboard = 1
+text = "🔴 KÉTCHUP"
+font_size = 26
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)
+
+[node name="Station_Trash" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.7, 0.35, 1.6)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+station_type = "trash"
+station_name = "Basurero"
+
+[node name="Collision" type="CollisionShape3D" parent="Station_Trash"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+shape = SubResource("BoxShape3D_trash")
+
+[node name="Visual" type="Node3D" parent="Station_Trash"]
+
+[node name="Can" type="CSGCylinder3D" parent="Station_Trash/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+radius = 0.22
+height = 0.65
+material = SubResource("StandardMaterial3D_trash_can")
+
+[node name="Rim" type="CSGCylinder3D" parent="Station_Trash/Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.33, 0)
+radius = 0.24
+height = 0.05
+material = SubResource("StandardMaterial3D_trash_rim")
+
+[node name="Label3D" type="Label3D" parent="Station_Trash"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+billboard = 1
+text = "🗑️ BASURERO"
+font_size = 24
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)
