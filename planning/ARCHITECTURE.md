@@ -1,102 +1,63 @@
-# Arquitectura y Convenciones Tecnicas
+# Arquitectura actual del juego
 
-## Vision General
-Juego 3D retro (low-poly/PSX) en Godot 4.x de atencion de local con tematica de terror y anomalias.
-Escena principal: res://scenes/Main.tscn
+## 1) Configuración base
 
-## Estructura de Archivos
-- scenes/
-  - Main.tscn: Escena del local (SpawnPoint, WindowPoint, ExitPoint, luces, mapa).
-  - Player.tscn: Jugador en 1ra persona (Camera3D + RayCast3D).
-  - NPC.tscn: Clientes con maquina de estados y barra de paciencia.
-  - UI.tscn: HUD minimalista, prompts, menu de pausa y panel de depuracion.
-  - items/: Escenas fisicas de items interactuables.
-  - ui/PauseMenu.tscn, ui/MainMenu.tscn: Menus.
-- scripts/
-  - Player.gd: Movimiento, mirada con mouse, salto, sprint, raycast picking/entregas y deteccion de estaciones.
-  - NPC.gd: Estados (APPROACHING, WAITING, LEAVING), paciencia, recetas de completos, validacion de base e ingredientes.
-  - NPCSpawner.gd: Spawnea 1 NPC a la vez, asigna anomalias, intervalo via Timer.
-  - NPCEventManager.gd: Gestion y sorteo de eventos/anomalias.
-  - events/NPCEvent.gd: Clase base de eventos (apply, on_arrive, on_leave).
-  - events/fastNPC.gd: Anomalia de cliente rapido con baja paciencia.
-  - events/static/RobberNPC.gd: Secuencia de demanda de completos y mecanica de atraco.
-  - GameManager.gd: Autoload singleton de estado global y contadores.
-  - SFXManager.gd: Autoload singleton de audio.
-  - UI.gd: HUD, reticula, prompts, panel debug (F3).
-  - CompletoItem.gd: Logica de completo modular 3D (ingredientes, base valida, visuales reactivos).
-  - IngredientStation.gd: Logica de estaciones 3D de armado (pan, vienesa, palta, mayo, ketchup, basurero).
-  - ItemData.gd, Interactable.gd: Logica base de items.
-- resources/items/: Recursos .tres (empanada, sopaipilla, completo, bebida).
+- Proyecto: `/home/runner/work/empanadas/empanadas/project.godot`
+- Escena inicial: `res://scenes/ui/MainMenu.tscn`
+- Autoloads:
+  - `GameManager = res://scripts/GameManager.gd`
+  - `SFXManager = res://scripts/SFXManager.gd`
+- Capas físicas 3D:
+  - Layer 1: `World`
+  - Layer 2: `Interactable`
+  - Layer 3: `NPC`
 
-## Bucle de Juego y Flujo
-1. Player: Interactua con E (recoger/entregar/usar estacion) o Q (soltar). Detecta capas 2 (items y estaciones) y 3 (NPCs) con RayCast.
-2. Items: ItemData (id, display_name). Interactable maneja agarre y fisicas. CompletoItem hereda de Interactable con soporte modular de ingredientes.
-3. NPCs:
-   - APPROACHING: camina a WindowPoint.
-   - WAITING: pide receta de completo de forma ponderada (Italiano, Con Todo, etc.), drena paciencia. receive_item() valida base obligatoria (pan + vienesa) e ingredientes exactos, notificando a GameManager.
-   - LEAVING: desactiva colision, camina a ExitPoint, fade tween y queue_free.
-4. Spawner y Anomalias:
-   - NPCSpawner instancia 1 NPC tras delay inicial (2s) o cada SPAWN_INTERVAL.
-   - NPCEventManager asigna eventos fijos o ponderados segun npcs_spawned y npcs_served.
-5. Autoload GameManager:
-   - Variables: game_active, current_day, max_clients_per_day, clients_attended_today, day_active, npcs_spawned, npcs_served, npcs_served_correctly, SPAWN_INTERVAL (6.0), PATIENCE_TIME (25.0).
-   - Senales: npc_spawned(total), npc_served(total, is_correct), item_delivered(), npc_left(), day_started(day, max_clients), day_progress(attended, max_clients), day_ended(day).
-6. UI, Jornadas y Debug:
-   - HUD minimalista con reticula, prompt dinamico e indicador de jornada (Dia N - Clientes x/y).
-   - Banner animado al comenzar cada dia (fade in/out).
-   - Panel de fin de jornada (DayEndPanel) con desglose de atendidos, correctos, fallidos y huidos, junto con boton de avance.
-   - Panel de depuracion superior derecho: cuenta NPCs aparecidos y atendidos.
-   - Toggle por Inspector (show_debug_counters) y en runtime con tecla F3.
-7. Persiana de Mostrador:
-   - Alternable mediante boton interactuable en el local.
-   - Al cerrarse ejecuta on_persiana_closed() en NPCs presentes en mostrador (can_react_to_persiana()).
-   - NPC base: ejecuta _timeout() y se marcha.
-   - RobberNPC:
-     - En espera normal: se enfurece por el cierre, enfunda arma, restaura ambiente y huye corriendo a velocidad aumentada.
-     - En secuencia de ira (error de item o timeout): el jugador dispone de una ventana de 2.6s antes del disparo fatal para pulsar el boton; al cerrar la persiana se cancela el disparo, se evita la muerte ("clutch save"), el ladron reacciona al bloqueo de la persiana, enfunda y huye.
-8. Sistema de Armado de Completos 3D (HU-11):
-   - Preparacion enteramente en el espacio 3D fisico sin interfaces o ventanas 2D.
-   - Estaciones en el estante (KitchenStations):
-     - Estacion de Pan: dispensa un pan vacio al interactuar con las manos libres.
-     - Estacion de Vienesa: anade la salchicha obligatoria al pan en mano.
-     - Estaciones de Ingredientes (Palta, Mayo, Ketchup): aplican cada ingrediente sobre el pan sostenido.
-     - Basurero: descarta el item sostenido para rehacer pedidos erroneos.
-   - Base obligatoria: Pan + Vienesa es requerida para cualquier completo entregable. Sin vienesa se rechaza con mensaje de error explicito.
-   - Renderizado dinamico: mallas visuales 3D independientes para pan, vienesa, palta, mayonesa y ketchup con animacion pop tipo squash/stretch al agregarse.
-   - Recetas: Italiano (Palta+Mayo), Con Todo (Palta+Mayo+Ketchup), Palta, Mayo, Ketchup, Mayo-Ketchup.
-   - Ladron adaptado: exige una secuencia de recetas especificas de completos bajo amenaza armada.
+## 2) Módulos principales
 
-## Configuracion de Jornadas y Dias (Bucle de Rondas)
-Los parametros del bucle de dias se configuran principalmente desde el Inspector de Godot o directamente en el codigo:
+- **Gameplay world** (`/scenes/Main.tscn`): instancia mapa, jugador, HUD, spawner y gestor de eventos.
+- **Jugador** (`/scripts/Player.gd` + `/scenes/Player.tscn`): movimiento FPS, RayCast3D, recoger/soltar/entregar ítems.
+- **NPC base** (`/scripts/NPC.gd` + `/scenes/NPC.tscn`): estados `APPROACHING/WAITING/LEAVING`, pedidos de completos, paciencia.
+- **Cocina 3D** (`/scripts/IngredientStation.gd` + `/scenes/map/KitchenStations.tscn`): estaciones de pan, vienesa, palta, mayo, ketchup y basurero.
+- **Ítems**:
+  - Base recogible: `/scripts/Interactable.gd`
+  - Completo modular: `/scripts/CompletoItem.gd` + `/scenes/items/Completo.tscn`
+  - Recursos de datos: `/resources/items/*.tres`
+- **Eventos/anomalías**:
+  - Base evento: `/scripts/events/NPCEvent.gd`
+  - Selección/registro: `/scripts/events/NPCEventManager.gd`
+  - Aleatorios: `BigHeadEvent.gd`, `fastNPC.gd`
+  - Estático: `RobberEvent.gd` + NPC dedicado `/scripts/events/static/RobberNPC.gd`
+- **UI** (`/scripts/ui/UI.gd` + `/scenes/UI.tscn`): crosshair, prompt, debug, panel de jornada, game over y menú pausa.
 
-1. Clientes por dia (max_clients_per_day):
-   - En el Editor de Godot: Abrir res://scenes/Main.tscn, seleccionar el nodo NPCSpawner en el arbol de escena, y en el Inspector modificar en el grupo 'Jornada / Dias' la propiedad 'Max Clients Per Day' (rango 1 a 50, valor por defecto: 8).
-   - En codigo GDScript:
-     - res://scripts/NPCSpawner.gd: linea con @export_range(1, 50, 1) var max_clients_per_day: int = 8.
-     - res://scripts/GameManager.gd: variable var max_clients_per_day: int = 8 (sincronizada en _ready() por NPCSpawner).
+## 3) Relaciones entre sistemas
 
-2. Cantidad maxima de dias (max_days):
-   - En el Editor de Godot: En el mismo nodo NPCSpawner de res://scenes/Main.tscn, modificar en el grupo 'Jornada / Dias' la propiedad 'Max Days' (rango 0 a 30, valor por defecto: 5).
-     - Si se define un numero mayor a 0 (ej. 5): al terminar el dia 5 se muestra la pantalla de victoria/turno semanal completado ("SEMANA COMPLETADA") y el boton permite reiniciar.
-     - Si se define en 0: los dias continuan de forma infinita (modo supervivencia sin fin de semana).
-   - En codigo GDScript:
-     - res://scripts/NPCSpawner.gd: linea con @export_range(0, 30, 1) var max_days: int = 5.
-     - res://scripts/GameManager.gd: variable var max_days: int = 5.
+- `MainMenu.gd` inicia partida (`change_scene_to_file("res://scenes/Main.tscn")`) y resetea estado global.
+- `NPCSpawner.gd` depende de `GameManager` (cupos, jornada, timing) y de `NPCEventManager` (evento a aplicar).
+- Cada NPC reporta resultado a `GameManager` (`register_npc_served` / `register_npc_left`).
+- `UI.gd` escucha señales de `GameManager` para refrescar contador, jornada y game over.
+- `Player.gd` usa `RayCast3D` para interactuar con `Interactable`, estaciones y NPCs.
+- `shop.tscn` contiene scripts embebidos para persiana/puerta/botón; cierre de persiana notifica NPCs del grupo `npcs`.
 
-## Capas de Fisicas 3D
-- Capa 1 (World): Geometria estatica, paredes, suelo, mostrador.
-- Capa 2 (Interactable): Objetos recogibles (comida y bebida).
-- Capa 3 (NPC): Clientes.
+## 4) Nodo raíz de ejecución (escena de juego)
 
-## Mapeo de Entradas
-- interact: E (recoger / entregar).
-- drop_item: Q (soltar item en mano).
-- pause: Escape (pausar juego).
-- sprint: Shift (correr).
-- jump: Espacio (saltar).
-- debug: F3 (alternar contadores en pantalla).
+`/home/runner/work/empanadas/empanadas/scenes/Main.tscn`:
 
-## Reglas de Desarrollo
-- Contenedores UI: no animar position/size directamente en hijos de Containers en Godot (usar modulate o animar el contenedor raiz).
-- Mouse filter: overlays de UI deben usar mouse_filter = 2 (IGNORE) para no bloquear clics del juego.
-- Sin emojis en documentacion tecnica para optimizar espacio y consumo de tokens.
+- `Main (Node3D)`
+  - `Enviroment/WorldEnvironment`
+  - `Map` (instancia `shop.tscn`, `shelf.tscn`, `KitchenStations.tscn`, luces, suelo)
+  - `SpawnPoint`, `WindowPoint`, `ExitPoint` (Marker3D)
+  - `Player` (instancia `Player.tscn`)
+  - `UI` (instancia `UI.tscn`)
+  - `NPCSpawner` (con `Timer` hijo)
+  - `NPCEventManager`
+
+## 5) Referencias cruzadas clave
+
+- `Main.tscn` enlaza `NPCSpawner.event_manager -> ../NPCEventManager`.
+- `NPCSpawner` asigna `spawn_point/window_point/exit_point` desde marcadores en `Main`.
+- `RobberEvent` define `custom_npc_scene = res://scenes/RobberNPC.tscn`.
+- `UI.tscn` instancia `PauseMenu.tscn` como hijo (`PauseMenu`).
+
+Ver también:
+- [Inventario técnico](./INVENTARIO.md)
+- [Flujo de ejecución](./FLUJO_DE_EJECUCION.md)
