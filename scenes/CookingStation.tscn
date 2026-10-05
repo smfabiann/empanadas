@@ -1,0 +1,295 @@
+[gd_scene format=3 uid="uid://dmdgdh1c70rim"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_table"]
+albedo_color = Color(0.2, 0.18, 0.16, 1)
+roughness = 0.8
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_board"]
+size = Vector3(0.48, 0.16, 0.32)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_board"]
+albedo_color = Color(0.65, 0.45, 0.25, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bun"]
+albedo_color = Color(0.92, 0.72, 0.35, 1)
+emission_enabled = true
+emission = Color(0.8, 0.55, 0.2, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sausage"]
+albedo_color = Color(0.82, 0.22, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_palta"]
+albedo_color = Color(0.38, 0.72, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mayo"]
+albedo_color = Color(0.96, 0.96, 0.92, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ketchup"]
+albedo_color = Color(0.88, 0.12, 0.08, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pan"]
+size = Vector3(0.18, 0.16, 0.22)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sausage"]
+size = Vector3(0.18, 0.16, 0.18)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_palta"]
+height = 0.16
+radius = 0.075
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_bottle"]
+height = 0.2
+radius = 0.045
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trash"]
+size = Vector3(0.16, 0.08, 0.09)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_paper"]
+albedo_color = Color(0.96, 0.94, 0.88, 1)
+
+[node name="CookingStation" type="Node3D" unique_id=1391623396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0046646595, 0, 0)
+
+[node name="StationCamera" type="Camera3D" parent="." unique_id=899007434]
+transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 0.52, 0.38)
+fov = 65.0
+
+[node name="TableBase" type="CSGBox3D" parent="." unique_id=227258275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, -0.02, 0)
+size = Vector3(2, 0.04, 0.58)
+material = SubResource("StandardMaterial3D_table")
+
+[node name="BoardSlot" type="StaticBody3D" parent="." unique_id=91176496]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.02, 0.04)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BoardSlot" unique_id=1136535376]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+shape = SubResource("BoxShape3D_board")
+
+[node name="CuttingBoard" type="CSGBox3D" parent="BoardSlot" unique_id=140150691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+size = Vector3(0.46, 0.04, 0.3)
+material = SubResource("StandardMaterial3D_board")
+
+[node name="Completo3D" type="Node3D" parent="BoardSlot" unique_id=1200260534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+
+[node name="Bun" type="CSGBox3D" parent="BoardSlot/Completo3D" unique_id=1041997807]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.07, 0)
+visible = false
+size = Vector3(0.34, 0.14, 0.16)
+material = SubResource("StandardMaterial3D_bun")
+
+[node name="Sausage" type="CSGBox3D" parent="BoardSlot/Completo3D" unique_id=656403920]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+visible = false
+size = Vector3(0.32, 0.06, 0.08)
+material = SubResource("StandardMaterial3D_sausage")
+
+[node name="Palta" type="CSGBox3D" parent="BoardSlot/Completo3D" unique_id=1729715372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16, 0)
+visible = false
+size = Vector3(0.28, 0.04, 0.09)
+material = SubResource("StandardMaterial3D_palta")
+
+[node name="Mayo" type="CSGBox3D" parent="BoardSlot/Completo3D" unique_id=2023321722]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.185, -0.02)
+visible = false
+size = Vector3(0.24, 0.025, 0.025)
+material = SubResource("StandardMaterial3D_mayo")
+
+[node name="Ketchup" type="CSGBox3D" parent="BoardSlot/Completo3D" unique_id=1498763745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.185, 0.02)
+visible = false
+size = Vector3(0.24, 0.025, 0.025)
+material = SubResource("StandardMaterial3D_ketchup")
+
+[node name="BoardLabel3D" type="Label3D" parent="BoardSlot" unique_id=1176743120]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0)
+billboard = 1
+text = "🥖 Tabla de Armado"
+font_size = 22
+outline_size = 4
+
+[node name="PanSlot" type="StaticBody3D" parent="." unique_id=33467774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.02, 0.15)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PanSlot" unique_id=196624990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+shape = SubResource("BoxShape3D_pan")
+
+[node name="BasketMesh" type="CSGBox3D" parent="PanSlot" unique_id=1482658186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
+size = Vector3(0.17, 0.07, 0.2)
+material = SubResource("StandardMaterial3D_board")
+
+[node name="BunsInside" type="CSGBox3D" parent="PanSlot" unique_id=1443831015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0)
+size = Vector3(0.13, 0.09, 0.16)
+material = SubResource("StandardMaterial3D_bun")
+
+[node name="Label3D" type="Label3D" parent="PanSlot" unique_id=1759168282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+billboard = 1
+text = "🥖 Pan"
+font_size = 20
+outline_size = 3
+
+[node name="SausageSlot" type="StaticBody3D" parent="." unique_id=1398620324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35, 0.02, -0.16)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SausageSlot" unique_id=1516617595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+shape = SubResource("BoxShape3D_sausage")
+
+[node name="WarmerTray" type="CSGBox3D" parent="SausageSlot" unique_id=70039397]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
+size = Vector3(0.17, 0.07, 0.16)
+material = SubResource("StandardMaterial3D_table")
+
+[node name="SausagesInside" type="CSGBox3D" parent="SausageSlot" unique_id=804954697]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0)
+size = Vector3(0.13, 0.06, 0.12)
+material = SubResource("StandardMaterial3D_sausage")
+
+[node name="Label3D" type="Label3D" parent="SausageSlot" unique_id=1226669170]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+billboard = 1
+text = "🌭 Vienesa"
+font_size = 20
+outline_size = 3
+
+[node name="PaltaSlot" type="StaticBody3D" parent="." unique_id=2057450383]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.23, 0.02, -0.16)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PaltaSlot" unique_id=1138402926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+shape = SubResource("CylinderShape3D_palta")
+
+[node name="BowlMesh" type="CSGCylinder3D" parent="PaltaSlot" unique_id=132496317]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
+radius = 0.065
+height = 0.07
+material = SubResource("StandardMaterial3D_table")
+
+[node name="AvocadoMash" type="CSGCylinder3D" parent="PaltaSlot" unique_id=920224062]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.055, 0)
+radius = 0.055
+height = 0.05
+material = SubResource("StandardMaterial3D_palta")
+
+[node name="Label3D" type="Label3D" parent="PaltaSlot" unique_id=1985411509]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+billboard = 1
+text = "🥑 Palta"
+font_size = 20
+outline_size = 3
+
+[node name="MayoSlot" type="StaticBody3D" parent="." unique_id=1235201578]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.9799999, 0.02, 0.05)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MayoSlot" unique_id=2079331803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+shape = SubResource("CylinderShape3D_bottle")
+
+[node name="BottleMesh" type="CSGCylinder3D" parent="MayoSlot" unique_id=876161568]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0)
+radius = 0.035
+height = 0.13
+material = SubResource("StandardMaterial3D_mayo")
+
+[node name="CapMesh" type="CSGCylinder3D" parent="MayoSlot" unique_id=639049324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0)
+radius = 0.015
+height = 0.04
+material = SubResource("StandardMaterial3D_bun")
+
+[node name="Label3D" type="Label3D" parent="MayoSlot" unique_id=1404757860]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+billboard = 1
+text = "🍶 Mayo"
+font_size = 20
+outline_size = 3
+
+[node name="KetchupSlot" type="StaticBody3D" parent="." unique_id=1389652564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.38, 0.02, 0.05)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="KetchupSlot" unique_id=7614173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+shape = SubResource("CylinderShape3D_bottle")
+
+[node name="BottleMesh" type="CSGCylinder3D" parent="KetchupSlot" unique_id=1774891563]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.065, 0)
+radius = 0.035
+height = 0.13
+material = SubResource("StandardMaterial3D_ketchup")
+
+[node name="CapMesh" type="CSGCylinder3D" parent="KetchupSlot" unique_id=653359153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.14, 0)
+radius = 0.015
+height = 0.04
+material = SubResource("StandardMaterial3D_sausage")
+
+[node name="Label3D" type="Label3D" parent="KetchupSlot" unique_id=1179386536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+billboard = 1
+text = "🍅 Kétchup"
+font_size = 20
+outline_size = 3
+
+[node name="TrashSlot" type="StaticBody3D" parent="." unique_id=842585259]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.748636, 0.02, 0.23)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TrashSlot" unique_id=773181758]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+shape = SubResource("BoxShape3D_trash")
+
+[node name="BinMesh" type="CSGBox3D" parent="TrashSlot" unique_id=1122322058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.07, 0)
+size = Vector3(0.14, 0.2, 0.08)
+material = SubResource("StandardMaterial3D_table")
+
+[node name="Label3D" type="Label3D" parent="TrashSlot" unique_id=720140446]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+billboard = 1
+text = "🗑️ Limpiar Mesón"
+font_size = 8
+outline_size = 3
+
+[node name="OrderTicket3D" type="Node3D" parent="." unique_id=1936993185]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0.22, -0.22)
+
+[node name="ClipStand" type="CSGBox3D" parent="OrderTicket3D" unique_id=908079607]
+size = Vector3(0.38, 0.28, 0.02)
+material = SubResource("StandardMaterial3D_table")
+
+[node name="PaperSheet" type="CSGBox3D" parent="OrderTicket3D" unique_id=769474522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.012)
+size = Vector3(0.35, 0.25, 0.01)
+material = SubResource("StandardMaterial3D_paper")
+
+[node name="TicketText" type="Label3D" parent="OrderTicket3D" unique_id=406618103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.022)
+pixel_size = 0.002
+text = "📋 ORDEN ACTUAL:
+(Sin cliente)
+
+🌭 Listo para armar"
+font_size = 20
+outline_size = 2
