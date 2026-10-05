@@ -1,4 +1,10 @@
-# Lis ta de cambios
+# Lista de cambios
+- **Bucle de Días / Rondas basado en Clientes (HU-01, Issue #3)**:
+  - Se implementó un ciclo de jornadas laborales donde cada día cuenta con un cupo configurable de clientes (`max_clients_per_day` en `NPCSpawner` y `GameManager`).
+  - Al alcanzar el cupo de clientes del día (atendidos o retirados), se bloquea el spawn de nuevos NPCs.
+  - Al marcharse el último cliente de la jornada, se activa automáticamente la pantalla de **Fin de la Jornada** con resumen de desempeño (clientes atendidos, pedidos correctos, equivocados y clientes que se fueron).
+  - Botón para avanzar a la siguiente jornada ("Comenzar Día N"), el cual resetea los contadores del día, actualiza el indicador en HUD ("Día N · Clientes 0/X"), muestra el banner animado "DÍA N" y reanuda el spawn tras un delay configurable.
+  - Durante el panel de fin de jornada, se libera el cursor del ratón y se bloquea el movimiento/interacción del jugador hasta iniciar el nuevo día.
 - Se agrego la capacidad de saltar, hecho principalmente para obstaculos pequeños en el desarrollo del mapa
 - Se arreglo la oprientacio nde la barra de paciencia de los npc
 - Se implementó el evento FastNPC: cliente más rápido y con menor paciencia (la barra se drena más rápido)

@@ -1,6 +1,7 @@
 extends Node
 ## Autoload singleton — estado global del juego de anomalías.
-## Gestiona el flujo del juego, contadores de clientes atendidos y señales de eventos.
+## Gestiona el flujo del juego, contadores de clientes atendidos, el bucle de días
+## (jornadas) y señales de eventos.
 
 signal item_delivered()
 signal npc_left()
@@ -8,13 +9,33 @@ signal npc_spawned(total_spawned: int)
 signal npc_served(total_served: int, is_correct: bool)
 signal game_over(reason: String)
 
+## Bucle de días / jornadas
+signal day_started(day: int, max_clients: int)
+signal day_progress(attended: int, max_clients: int)
+signal day_ended(day: int)
+
 var game_active: bool = true
 var high_score: int = 0
 
-## Contadores de clientes
+## Contadores de clientes (totales de la partida)
 var npcs_spawned: int = 0
 var npcs_served: int = 0
 var npcs_served_correctly: int = 0
+
+## --- Jornada actual ---
+## Día en curso (empieza en 1)
+var current_day: int = 1
+## Cupo de clientes por jornada. Lo sobrescribe NPCSpawner desde el Inspector.
+var max_clients_per_day: int = 8
+## Cantidad máxima de días de la partida (0 = días infinitos). Lo sobrescribe NPCSpawner desde el Inspector.
+var max_days: int = 5
+## Clientes cuya visita terminó hoy (atendidos con o sin éxito + los que se fueron)
+var clients_attended_today: int = 0
+var clients_served_correctly_today: int = 0
+var clients_served_wrong_today: int = 0
+var clients_lost_today: int = 0
+## true mientras la jornada está en curso; false al mostrarse el resumen del día
+var day_active: bool = true
 
 # Intervalo entre NPCs (segundos)
 @export var SPAWN_INTERVAL := 6.0
@@ -40,13 +61,86 @@ func register_npc_served(is_correct: bool) -> int:
 	npcs_served += 1
 	if is_correct:
 		npcs_served_correctly += 1
+		clients_served_correctly_today += 1
+	else:
+		clients_served_wrong_today += 1
+	_register_client_attended_today()
 	item_delivered.emit()
 	npc_served.emit(npcs_served, is_correct)
 	return npcs_served
 
 
 func register_npc_left() -> void:
+	clients_lost_today += 1
+	_register_client_attended_today()
 	npc_left.emit()
+
+
+# =========================================================
+#  BUCLE DE DÍAS / JORNADAS
+# =========================================================
+
+func _register_client_attended_today() -> void:
+	if not day_active:
+		return
+	clients_attended_today += 1
+	day_progress.emit(clients_attended_today, max_clients_per_day)
+
+
+## Configura el cupo de clientes de la jornada (llamado por NPCSpawner desde el Inspector)
+func set_max_clients_per_day(value: int) -> void:
+	max_clients_per_day = maxi(value, 1)
+	day_progress.emit(clients_attended_today, max_clients_per_day)
+
+
+## Configura la cantidad máxima de días de la partida (0 = días infinitos sin límite)
+func set_max_days(value: int) -> void:
+	max_days = maxi(value, 0)
+	day_progress.emit(clients_attended_today, max_clients_per_day)
+
+
+## true si el día actual es el último día configurado de la partida
+func is_final_day() -> bool:
+	return max_days > 0 and current_day >= max_days
+
+
+## true cuando ya se alcanzó el cupo de clientes del día (no deben aparecer más)
+func is_day_quota_reached() -> bool:
+	return clients_attended_today >= max_clients_per_day
+
+
+## Indica si el spawner puede generar un nuevo cliente en este momento
+func can_spawn_npc() -> bool:
+	return game_active and day_active and not is_day_quota_reached()
+
+
+## Indica si el jugador puede moverse e interactuar (no durante el resumen del día ni tras Game Over)
+func can_player_act() -> bool:
+	return game_active and day_active
+
+
+## Cierra la jornada actual y notifica a la UI para mostrar el resumen
+func end_day() -> void:
+	if not day_active or not game_active:
+		return
+	day_active = false
+	day_ended.emit(current_day)
+
+
+## Avanza al siguiente día y reinicia los contadores diarios
+func start_next_day() -> void:
+	current_day += 1
+	_reset_day_counters()
+	day_active = true
+	day_started.emit(current_day, max_clients_per_day)
+	day_progress.emit(clients_attended_today, max_clients_per_day)
+
+
+func _reset_day_counters() -> void:
+	clients_attended_today = 0
+	clients_served_correctly_today = 0
+	clients_served_wrong_today = 0
+	clients_lost_today = 0
 
 
 # Valores originales del ambiente para restaurar tras eventos
@@ -67,7 +161,9 @@ func trigger_game_over(reason: String = "") -> void:
 
 ## Restaura el ambiente, niebla y luces a sus valores originales
 func restore_environment(tree: SceneTree = null) -> void:
-	var target_tree := tree if tree != null else get_tree()
+	var target_tree: SceneTree = tree
+	if target_tree == null and is_inside_tree():
+		target_tree = get_tree()
 	if target_tree == null or target_tree.root == null:
 		return
 
@@ -94,6 +190,10 @@ func reset_game() -> void:
 	npcs_spawned = 0
 	npcs_served = 0
 	npcs_served_correctly = 0
+	current_day = 1
+	day_active = true
+	_reset_day_counters()
 	npc_spawned.emit(npcs_spawned)
 	npc_served.emit(npcs_served, true)
+	day_progress.emit(clients_attended_today, max_clients_per_day)
 	restore_environment()

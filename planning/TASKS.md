@@ -6,10 +6,10 @@
 ## Backlog / Pendientes
 - [TASK-005] Diseno e implementacion de nueva anomalia: Cliente silencioso / estatico.
 - [TASK-006] Implementar SFX basicos (recoger item, soltar, timbre de pedido y pasos).
-- [TASK-007] Sistema de turnos / noches (reemplazar bucle infinito por turnos con fin de guardia).
 - [TASK-008] Efectos ambientales de terror (parpadeo de luces en mostrador tras evento anomalo).
 
 ## Tareas Completadas
+- [TASK-007] Bucle de dias y rondas basado en clientes (HU-01, Issue #3). Contador de clientes por jornada, bloqueo de spawn al cupo, pantalla de fin de jornada, y avance a la siguiente jornada.
 - [TASK-010] Interaccion de persiana con NPCs, evasion de muerte por disparo (cancelar ira/muerte al cerrar persiana) y huida del Ladron.
 - [TASK-009] Plantilla modular de eventos estáticos (StaticNPCEvent), escena RobberNPC y trigger configurable en Inspector.
 - [TASK-004] Contadores de depuracion en UI (NPCs aparecidos y atendidos, toggle Inspector y F3).

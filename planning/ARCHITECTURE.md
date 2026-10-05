@@ -36,10 +36,12 @@ Escena principal: res://scenes/Main.tscn
    - NPCSpawner instancia 1 NPC tras delay inicial (2s) o cada SPAWN_INTERVAL.
    - NPCEventManager asigna eventos fijos o ponderados segun npcs_spawned y npcs_served.
 5. Autoload GameManager:
-   - Variables: game_active, npcs_spawned, npcs_served, npcs_served_correctly, SPAWN_INTERVAL (6.0), PATIENCE_TIME (25.0).
-   - Senales: npc_spawned(total), npc_served(total, is_correct), item_delivered(), npc_left().
-6. UI y Debug:
-   - HUD minimalista con reticula y prompt dinamico.
+   - Variables: game_active, current_day, max_clients_per_day, clients_attended_today, day_active, npcs_spawned, npcs_served, npcs_served_correctly, SPAWN_INTERVAL (6.0), PATIENCE_TIME (25.0).
+   - Senales: npc_spawned(total), npc_served(total, is_correct), item_delivered(), npc_left(), day_started(day, max_clients), day_progress(attended, max_clients), day_ended(day).
+6. UI, Jornadas y Debug:
+   - HUD minimalista con reticula, prompt dinamico e indicador de jornada (Dia N - Clientes x/y).
+   - Banner animado al comenzar cada dia (fade in/out).
+   - Panel de fin de jornada (DayEndPanel) con desglose de atendidos, correctos, fallidos y huidos, junto con boton de avance.
    - Panel de depuracion superior derecho: cuenta NPCs aparecidos y atendidos.
    - Toggle por Inspector (show_debug_counters) y en runtime con tecla F3.
 7. Persiana de Mostrador:
@@ -49,6 +51,23 @@ Escena principal: res://scenes/Main.tscn
    - RobberNPC:
      - En espera normal: se enfurece por el cierre, enfunda arma, restaura ambiente y huye corriendo a velocidad aumentada.
      - En secuencia de ira (error de item o timeout): el jugador dispone de una ventana de 2.6s antes del disparo fatal para pulsar el boton; al cerrar la persiana se cancela el disparo, se evita la muerte ("clutch save"), el ladron reacciona al bloqueo de la persiana, enfunda y huye.
+
+## Configuracion de Jornadas y Dias (Bucle de Rondas)
+Los parametros del bucle de dias se configuran principalmente desde el Inspector de Godot o directamente en el codigo:
+
+1. Clientes por dia (max_clients_per_day):
+   - En el Editor de Godot: Abrir res://scenes/Main.tscn, seleccionar el nodo NPCSpawner en el arbol de escena, y en el Inspector modificar en el grupo 'Jornada / Dias' la propiedad 'Max Clients Per Day' (rango 1 a 50, valor por defecto: 8).
+   - En codigo GDScript:
+     - res://scripts/NPCSpawner.gd: linea con @export_range(1, 50, 1) var max_clients_per_day: int = 8.
+     - res://scripts/GameManager.gd: variable var max_clients_per_day: int = 8 (sincronizada en _ready() por NPCSpawner).
+
+2. Cantidad maxima de dias (max_days):
+   - En el Editor de Godot: En el mismo nodo NPCSpawner de res://scenes/Main.tscn, modificar en el grupo 'Jornada / Dias' la propiedad 'Max Days' (rango 0 a 30, valor por defecto: 5).
+     - Si se define un numero mayor a 0 (ej. 5): al terminar el dia 5 se muestra la pantalla de victoria/turno semanal completado ("SEMANA COMPLETADA") y el boton permite reiniciar.
+     - Si se define en 0: los dias continuan de forma infinita (modo supervivencia sin fin de semana).
+   - En codigo GDScript:
+     - res://scripts/NPCSpawner.gd: linea con @export_range(0, 30, 1) var max_days: int = 5.
+     - res://scripts/GameManager.gd: variable var max_days: int = 5.
 
 ## Capas de Fisicas 3D
 - Capa 1 (World): Geometria estatica, paredes, suelo, mostrador.

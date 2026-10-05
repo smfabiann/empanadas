@@ -33,13 +33,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if not GameManager.game_active or is_dead:
+	if not GameManager.can_player_act() or is_dead:
 		return
 	_handle_movement(delta)
 
 
 func _process(_delta: float) -> void:
-	if not GameManager.game_active or is_dead:
+	if not GameManager.can_player_act() or is_dead:
 		if ui and ui.has_method("set_prompt"):
 			ui.set_prompt("", false)
 		return
@@ -160,7 +160,7 @@ func _get_target_npc() -> Node:
 
 
 func _input(event: InputEvent) -> void:
-	if not GameManager.game_active or is_dead:
+	if not GameManager.can_player_act() or is_dead:
 		return
 
 	# Rotar la vista con el ratón (360° horizontal, limitado vertical)

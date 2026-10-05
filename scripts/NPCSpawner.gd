@@ -1,6 +1,16 @@
 extends Node
 ## Spawner de NPCs — solo 1 cliente a la vez frente a la ventana.
-## Gestiona el ciclo de vida y la asignación de eventos/anomalías.
+## Gestiona el ciclo de vida, la asignación de eventos/anomalías y el cupo de
+## clientes por jornada (bucle de días).
+
+@export_group("Jornada / Días")
+## Cantidad de clientes que se atienden por día. Al alcanzarla deja de spawnear
+## y, cuando se retira el último cliente, termina la jornada.
+@export_range(1, 50, 1) var max_clients_per_day: int = 8
+## Cantidad máxima de días de la partida (0 = días infinitos sin límite)
+@export_range(0, 30, 1) var max_days: int = 5
+## Segundos de espera antes del primer cliente de cada día
+@export var first_client_delay: float = 2.0
 
 @export_group("Eventos y Anomalías")
 ## Referencia al nodo gestor de eventos en la escena. Si está vacío, se busca automáticamente.
@@ -54,12 +64,19 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(_spawn_npc)
 
+	# Configurar la jornada y escuchar el inicio de cada nuevo día
+	GameManager.set_max_clients_per_day(max_clients_per_day)
+	GameManager.set_max_days(max_days)
+	if not GameManager.day_started.is_connected(_on_day_started):
+		GameManager.day_started.connect(_on_day_started)
+
 	# Spawnear el primer NPC tras un breve delay
-	timer.start(2.0)
+	timer.start(first_client_delay)
 
 
 func _spawn_npc() -> void:
-	if not GameManager.game_active:
+	# Bloquea el spawn si terminó la partida, la jornada o se alcanzó el cupo del día
+	if not GameManager.can_spawn_npc():
 		return
 	if current_npc != null and is_instance_valid(current_npc):
 		return
@@ -106,6 +123,19 @@ func _spawn_npc() -> void:
 
 func _on_npc_removed() -> void:
 	current_npc = null
-	if GameManager.game_active:
-		timer.wait_time = GameManager.get_spawn_interval()
-		timer.start()
+	if not GameManager.game_active or not is_inside_tree():
+		return
+
+	# Cupo del día cumplido y ya no queda nadie en la ventana: fin de la jornada
+	if GameManager.day_active and GameManager.is_day_quota_reached():
+		timer.stop()
+		GameManager.end_day()
+		return
+
+	timer.wait_time = GameManager.get_spawn_interval()
+	timer.start()
+
+
+func _on_day_started(_day: int, _max_clients: int) -> void:
+	timer.stop()
+	timer.start(first_client_delay)

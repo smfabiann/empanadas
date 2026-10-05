@@ -20,7 +20,7 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"):
 		if get_tree().paused:
 			_resume()
-		elif GameManager.game_active:
+		elif GameManager.can_player_act():
 			_pause()
 		get_viewport().set_input_as_handled()
 
