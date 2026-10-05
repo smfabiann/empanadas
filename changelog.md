@@ -1,4 +1,18 @@
 # Lista de cambios
+- **Sistema de Armado de Completos en 3D sin Interfaz (HU-11, Issue #14)**:
+  - **Cocina Interactiva 3D**: Preparación física en el mundo 3D sin interfaces ni menús 2D; el jugador camina a cada estación para ensamblar el completo paso a paso con la tecla [E].
+  - **Estaciones 3D en Cocina (`KitchenStations.tscn` e `IngredientStation.gd`)**: 6 estaciones modulares ubicadas en el estante y suelo del local:
+    - *Pan*: Dispensa un pan de completo en las manos vacías del jugador.
+    - *Vienesa*: Aplica la salchicha obligatoria al pan que lleva en mano.
+    - *Palta*, *Mayonesa*, *Kétchup*: Agregan condimentos y agregados sobre el completo.
+    - *Basurero*: Permite tirar a la basura cualquier ítem o completo mal preparado para volver a empezar.
+  - **Regla de Base Obligatoria (Pan + Vienesa)**: Todo completo requiere pan y vienesa como base obligatoria. Si se entrega un completo sin salchicha, el cliente lo rechazará de inmediato con feedback explícito.
+  - **Modelo 3D Reactivo y Modular (`CompletoItem.gd` y `Completo.tscn`)**: Cada ingrediente cuenta con su propia geometría 3D visible que aparece con una animación de rebote pop (squash and stretch) al colocarse en la estación.
+  - **Recetas Chilenas y Validación Estricta en Clientes (`NPC.gd`)**:
+    - Recetas: Completo Italiano (Palta+Mayo), Con Todo (Palta+Mayo+Kétchup), Solo Palta, Solo Mayo, Solo Kétchup y Mayo-Kétchup.
+    - Validación exacta de agregados con feedback detallado de qué ingrediente falta o sobra en caso de error.
+  - **Adaptación del Ladrón (`RobberNPC.gd`)**: El evento del ladrón exige ahora una secuencia de recetas específicas de completos bajo amenaza armada.
+  - **Pizarra de Menú (`MenuBoard2`)**: Actualizada en 3D con el menú de completos y el recordatorio de la base de vienesa obligatoria.
 - **Bucle de Días / Rondas basado en Clientes (HU-01, Issue #3)**:
   - Se implementó un ciclo de jornadas laborales donde cada día cuenta con un cupo configurable de clientes (`max_clients_per_day` en `NPCSpawner` y `GameManager`).
   - Al alcanzar el cupo de clientes del día (atendidos o retirados), se bloquea el spawn de nuevos NPCs.

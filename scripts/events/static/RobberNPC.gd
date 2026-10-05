@@ -123,25 +123,36 @@ func _arrive_at_counter() -> void:
 	_start_current_step()
 
 
-## Prepara la lista de items (fija o aleatoria)
+var robber_recipes: Array[Dictionary] = [
+	{
+		"name": "Completo Italiano",
+		"desc": "Palta + Mayo",
+		"palta": true,
+		"mayo": true,
+		"ketchup": false
+	},
+	{
+		"name": "Completo con Todo",
+		"desc": "Palta + Mayo + Kétchup",
+		"palta": true,
+		"mayo": true,
+		"ketchup": true
+	}
+]
+
+
+## Prepara la lista de pedidos de completos para el atraco (HU-11)
 func _setup_sequence() -> void:
 	current_step = 0
-	if randomize_sequence and not possible_items.is_empty():
-		item_sequence.clear()
-		for i in range(random_sequence_count):
-			item_sequence.append(possible_items.pick_random())
-	elif item_sequence.is_empty() and not possible_items.is_empty():
-		item_sequence = [
-			preload("res://resources/items/completo.tres"),
-			preload("res://resources/items/bebida.tres"),
-			preload("res://resources/items/empanada.tres"),
-		]
 
 
-## Configura el ítem actual que pide el ladrón
+## Configura el completo actual que exige el ladrón
 func _start_current_step() -> void:
-	if current_step < item_sequence.size():
-		requested_item = item_sequence[current_step]
+	if current_step < robber_recipes.size():
+		var rec: Dictionary = robber_recipes[current_step]
+		requested_item = ItemData.new()
+		requested_item.id = "completo"
+		requested_item.display_name = "%s (%s)" % [rec["name"], rec["desc"]]
 		patience_time = patience_per_item
 		patience_remaining = patience_time
 		_update_robber_dialogue()
@@ -151,17 +162,22 @@ func _start_current_step() -> void:
 func _update_robber_dialogue() -> void:
 	if not label or requested_item == null or is_game_over:
 		return
-	var progress := "[%d/%d]" % [current_step + 1, item_sequence.size()]
+	var progress := "[%d/%d]" % [current_step + 1, robber_recipes.size()]
 	label.text = "😈 ¡Pasa ya: %s %s!" % [progress, requested_item.display_name]
 	label.modulate = Color(1.0, 0.25, 0.25, 1.0)
 
 
 ## Se ejecuta cuando el jugador le entrega un item
 func receive_item(item_node: Interactable) -> void:
-	if not can_receive_item() or item_node == null or item_node.item_data == null:
+	if not can_receive_item() or item_node == null:
 		return
 
-	var is_correct: bool = (requested_item != null and item_node.item_data.id == requested_item.id)
+	var is_correct: bool = false
+	if item_node != null and item_node.has_method("is_valid_base"):
+		var comp = item_node
+		if comp.is_valid_base() and current_step < robber_recipes.size():
+			var rec: Dictionary = robber_recipes[current_step]
+			is_correct = comp.matches_order(true, rec["palta"], rec["mayo"], rec["ketchup"])
 
 	# Consumir el item entregado
 	if item_node.get_parent():
@@ -171,7 +187,7 @@ func receive_item(item_node: Interactable) -> void:
 	if is_correct:
 		current_step += 1
 		
-		if current_step < item_sequence.size():
+		if current_step < robber_recipes.size():
 			# Pequeño salto de satisfacción y siguiente pedido
 			var tween := create_tween()
 			tween.tween_property(self, "scale", Vector3(1.1, 0.92, 1.1), 0.08)
@@ -185,7 +201,7 @@ func receive_item(item_node: Interactable) -> void:
 			patience_bar_pivot.visible = false
 			
 			if label:
-				label.text = "😈 ¡Trato hecho! Me voy satisfecho... 💰"
+				label.text = "😈 ¡Trato hecho! Me voy satisfecho con mis completos... 💰"
 				label.modulate = Color(0.2, 1.0, 0.4, 1.0)
 			
 			_holster_gun()
@@ -194,7 +210,7 @@ func receive_item(item_node: Interactable) -> void:
 			_start_leaving()
 	else:
 		# ¡Error! Iniciar secuencia de ira dramática antes de disparar
-		_start_anger_sequence("¡Le diste un ítem equivocado al ladrón!")
+		_start_anger_sequence("¡Le diste un completo incorrecto al ladrón!")
 
 
 ## Secuencia cinemática de ira: oscurece el entorno, niebla densa, avanza lentamente y prepara disparo fatal

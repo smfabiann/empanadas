@@ -111,16 +111,33 @@ func _handle_movement(delta: float) -> void:
 	camera.fov = lerpf(camera.fov, target_fov, delta * 8.0)
 
 
+func pick_up_direct(item: Interactable) -> void:
+	"""Recoge un ítem de forma directa (ej. dispensado por una estación)."""
+	held_item = item
+	ray.add_exception(held_item)
+	held_item.interact(self)
+
+
 func _update_interaction_prompt() -> void:
 	if not ui or not ui.has_method("set_prompt"):
 		return
 
+	# 1. Si miramos directamente a una estación de ingredientes 3D
+	if ray.is_colliding():
+		var col = ray.get_collider()
+		if col != null and col.has_method("get_interaction_prompt"):
+			var info: Dictionary = col.get_interaction_prompt(self)
+			ui.set_prompt(info.get("text", ""), info.get("actionable", false))
+			return
+
 	if held_item != null:
 		var target_npc := _get_target_npc()
 		if target_npc != null and target_npc.requested_item != null:
-			ui.set_prompt("[E] Entregar " + held_item.item_data.display_name + " (Pide: " + target_npc.requested_item.display_name + ")", true)
+			var item_desc: String = held_item.item_data.display_name if held_item.item_data else "Ítem"
+			ui.set_prompt("[E] Entregar " + item_desc + " (Pide: " + target_npc.requested_item.display_name + ")", true)
 		else:
-			ui.set_prompt("Sosteniendo: " + held_item.item_data.display_name + "  |  [Q] Soltar", false)
+			var item_desc: String = held_item.item_data.display_name if held_item.item_data else "Ítem"
+			ui.set_prompt("Sosteniendo: " + item_desc + "  |  [Q] Soltar", false)
 	else:
 		if ray.is_colliding():
 			var collider := ray.get_collider()
@@ -148,13 +165,16 @@ func _get_target_npc() -> Node:
 			if not col.has_method("can_receive_item") or col.can_receive_item():
 				return col
 
-	# 2. Si apuntamos hacia un NPC que esté esperando con un pedido
+	# 2. Si miramos hacia un NPC que esté esperando con un pedido
 	var npcs := get_tree().get_nodes_in_group("npcs")
+	var cam_fwd: Vector3 = -camera.global_transform.basis.z
 	for npc in npcs:
 		if npc.has_method("can_receive_item") and npc.can_receive_item():
-			var dist := global_position.distance_to(npc.global_position)
-			if dist < 3.8:
-				return npc
+			var to_npc: Vector3 = (npc.global_position - camera.global_position).normalized()
+			if cam_fwd.dot(to_npc) > 0.25:
+				var dist: float = global_position.distance_to(npc.global_position)
+				if dist < 4.2:
+					return npc
 
 	return null
 
@@ -170,7 +190,7 @@ func _input(event: InputEvent) -> void:
 		camera.rotation.x = clampf(camera.rotation.x, -PITCH_LIMIT, PITCH_LIMIT)
 		get_viewport().set_input_as_handled()
 
-	# Interactuar: recoger ítem o entregar a NPC
+	# Interactuar: recoger ítem, usar estación o entregar a NPC
 	if event.is_action_pressed("interact"):
 		_handle_interact()
 
@@ -180,7 +200,15 @@ func _input(event: InputEvent) -> void:
 
 
 func _handle_interact() -> void:
-	# Caso 1: Manos vacías -> recoger ítem o usar botones
+	# Prioridad 1: Si apuntamos a una estación de ingredientes 3D
+	if ray.is_colliding():
+		var collider = ray.get_collider()
+		if collider != null and collider.has_method("get_interaction_prompt"):
+			collider.interact(self)
+			_update_interaction_prompt()
+			return
+
+	# Prioridad 2: Manos vacías -> recoger ítem o usar botones
 	if held_item == null:
 		if ray.is_colliding():
 			var collider := ray.get_collider()
@@ -192,7 +220,7 @@ func _handle_interact() -> void:
 				collider.interact(self)
 		return
 
-	# Caso 2: Sosteniendo ítem -> entregar al NPC
+	# Prioridad 3: Sosteniendo ítem -> entregar al NPC
 	var target_npc := _get_target_npc()
 	if target_npc != null:
 		var item_to_deliver := held_item

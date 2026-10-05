@@ -1,0 +1,47 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/IngredientStation.gd" id="1_station"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_stat"]
+size = Vector3(0.48, 0.45, 0.48)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_base"]
+albedo_color = Color(0.25, 0.22, 0.2, 1)
+metallic = 0.5
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rim"]
+albedo_color = Color(0.65, 0.65, 0.7, 1)
+metallic = 0.8
+roughness = 0.2
+
+[node name="IngredientStation" type="StaticBody3D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_station")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+shape = SubResource("BoxShape3D_stat")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="StandBase" type="CSGCylinder3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+radius = 0.22
+height = 0.1
+material = SubResource("StandardMaterial3D_base")
+
+[node name="DishRim" type="CSGCylinder3D" parent="Visual"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.12, 0)
+radius = 0.2
+height = 0.08
+material = SubResource("StandardMaterial3D_rim")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+billboard = 1
+text = "🥖 PAN"
+font_size = 28
+outline_size = 4
+outline_color = Color(0.05, 0.02, 0.08, 1)

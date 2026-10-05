@@ -34,12 +34,63 @@ var is_leaving_cleanly: bool = false
 
 var active_event: NPCEvent = null
 
-var possible_items: Array[ItemData] = [
-	preload("res://resources/items/sopaipilla.tres"),
-	preload("res://resources/items/bebida.tres"),
-	preload("res://resources/items/empanada.tres"),
-	preload("res://resources/items/completo.tres"),
+## Recetas de completos interactivos (HU-11)
+const COMPLETO_RECIPES: Array[Dictionary] = [
+	{
+		"name": "Completo Italiano",
+		"desc": "Palta + Mayo",
+		"palta": true,
+		"mayo": true,
+		"ketchup": false,
+		"weight": 35
+	},
+	{
+		"name": "Completo con Todo",
+		"desc": "Palta + Mayo + Kétchup",
+		"palta": true,
+		"mayo": true,
+		"ketchup": true,
+		"weight": 25
+	},
+	{
+		"name": "Completo Palta",
+		"desc": "Solo Palta",
+		"palta": true,
+		"mayo": false,
+		"ketchup": false,
+		"weight": 12
+	},
+	{
+		"name": "Completo Mayo",
+		"desc": "Solo Mayo",
+		"palta": false,
+		"mayo": true,
+		"ketchup": false,
+		"weight": 10
+	},
+	{
+		"name": "Completo Kétchup",
+		"desc": "Solo Kétchup",
+		"palta": false,
+		"mayo": false,
+		"ketchup": true,
+		"weight": 10
+	},
+	{
+		"name": "Completo Mayo-Kétchup",
+		"desc": "Mayo + Kétchup",
+		"palta": false,
+		"mayo": true,
+		"ketchup": true,
+		"weight": 8
+	}
 ]
+
+var order_recipe: Dictionary = {}
+var order_req_sausage: bool = true
+var order_req_palta: bool = false
+var order_req_mayo: bool = false
+var order_req_ketchup: bool = false
 
 const NPC_COLORS: Array[Color] = [
 	Color(0.6, 0.2, 0.5, 1), Color(0.2, 0.5, 0.6, 1), Color(0.7, 0.3, 0.2, 1),
@@ -124,8 +175,8 @@ func _arrive_at_counter() -> void:
 	is_at_counter = true
 	velocity = Vector3.ZERO
 
-	requested_item = possible_items.pick_random()
-	label.text = "💬 Quiero: " + requested_item.display_name
+	_generate_completo_order()
+	label.text = "💬 Quiero: %s\n(%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
 	label.visible = true
 
 	patience_bar_pivot.visible = true
@@ -135,6 +186,29 @@ func _arrive_at_counter() -> void:
 
 	if active_event:
 		active_event.on_arrive(self)
+
+
+func _generate_completo_order() -> void:
+	var total_w := 0
+	for r in COMPLETO_RECIPES:
+		total_w += r.get("weight", 10)
+	var roll := randi_range(1, total_w)
+	var acc := 0
+	order_recipe = COMPLETO_RECIPES[0]
+	for r in COMPLETO_RECIPES:
+		acc += r.get("weight", 10)
+		if roll <= acc:
+			order_recipe = r
+			break
+
+	order_req_sausage = true
+	order_req_palta = order_recipe.get("palta", false)
+	order_req_mayo = order_recipe.get("mayo", false)
+	order_req_ketchup = order_recipe.get("ketchup", false)
+
+	requested_item = ItemData.new()
+	requested_item.id = "completo"
+	requested_item.display_name = "%s (%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
 
 
 func _update_patience(delta: float) -> void:
@@ -184,26 +258,42 @@ func can_receive_item() -> bool:
 
 
 func receive_item(item_node: Interactable) -> void:
-	if not can_receive_item() or item_node == null or item_node.item_data == null:
+	if not can_receive_item() or item_node == null:
 		return
 
 	is_at_counter = false
-	var is_correct: bool = (requested_item != null and item_node.item_data.id == requested_item.id)
+	var is_correct: bool = false
+
+	if item_node != null and item_node.has_method("is_valid_base"):
+		var completo = item_node
+		if not completo.is_valid_base():
+			is_correct = false
+			label.text = "😠 ¡Le falta la vienesa obligatoria! ❌"
+		elif completo.matches_order(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup):
+			is_correct = true
+			label.text = "😊 ¡Buenísimo completo! ✅"
+		else:
+			is_correct = false
+			var err: String = String(completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup))
+			label.text = "😠 %s ❌" % err
+	else:
+		is_correct = false
+		label.text = "😠 ¡Esto no es un completo! ❌"
 
 	if is_correct:
-		label.text = "😊 ¡Gracias! ✅"
-		var tween := create_tween()
-		tween.tween_property(self, "scale", Vector3(1.15, 0.9, 1.15), 0.1)
-		tween.tween_property(self, "scale", Vector3(0.95, 1.1, 0.95), 0.1)
-		tween.tween_property(self, "scale", Vector3.ONE, 0.15).set_ease(Tween.EASE_OUT)
+		if body_mesh:
+			var tween := create_tween()
+			tween.tween_property(body_mesh, "scale", Vector3(1.15, 0.9, 1.15), 0.1)
+			tween.tween_property(body_mesh, "scale", Vector3(0.95, 1.1, 0.95), 0.1)
+			tween.tween_property(body_mesh, "scale", Vector3.ONE, 0.15).set_ease(Tween.EASE_OUT)
 	else:
-		label.text = "😠 ¡Esto no es! ❌"
-		var tween := create_tween()
-		var orig_x := global_position.x
-		tween.tween_property(self, "global_position:x", orig_x + 0.1, 0.05)
-		tween.tween_property(self, "global_position:x", orig_x - 0.1, 0.05)
-		tween.tween_property(self, "global_position:x", orig_x + 0.05, 0.05)
-		tween.tween_property(self, "global_position:x", orig_x, 0.05)
+		if body_mesh:
+			var tween := create_tween()
+			var orig_x := body_mesh.position.x
+			tween.tween_property(body_mesh, "position:x", orig_x + 0.1, 0.05)
+			tween.tween_property(body_mesh, "position:x", orig_x - 0.1, 0.05)
+			tween.tween_property(body_mesh, "position:x", orig_x + 0.05, 0.05)
+			tween.tween_property(body_mesh, "position:x", orig_x, 0.05)
 
 	patience_bar_pivot.visible = false
 
@@ -213,7 +303,7 @@ func receive_item(item_node: Interactable) -> void:
 	
 	GameManager.register_npc_served(is_correct)
 
-	await get_tree().create_timer(1.0).timeout
+	await get_tree().create_timer(1.2).timeout
 	_start_leaving()
 
 

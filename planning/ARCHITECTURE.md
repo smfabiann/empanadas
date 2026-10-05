@@ -13,24 +13,27 @@ Escena principal: res://scenes/Main.tscn
   - items/: Escenas fisicas de items interactuables.
   - ui/PauseMenu.tscn, ui/MainMenu.tscn: Menus.
 - scripts/
-  - Player.gd: Movimiento, mirada con mouse, salto, sprint, raycast picking/entregas.
-  - NPC.gd: Estados (APPROACHING, WAITING, LEAVING), paciencia, recepcion de item.
+  - Player.gd: Movimiento, mirada con mouse, salto, sprint, raycast picking/entregas y deteccion de estaciones.
+  - NPC.gd: Estados (APPROACHING, WAITING, LEAVING), paciencia, recetas de completos, validacion de base e ingredientes.
   - NPCSpawner.gd: Spawnea 1 NPC a la vez, asigna anomalias, intervalo via Timer.
   - NPCEventManager.gd: Gestion y sorteo de eventos/anomalias.
   - events/NPCEvent.gd: Clase base de eventos (apply, on_arrive, on_leave).
   - events/fastNPC.gd: Anomalia de cliente rapido con baja paciencia.
+  - events/static/RobberNPC.gd: Secuencia de demanda de completos y mecanica de atraco.
   - GameManager.gd: Autoload singleton de estado global y contadores.
   - SFXManager.gd: Autoload singleton de audio.
   - UI.gd: HUD, reticula, prompts, panel debug (F3).
-  - ItemData.gd, Interactable.gd, ItemSpawner.gd: Logica de items.
+  - CompletoItem.gd: Logica de completo modular 3D (ingredientes, base valida, visuales reactivos).
+  - IngredientStation.gd: Logica de estaciones 3D de armado (pan, vienesa, palta, mayo, ketchup, basurero).
+  - ItemData.gd, Interactable.gd: Logica base de items.
 - resources/items/: Recursos .tres (empanada, sopaipilla, completo, bebida).
 
 ## Bucle de Juego y Flujo
-1. Player: Interactua con E (recoger/entregar) o Q (soltar). Detecta capas 2 (items) y 3 (NPCs) con RayCast.
-2. Items: ItemData (id, display_name). Interactable maneja agarre y fisicas.
+1. Player: Interactua con E (recoger/entregar/usar estacion) o Q (soltar). Detecta capas 2 (items y estaciones) y 3 (NPCs) con RayCast.
+2. Items: ItemData (id, display_name). Interactable maneja agarre y fisicas. CompletoItem hereda de Interactable con soporte modular de ingredientes.
 3. NPCs:
    - APPROACHING: camina a WindowPoint.
-   - WAITING: pide item al azar, drena paciencia. receive_item() compara id y notifica a GameManager.
+   - WAITING: pide receta de completo de forma ponderada (Italiano, Con Todo, etc.), drena paciencia. receive_item() valida base obligatoria (pan + vienesa) e ingredientes exactos, notificando a GameManager.
    - LEAVING: desactiva colision, camina a ExitPoint, fade tween y queue_free.
 4. Spawner y Anomalias:
    - NPCSpawner instancia 1 NPC tras delay inicial (2s) o cada SPAWN_INTERVAL.
@@ -51,6 +54,17 @@ Escena principal: res://scenes/Main.tscn
    - RobberNPC:
      - En espera normal: se enfurece por el cierre, enfunda arma, restaura ambiente y huye corriendo a velocidad aumentada.
      - En secuencia de ira (error de item o timeout): el jugador dispone de una ventana de 2.6s antes del disparo fatal para pulsar el boton; al cerrar la persiana se cancela el disparo, se evita la muerte ("clutch save"), el ladron reacciona al bloqueo de la persiana, enfunda y huye.
+8. Sistema de Armado de Completos 3D (HU-11):
+   - Preparacion enteramente en el espacio 3D fisico sin interfaces o ventanas 2D.
+   - Estaciones en el estante (KitchenStations):
+     - Estacion de Pan: dispensa un pan vacio al interactuar con las manos libres.
+     - Estacion de Vienesa: anade la salchicha obligatoria al pan en mano.
+     - Estaciones de Ingredientes (Palta, Mayo, Ketchup): aplican cada ingrediente sobre el pan sostenido.
+     - Basurero: descarta el item sostenido para rehacer pedidos erroneos.
+   - Base obligatoria: Pan + Vienesa es requerida para cualquier completo entregable. Sin vienesa se rechaza con mensaje de error explicito.
+   - Renderizado dinamico: mallas visuales 3D independientes para pan, vienesa, palta, mayonesa y ketchup con animacion pop tipo squash/stretch al agregarse.
+   - Recetas: Italiano (Palta+Mayo), Con Todo (Palta+Mayo+Ketchup), Palta, Mayo, Ketchup, Mayo-Ketchup.
+   - Ladron adaptado: exige una secuencia de recetas especificas de completos bajo amenaza armada.
 
 ## Configuracion de Jornadas y Dias (Bucle de Rondas)
 Los parametros del bucle de dias se configuran principalmente desde el Inspector de Godot o directamente en el codigo:
