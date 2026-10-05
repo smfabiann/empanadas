@@ -35,6 +35,22 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victory"]
+content_margin_left = 30.0
+content_margin_top = 26.0
+content_margin_right = 30.0
+content_margin_bottom = 26.0
+bg_color = Color(0.02, 0.05, 0.03, 0.94)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.88, 0.45, 0.9)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
 
 [node name="UI" type="CanvasLayer" unique_id=1164930736]
 script = ExtResource("1_ui")
@@ -445,6 +461,90 @@ theme_override_font_sizes/font_size = 18
 text = "▶ Comenzar Día 2"
 
 [node name="DayEndMenuButton" type="Button" parent="HUD/DayEndPanel/VBoxContainer" unique_id=1934817213]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "◀ Menú Principal"
+
+[node name="VictoryPanel" type="PanelContainer" parent="HUD" unique_id=1934817220]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -185.0
+offset_right = 225.0
+offset_bottom = 185.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_victory")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/VictoryPanel" unique_id=1934817221]
+layout_mode = 2
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="VictoryTitle" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817222]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 1.0, 0.5, 1)
+theme_override_font_sizes/font_size = 30
+text = "🏆 ¡HAS GANADO! 🏆"
+horizontal_alignment = 1
+
+[node name="VictorySubtitle" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817223]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "¡Has sobrevivido los 3 días de turno nocturno!"
+horizontal_alignment = 1
+
+[node name="VictoryLore" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817224]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.8, 0.7, 0.9)
+theme_override_font_sizes/font_size = 13
+text = "Lograste resistir a las anomalías y escapar de la ciudad a salvo."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="VictorySeparator" type="HSeparator" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817225]
+layout_mode = 2
+
+[node name="VictoryStatDays" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817226]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
+theme_override_font_sizes/font_size = 14
+text = "📅 Días sobrevividos: 3/3"
+horizontal_alignment = 1
+
+[node name="VictoryStatServed" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817227]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.95, 0.5, 1)
+theme_override_font_sizes/font_size = 14
+text = "✅ Pedidos correctos: 0"
+horizontal_alignment = 1
+
+[node name="VictoryStatWrong" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817228]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.6, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "❌ Pedidos equivocados: 0"
+horizontal_alignment = 1
+
+[node name="VictoryStatLost" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817229]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "🏃 Clientes que se fueron: 0"
+horizontal_alignment = 1
+
+[node name="VictoryRestartButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817230]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "🔄 Reiniciar Partida"
+
+[node name="VictoryMenuButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817231]
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "◀ Menú Principal"

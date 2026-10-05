@@ -157,6 +157,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.6, -2.3)
 [node name="NPCSpawner" type="Node" parent="." unique_id=1541630979 node_paths=PackedStringArray("event_manager", "spawn_point", "window_point", "exit_point")]
 script = ExtResource("3_spawner")
 event_manager = NodePath("../NPCEventManager")
+max_days = 3
 robber_trigger_served_count = 2
 spawn_point = NodePath("../SpawnPoint")
 window_point = NodePath("../WindowPoint")

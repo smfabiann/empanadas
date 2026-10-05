@@ -1,4 +1,10 @@
 # Lista de cambios
+- **Condición de Victoria al Sobrevivir 3 Días (HU-06, Issue #9)**:
+  - **Meta de 3 Días Canónicos**: Se configuró la partida a un ciclo objetivo de 3 jornadas laborales (`max_days = 3` por defecto en `GameManager` y `NPCSpawner`), ajustable desde el Inspector.
+  - **Detención del Flujo de Eventos**: Al culminar con vida el Día 3, se detiene automáticamente el flujo de eventos, anomalías y spawners (`game_active = false`, `can_spawn_npc = false`, timers detenidos).
+  - **Pantalla de Victoria ("Has ganado" y Secuencia de Escape)**: Se implementó un panel visual de victoria (`VictoryPanel`) con diseño temático verde/esmeralda, título "🏆 ¡HAS GANADO! 🏆", texto narrativo de escape de la ciudad y estadísticas finales de la partida (días sobrevividos, pedidos correctos, equivocados y clientes huidos).
+  - **Fanfarria de Audio Procedural**: Nuevo arpegio triunfal en `SFXManager.play_victory()`.
+  - **Interactividad**: Se incluyeron botones interactivos para reiniciar la partida desde el Día 1 o volver al menú principal liberando el cursor del ratón.
 - **Sistema de Armado de Completos en 3D sin Interfaz (HU-11, Issue #14)**:
   - **Cocina Interactiva 3D**: Preparación física en el mundo 3D sin interfaces ni menús 2D; el jugador camina a cada estación para ensamblar el completo paso a paso con la tecla [E].
   - **Estaciones 3D en Cocina (`KitchenStations.tscn` e `IngredientStation.gd`)**: 6 estaciones modulares ubicadas en el estante y suelo del local:

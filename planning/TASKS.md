@@ -9,6 +9,7 @@
 - [TASK-008] Efectos ambientales de terror (parpadeo de luces en mostrador tras evento anomalo).
 
 ## Tareas Completadas
+- [TASK-012] Condicion de victoria al sobrevivir 3 dias (HU-06, Issue #9). Configuración de 3 días canónicos por partida en GameManager y NPCSpawner, detención de flujo de eventos, emisión de señal game_won con estadísticas completas, pantalla de victoria con mensaje de escape ("Has ganado") y opciones de reinicio o volver al menú principal.
 - [TASK-011] Sistema de armado e interaccion de completos al estilo cocina interactiva 3D (HU-11, Issue #14). Estaciones 3D en el estante (pan, vienesa, palta, mayo, ketchup, basurero) sin ventanas 2D. Base obligatoria (pan + vienesa), ensamblado modular reactivo visual, recetas chilenas en NPCs y adaptacion del evento del Ladron.
 - [TASK-007] Bucle de dias y rondas basado en clientes (HU-01, Issue #3). Contador de clientes por jornada, bloqueo de spawn al cupo, pantalla de fin de jornada, y avance a la siguiente jornada.
 - [TASK-010] Interaccion de persiana con NPCs, evasion de muerte por disparo (cancelar ira/muerte al cerrar persiana) y huida del Ladron.

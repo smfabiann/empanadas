@@ -23,6 +23,10 @@ func play_correct() -> void:
 	_play_sequence([523.25, 659.25, 783.99], 0.08)
 
 
+func play_victory() -> void:
+	_play_sequence([523.25, 659.25, 783.99, 1046.50], 0.12)
+
+
 func play_incorrect() -> void:
 	_play_sequence([200.0, 150.0], 0.15)
 
