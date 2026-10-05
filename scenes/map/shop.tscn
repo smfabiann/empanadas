@@ -1,5 +1,14 @@
 [gd_scene format=3 uid="uid://dtdqocd2hb5r"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.22, 0.18, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_back"]
+albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_side"]
+albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
+
 [sub_resource type="GDScript" id="GDScript_puerta"]
 script/source = "extends AnimatableBody3D
 
@@ -21,6 +30,18 @@ func interact(player: Node3D) -> void:
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_door"]
 size = Vector3(1.1, 2.2, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_counter"]
+albedo_color = Color(0.35, 0.25, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_register"]
+albedo_color = Color(0.15, 0.15, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceiling"]
+albedo_color = Color(0.2, 0.18, 0.16, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_front"]
+albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
 
 [sub_resource type="GDScript" id="GDScript_persiana"]
 script/source = "extends Node3D
@@ -83,44 +104,18 @@ func interact(player: Node3D) -> void:
 [sub_resource type="BoxShape3D" id="BoxShape3D_boton"]
 size = Vector3(0.15, 0.15, 0.15)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
-albedo_color = Color(0.22, 0.18, 0.15, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_back"]
-albedo_color = Color(0.28, 0.22, 0.18, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_side"]
-albedo_color = Color(0.25, 0.2, 0.17, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ceiling"]
-albedo_color = Color(0.2, 0.18, 0.16, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_counter"]
-albedo_color = Color(0.35, 0.25, 0.15, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_register"]
-albedo_color = Color(0.15, 0.15, 0.18, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_front"]
-albedo_color = Color(0.25, 0.2, 0.17, 1)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awning"]
 albedo_color = Color(0.7, 0.2, 0.2, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sidewalk"]
 albedo_color = Color(0.2702219, 0.27022195, 0.27022177, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_post"]
-albedo_color = Color(0.4, 0.4, 0.4, 1)
-metallic = 0.8
-roughness = 0.3
-
 [node name="Shop" type="Node3D" unique_id=831494344]
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=328204686]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.6, -0.7022095)
 use_collision = true
-size = Vector3(8, 0.2, 10)
+size = Vector3(8, 0.2, 8.595581)
 material = SubResource("StandardMaterial3D_floor")
 
 [node name="WallBack" type="CSGBox3D" parent="." unique_id=809778567]
@@ -135,9 +130,9 @@ operation = 2
 size = Vector3(1.15, 2.25, 0.5)
 
 [node name="WallLeft" type="CSGBox3D" parent="." unique_id=512241074]
-transform = Transform3D(1.0588065, 0, 0, 0, 1.0433729, 0, 0, 0, 1, -7.8, 0, 0)
+transform = Transform3D(1.0588065, 0, 0, 0, 1.0433729, 0, 0, 0, 1, -7.8, 0, -0.69970703)
 use_collision = true
-size = Vector3(0.2, 3, 10)
+size = Vector3(0.2, 3, 8.600586)
 material = SubResource("StandardMaterial3D_wall_side")
 
 [node name="BackDoor" type="AnimatableBody3D" parent="." unique_id=900000001]
@@ -161,14 +156,14 @@ height = 0.2
 material = SubResource("StandardMaterial3D_register")
 
 [node name="WallRight" type="CSGBox3D" parent="." unique_id=1451498433]
-transform = Transform3D(1.009727, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1.009727, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.7011719)
 use_collision = true
-size = Vector3(0.2, 3, 10)
+size = Vector3(0.2, 3, 8.597656)
 material = SubResource("StandardMaterial3D_wall_side")
 
 [node name="Ceiling" type="CSGBox3D" parent="." unique_id=2042987931]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0069541, -3.9, 1.5, 0)
-size = Vector3(8, 0.15, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0069541, -3.9, 1.5, -0.71502095)
+size = Vector3(8, 0.15, 8.579834)
 material = SubResource("StandardMaterial3D_ceiling")
 
 [node name="Counter" type="CSGBox3D" parent="." unique_id=610533249]
@@ -232,9 +227,7 @@ size = Vector3(5, 0.1, 1.5)
 material = SubResource("StandardMaterial3D_awning")
 
 [node name="Sidewalk" type="CSGBox3D" parent="." unique_id=1891771189]
-transform = Transform3D(0.9961373, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.62, -6.5)
+transform = Transform3D(0.9961373, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.62, -5.7161865)
 use_collision = true
-size = Vector3(8, 0.15, 6)
+size = Vector3(8, 0.15, 4.432373)
 material = SubResource("StandardMaterial3D_sidewalk")
-
-
