@@ -45,8 +45,17 @@ func close() -> void:
 	
 	var npcs = get_tree().get_nodes_in_group(\"npcs\")
 	for npc in npcs:
-		if npc.has_method(\"_timeout\") and npc.is_at_counter:
-			npc._timeout()
+		var can_react: bool = false
+		if npc.has_method(\"can_react_to_persiana\"):
+			can_react = npc.can_react_to_persiana()
+		else:
+			can_react = npc.is_at_counter
+		
+		if can_react:
+			if npc.has_method(\"on_persiana_closed\"):
+				npc.on_persiana_closed()
+			elif npc.has_method(\"_timeout\"):
+				npc._timeout()
 "
 
 [sub_resource type="GDScript" id="GDScript_boton"]

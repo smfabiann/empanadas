@@ -169,6 +169,16 @@ func _timeout() -> void:
 	_start_leaving()
 
 
+## Determina si el NPC está en posición y estado para reaccionar a la persiana
+func can_react_to_persiana() -> bool:
+	return is_at_counter and state == State.WAITING
+
+
+## Se ejecuta cuando se cierra la persiana del mostrador
+func on_persiana_closed() -> void:
+	_timeout()
+
+
 func can_receive_item() -> bool:
 	return state == State.WAITING and requested_item != null and is_at_counter
 

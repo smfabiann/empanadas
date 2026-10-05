@@ -54,6 +54,7 @@ shadow_enabled = true
 transform = Transform3D(0.9999941, -0.0015523564, -0.0030701628, 0.0015251127, 0.9999596, -0.008857943, 0.0030837867, 0.00885321, 0.9999561, 3.4703743, 1.7049768, -0.22162199)
 
 [node name="StepsCollision" type="Node3D" parent="Map/Shop" unique_id=1228593559]
+visible = false
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="Map/Shop/StepsCollision" unique_id=1377821643]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.1743698, -1.6507076, -9.577507)
@@ -166,13 +167,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.6, -2.3)
 
 [node name="UI" parent="." unique_id=519914083 instance=ExtResource("2_ui")]
 
-[node name="NPCSpawner" type="Node" parent="." node_paths=PackedStringArray("event_manager", "spawn_point", "window_point", "exit_point") unique_id=1541630979]
+[node name="NPCSpawner" type="Node" parent="." unique_id=1541630979 node_paths=PackedStringArray("event_manager", "spawn_point", "window_point", "exit_point")]
 script = ExtResource("3_spawner")
 event_manager = NodePath("../NPCEventManager")
+robber_trigger_served_count = 2
 spawn_point = NodePath("../SpawnPoint")
 window_point = NodePath("../WindowPoint")
 exit_point = NodePath("../ExitPoint")
-robber_trigger_served_count = 2
 
 [node name="Timer" type="Timer" parent="NPCSpawner" unique_id=1455560433]
 wait_time = 0.5
@@ -181,7 +182,7 @@ wait_time = 0.5
 script = ExtResource("5_eventmanager")
 robber_trigger_served_count = 1
 
-[node name="ItemSpawner" type="Node" parent="." node_paths=PackedStringArray("sopaipilla_marker", "bebida_marker", "empanada_marker", "completo_marker") unique_id=541989250]
+[node name="ItemSpawner" type="Node" parent="." unique_id=541989250 node_paths=PackedStringArray("sopaipilla_marker", "bebida_marker", "empanada_marker", "completo_marker")]
 script = ExtResource("4_itemspawner")
 sopaipilla_marker = NodePath("../ItemSpawn_Sopaipilla")
 bebida_marker = NodePath("../ItemSpawn_Bebida")

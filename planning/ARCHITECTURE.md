@@ -42,6 +42,13 @@ Escena principal: res://scenes/Main.tscn
    - HUD minimalista con reticula y prompt dinamico.
    - Panel de depuracion superior derecho: cuenta NPCs aparecidos y atendidos.
    - Toggle por Inspector (show_debug_counters) y en runtime con tecla F3.
+7. Persiana de Mostrador:
+   - Alternable mediante boton interactuable en el local.
+   - Al cerrarse ejecuta on_persiana_closed() en NPCs presentes en mostrador (can_react_to_persiana()).
+   - NPC base: ejecuta _timeout() y se marcha.
+   - RobberNPC:
+     - En espera normal: se enfurece por el cierre, enfunda arma, restaura ambiente y huye corriendo a velocidad aumentada.
+     - En secuencia de ira (error de item o timeout): el jugador dispone de una ventana de 2.6s antes del disparo fatal para pulsar el boton; al cerrar la persiana se cancela el disparo, se evita la muerte ("clutch save"), el ladron reacciona al bloqueo de la persiana, enfunda y huye.
 
 ## Capas de Fisicas 3D
 - Capa 1 (World): Geometria estatica, paredes, suelo, mostrador.

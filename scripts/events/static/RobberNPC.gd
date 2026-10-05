@@ -52,6 +52,10 @@ extends NPC
 
 var current_step: int = 0
 var is_game_over: bool = false
+var is_about_to_shoot: bool = false
+var _shot_cancelled: bool = false
+var _approach_tween: Tween = null
+var _shake_tween: Tween = null
 
 var _env_tween: Tween = null
 var _orig_ambient_energy: float = -1.0
@@ -92,8 +96,12 @@ func _exit_tree() -> void:
 		_is_environment_dimmed = false
 
 
+func can_react_to_persiana() -> bool:
+	return (is_at_counter or is_about_to_shoot) and not is_game_over and state != State.LEAVING
+
+
 func can_receive_item() -> bool:
-	return super.can_receive_item() and not is_game_over
+	return super.can_receive_item() and not is_game_over and not is_about_to_shoot
 
 
 ## Se ejecuta cuando el ladrón llega al mostrador de la tienda
@@ -189,18 +197,19 @@ func receive_item(item_node: Interactable) -> void:
 		_start_anger_sequence("¡Le diste un ítem equivocado al ladrón!")
 
 
-## Secuencia cinemática de ira: oscurece el entorno, niebla densa, avanza lentamente y dispara
+## Secuencia cinemática de ira: oscurece el entorno, niebla densa, avanza lentamente y prepara disparo fatal
 func _start_anger_sequence(reason: String) -> void:
-	if is_game_over:
+	if is_game_over or is_about_to_shoot:
 		return
-	is_game_over = true
-	is_at_counter = false
+	is_about_to_shoot = true
+	_shot_cancelled = false
 	patience_bar_pivot.visible = false
 
 	# 1. Diálogo de furia
 	if label:
 		label.text = "😠 ¿¿Qué es esto...?? ¡Te dije que no jugaras conmigo!"
 		label.modulate = Color(1.0, 0.1, 0.1, 1.0)
+		label.visible = true
 
 	# Sonido tenso y amenazante
 	SFXManager.play_tense_anger()
@@ -209,23 +218,34 @@ func _start_anger_sequence(reason: String) -> void:
 	_darken_environment()
 
 	# 3. El ladrón avanza muy poquito y lentamente hacia el mostrador / jugador
-	var approach_tween := create_tween()
-	approach_tween.tween_property(self, "global_position:z", global_position.z + 0.38, 2.2)\
+	if _approach_tween and _approach_tween.is_valid():
+		_approach_tween.kill()
+	_approach_tween = create_tween()
+	_approach_tween.tween_property(self, "global_position:z", global_position.z + 0.38, 2.5)\
 		.set_trans(Tween.TRANS_SINE)\
 		.set_ease(Tween.EASE_OUT)
 
 	# Temblor sutil de rabia en su cuerpo
 	if body_mesh:
-		var shake_tween := create_tween()
-		for i in range(8):
+		if _shake_tween and _shake_tween.is_valid():
+			_shake_tween.kill()
+		_shake_tween = create_tween()
+		for i in range(10):
 			var offset := 0.02 if i % 2 == 0 else -0.02
-			shake_tween.tween_property(body_mesh, "position:x", offset, 0.12)
-		shake_tween.tween_property(body_mesh, "position:x", 0.0, 0.1)
+			_shake_tween.tween_property(body_mesh, "position:x", offset, 0.12)
+		_shake_tween.tween_property(body_mesh, "position:x", 0.0, 0.1)
 
-	# 4. Dar tiempo de tensión al jugador para asimilar la furia del ladrón
-	await get_tree().create_timer(2.3).timeout
+	# 4. Ventana de tensión para que el jugador reaccione y baje la persiana (evitando la muerte)
+	await get_tree().create_timer(2.6).timeout
 
-	# 5. Momento de disparar
+	# Si el jugador cerró la persiana a tiempo, se canceló el disparo: ¡EVITÓ LA MUERTE!
+	if _shot_cancelled or not is_about_to_shoot:
+		return
+
+	# 5. Si no cerró la persiana, momento del disparo fatal y Game Over
+	is_game_over = true
+	is_at_counter = false
+	is_about_to_shoot = false
 	_execute_shot(reason)
 
 
@@ -394,9 +414,69 @@ func _holster_gun() -> void:
 		tween.tween_callback(func(): if gun: gun.visible = false)
 
 
+## Se ejecuta cuando el jugador cierra la persiana del mostrador frente al ladrón
+func on_persiana_closed() -> void:
+	if is_game_over or state == State.LEAVING:
+		return
+	if state != State.WAITING and not is_about_to_shoot:
+		return
+
+	# Si estaba en la secuencia de ira a punto de disparar, el jugador salvó su vida
+	var saved_from_death: bool = is_about_to_shoot
+	_shot_cancelled = true
+	is_about_to_shoot = false
+	is_at_counter = false
+	requested_item = null
+	patience_bar_pivot.visible = false
+
+	# Detener avance y temblores de ira previa si estaban activos
+	if _approach_tween and _approach_tween.is_valid():
+		_approach_tween.kill()
+	if _shake_tween and _shake_tween.is_valid():
+		_shake_tween.kill()
+	if body_mesh:
+		body_mesh.position.x = 0.0
+
+	# Diálogo de furia y frustración (reacción especial si el jugador se salvó cerrando la persiana)
+	if label:
+		if saved_from_death:
+			label.text = "💥 ¡CLANG! 🤬 ¡¿Cerraste la persiana?! ¡Te salvaste por ahora!"
+		else:
+			label.text = "🤬 ¡¿Me cerraste la persiana?! ¡Ya vas a ver!"
+		label.modulate = Color(1.0, 0.2, 0.2, 1.0)
+		label.visible = true
+
+	# Sonido de indignación
+	SFXManager.play_npc_timeout()
+
+	# Reacción física de furia: temblor en el sitio
+	if body_mesh:
+		var shake_tween := create_tween()
+		for i in range(5):
+			var offset := 0.04 if i % 2 == 0 else -0.04
+			shake_tween.tween_property(body_mesh, "position:x", offset, 0.05)
+		shake_tween.tween_property(body_mesh, "position:x", 0.0, 0.05)
+
+	# Enfunda el arma de inmediato
+	_holster_gun()
+
+	# Restaura la iluminación original
+	_restore_environment()
+
+	# Registrar que el cliente se retira
+	GameManager.register_npc_left()
+
+	# Breve pausa para transmitir la reacción antes de huir
+	await get_tree().create_timer(0.8).timeout
+
+	# Escapa corriendo a gran velocidad
+	speed = 6.5
+	_start_leaving()
+
+
 ## Se ejecuta cuando se agota el tiempo de espera
 func _timeout() -> void:
-	if state != State.WAITING or is_game_over:
+	if state != State.WAITING or is_game_over or is_about_to_shoot:
 		return
 	_start_anger_sequence("¡Tardaste demasiado y el ladrón disparó!")
 

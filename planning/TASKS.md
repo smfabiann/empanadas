@@ -10,6 +10,7 @@
 - [TASK-008] Efectos ambientales de terror (parpadeo de luces en mostrador tras evento anomalo).
 
 ## Tareas Completadas
+- [TASK-010] Interaccion de persiana con NPCs, evasion de muerte por disparo (cancelar ira/muerte al cerrar persiana) y huida del Ladron.
 - [TASK-009] Plantilla modular de eventos estáticos (StaticNPCEvent), escena RobberNPC y trigger configurable en Inspector.
 - [TASK-004] Contadores de depuracion en UI (NPCs aparecidos y atendidos, toggle Inspector y F3).
 - [TASK-003] Sistema modular de eventos y anomalias de NPCs (NPCEventManager y FastNPC).
