@@ -134,8 +134,8 @@ func _discard_held_item(player: Node) -> void:
 		return
 
 	player.set("held_item", null)
-	var ray = player.get_node_or_null("Camera3D/RayCast3D") as RayCast3D
-	if ray and ray.get_exception_count() > 0:
+	var ray = player.get_node_or_null("Camera3D/RayCast3D")
+	if ray and held != null:
 		ray.remove_exception(held)
 
 	if held.get_parent():

@@ -274,24 +274,26 @@ func receive_item(item_node: Interactable) -> void:
 			label.text = "😊 ¡Buenísimo completo! ✅"
 		else:
 			is_correct = false
-			var err := completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup)
+			var err: String = String(completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup))
 			label.text = "😠 %s ❌" % err
 	else:
 		is_correct = false
 		label.text = "😠 ¡Esto no es un completo! ❌"
 
 	if is_correct:
-		var tween := create_tween()
-		tween.tween_property(self, "scale", Vector3(1.15, 0.9, 1.15), 0.1)
-		tween.tween_property(self, "scale", Vector3(0.95, 1.1, 0.95), 0.1)
-		tween.tween_property(self, "scale", Vector3.ONE, 0.15).set_ease(Tween.EASE_OUT)
+		if body_mesh:
+			var tween := create_tween()
+			tween.tween_property(body_mesh, "scale", Vector3(1.15, 0.9, 1.15), 0.1)
+			tween.tween_property(body_mesh, "scale", Vector3(0.95, 1.1, 0.95), 0.1)
+			tween.tween_property(body_mesh, "scale", Vector3.ONE, 0.15).set_ease(Tween.EASE_OUT)
 	else:
-		var tween := create_tween()
-		var orig_x := global_position.x
-		tween.tween_property(self, "global_position:x", orig_x + 0.1, 0.05)
-		tween.tween_property(self, "global_position:x", orig_x - 0.1, 0.05)
-		tween.tween_property(self, "global_position:x", orig_x + 0.05, 0.05)
-		tween.tween_property(self, "global_position:x", orig_x, 0.05)
+		if body_mesh:
+			var tween := create_tween()
+			var orig_x := body_mesh.position.x
+			tween.tween_property(body_mesh, "position:x", orig_x + 0.1, 0.05)
+			tween.tween_property(body_mesh, "position:x", orig_x - 0.1, 0.05)
+			tween.tween_property(body_mesh, "position:x", orig_x + 0.05, 0.05)
+			tween.tween_property(body_mesh, "position:x", orig_x, 0.05)
 
 	patience_bar_pivot.visible = false
 

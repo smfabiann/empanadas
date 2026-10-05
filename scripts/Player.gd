@@ -124,8 +124,8 @@ func _update_interaction_prompt() -> void:
 
 	# 1. Si miramos directamente a una estación de ingredientes 3D
 	if ray.is_colliding():
-		var col := ray.get_collider()
-		if col is IngredientStation:
+		var col = ray.get_collider()
+		if col != null and col.has_method("get_interaction_prompt"):
 			var info: Dictionary = col.get_interaction_prompt(self)
 			ui.set_prompt(info.get("text", ""), info.get("actionable", false))
 			return
@@ -167,12 +167,12 @@ func _get_target_npc() -> Node:
 
 	# 2. Si miramos hacia un NPC que esté esperando con un pedido
 	var npcs := get_tree().get_nodes_in_group("npcs")
-	var cam_fwd := -camera.global_transform.basis.z
+	var cam_fwd: Vector3 = -camera.global_transform.basis.z
 	for npc in npcs:
 		if npc.has_method("can_receive_item") and npc.can_receive_item():
-			var to_npc := (npc.global_position - camera.global_position).normalized()
+			var to_npc: Vector3 = (npc.global_position - camera.global_position).normalized()
 			if cam_fwd.dot(to_npc) > 0.25:
-				var dist := global_position.distance_to(npc.global_position)
+				var dist: float = global_position.distance_to(npc.global_position)
 				if dist < 4.2:
 					return npc
 
@@ -202,8 +202,8 @@ func _input(event: InputEvent) -> void:
 func _handle_interact() -> void:
 	# Prioridad 1: Si apuntamos a una estación de ingredientes 3D
 	if ray.is_colliding():
-		var collider := ray.get_collider()
-		if collider is IngredientStation:
+		var collider = ray.get_collider()
+		if collider != null and collider.has_method("get_interaction_prompt"):
 			collider.interact(self)
 			_update_interaction_prompt()
 			return
