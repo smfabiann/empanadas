@@ -1,4 +1,7 @@
 # Lista de cambios
+- **Corrección de Conteo Múltiple al Perder la Paciencia**:
+  - Se corrigió un error en `NPC.gd` y `RobberNPC.gd` donde el cliente con paciencia agotada (`patience_remaining <= 0`) volvía a invocar `_timeout()` y `GameManager.register_npc_left()` en cada frame durante la espera de salida.
+  - Se agregó el estado `State.REACTING` y la bandera `_is_order_resolved` para detener el procesamiento de paciencia inmediatamente al resolverse el pedido o agotarse el tiempo, garantizando que cada cliente se contabilice exactamente una única vez.
 - **Condición de Victoria al Sobrevivir 3 Días (HU-06, Issue #9)**:
   - **Meta de 3 Días Canónicos**: Se configuró la partida a un ciclo objetivo de 3 jornadas laborales (`max_days = 3` por defecto en `GameManager` y `NPCSpawner`), ajustable desde el Inspector.
   - **Detención del Flujo de Eventos**: Al culminar con vida el Día 3, se detiene automáticamente el flujo de eventos, anomalías y spawners (`game_active = false`, `can_spawn_npc = false`, timers detenidos).
