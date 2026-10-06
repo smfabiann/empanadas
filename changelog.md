@@ -1,5 +1,9 @@
 # Lista de cambios
-- **Sistema de Armado de Completos en 3D sin Interfaz (HU-11, Issue #14)**:
+- **Cielo Nocturno Urbano Procedimental (Sky Shader)**:
+  - Se reemplazó el `ProceduralSkyMaterial` con mapa de ruido plano por un shader de cielo procedimental dedicado en [night_sky.gdshader](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/shaders/night_sky.gdshader) configurado en el `WorldEnvironment` de [Main.tscn](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scenes/Main.tscn).
+  - Elimina distorsiones en los polos y no requiere cargar texturas pesadas.
+  - Calibrado para entorno urbano nocturno: gradiente con resplandor cálido de ciudad en el horizonte (`horizon_color`), noche profunda en el cenit (`sky_top_color`), transición oscura bajo el horizonte (`ground_color`) y atenuación de estrellas cerca del horizonte por contaminación lumínica.
+  - Controles con deslizadores (`hint_range`) en el Inspector para `star_density`, `star_threshold` (ajustado para cantidad moderada de estrellas) y `star_brightness`.
   - **Cocina Interactiva 3D**: Preparación física en el mundo 3D sin interfaces ni menús 2D; el jugador camina a cada estación para ensamblar el completo paso a paso con la tecla [E].
   - **Estaciones 3D en Cocina (`KitchenStations.tscn` e `IngredientStation.gd`)**: 6 estaciones modulares ubicadas en el estante y suelo del local:
 	- *Pan*: Dispensa un pan de completo en las manos vacías del jugador.

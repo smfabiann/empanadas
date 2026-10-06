@@ -7,8 +7,24 @@
 [ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
 [ext_resource type="PackedScene" uid="uid://deuv1f0onumkr" path="res://scenes/map/KitchenStations.tscn" id="4_kitchen"]
 [ext_resource type="Script" uid="uid://5gba233w2705" path="res://scripts/events/NPCEventManager.gd" id="5_eventmanager"]
+[ext_resource type="Shader" path="res://shaders/night_sky.gdshader" id="6_sky_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("6_sky_shader")
+shader_parameter/sky_top_color = Color(0.01, 0.02, 0.05, 1)
+shader_parameter/horizon_color = Color(0.12, 0.07, 0.03, 1)
+shader_parameter/ground_color = Color(0.01, 0.015, 0.02, 1)
+shader_parameter/star_density = 150.0
+shader_parameter/star_threshold = 0.988
+shader_parameter/star_brightness = 2.0
+
+[sub_resource type="Sky" id="Sky_nxtc6"]
+sky_material = SubResource("ShaderMaterial_sky")
 
 [sub_resource type="Environment" id="Environment_2a6q0"]
+background_mode = 2
+background_energy_multiplier = 0.5
+sky = SubResource("Sky_nxtc6")
 fog_enabled = true
 fog_light_color = Color(0.05, 0.03, 0.08, 1)
 fog_density = 0.015
@@ -47,7 +63,7 @@ albedo_color = Color(0, 0, 0, 1)
 environment = SubResource("Environment_2a6q0")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment" unique_id=1813892540]
-transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 10, 0)
+transform = Transform3D(0.9659258, 0, -0.25881907, 0.18301271, 0.7071068, 0.6830127, 0.18301271, -0.7071068, 0.6830127, 0, 10, 0)
 light_energy = 0.1
 shadow_enabled = true
 
