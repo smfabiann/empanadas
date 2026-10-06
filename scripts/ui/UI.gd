@@ -37,18 +37,6 @@ extends CanvasLayer
 @onready var next_day_button: Button = $HUD.get_node_or_null("DayEndPanel/VBoxContainer/NextDayButton")
 @onready var day_end_menu_button: Button = $HUD.get_node_or_null("DayEndPanel/VBoxContainer/DayEndMenuButton")
 
-# --- Pantalla de Victoria (HU-06) ---
-@onready var victory_panel: PanelContainer = $HUD.get_node_or_null("VictoryPanel")
-@onready var victory_title: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryTitle")
-@onready var victory_subtitle: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictorySubtitle")
-@onready var victory_lore: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryLore")
-@onready var victory_stat_days: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryStatDays")
-@onready var victory_stat_served: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryStatServed")
-@onready var victory_stat_wrong: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryStatWrong")
-@onready var victory_stat_lost: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryStatLost")
-@onready var victory_restart_button: Button = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryRestartButton")
-@onready var victory_menu_button: Button = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryMenuButton")
-
 var _banner_tween: Tween = null
 
 
@@ -83,14 +71,6 @@ func _ready() -> void:
 	if day_end_menu_button:
 		day_end_menu_button.pressed.connect(_on_menu_pressed)
 
-	# Conectar botones de la pantalla de victoria (HU-06)
-	if victory_panel:
-		victory_panel.visible = false
-	if victory_restart_button:
-		victory_restart_button.pressed.connect(_on_victory_restart_pressed)
-	if victory_menu_button:
-		victory_menu_button.pressed.connect(_on_menu_pressed)
-
 	# Conectar señales de GameManager
 	if GameManager:
 		if not GameManager.npc_spawned.is_connected(_on_npc_spawned):
@@ -105,8 +85,6 @@ func _ready() -> void:
 			GameManager.day_progress.connect(_on_day_progress)
 		if not GameManager.day_ended.is_connected(_on_day_ended):
 			GameManager.day_ended.connect(_on_day_ended)
-		if not GameManager.game_won.is_connected(_on_game_won):
-			GameManager.game_won.connect(_on_game_won)
 
 		GameManager.restore_environment(get_tree())
 		_update_spawned_count(GameManager.npcs_spawned)
@@ -184,12 +162,8 @@ func _show_day_banner(day: int) -> void:
 	_banner_tween.tween_property(day_banner, "modulate:a", 0.0, 0.8).set_ease(Tween.EASE_IN)
 
 
-## Notifica al jugador que la jornada terminó y muestra el resumen del día (Días intermedios)
+## Notifica al jugador que la jornada terminó y muestra el resumen del día
 func _on_day_ended(day: int) -> void:
-	# Si se ganó la partida (día final), la pantalla mostrada es VictoryPanel via _on_game_won
-	if GameManager.is_game_won or GameManager.is_final_day():
-		return
-
 	if crosshair:
 		crosshair.visible = false
 	if prompt_label:
@@ -200,12 +174,20 @@ func _on_day_ended(day: int) -> void:
 		day_banner.modulate.a = 0.0
 
 	var day_end_title = $HUD.get_node_or_null("DayEndPanel/VBoxContainer/DayEndTitle") as Label
-	if day_end_title:
-		day_end_title.text = "FIN DE LA JORNADA"
-	if day_end_subtitle:
-		day_end_subtitle.text = "Día %d completado" % day
-	if next_day_button:
-		next_day_button.text = "▶ Comenzar Día %d" % (day + 1)
+	if GameManager.is_final_day():
+		if day_end_title:
+			day_end_title.text = "🏆 ¡TURNO COMPLETADO!"
+		if day_end_subtitle:
+			day_end_subtitle.text = "¡Has completado los %d días de trabajo!" % day
+		if next_day_button:
+			next_day_button.text = "🔄 Reiniciar Partida"
+	else:
+		if day_end_title:
+			day_end_title.text = "FIN DE LA JORNADA"
+		if day_end_subtitle:
+			day_end_subtitle.text = "Día %d completado" % day
+		if next_day_button:
+			next_day_button.text = "▶ Comenzar Día %d" % (day + 1)
 
 	if day_stat_attended:
 		day_stat_attended.text = "Clientes atendidos: %d/%d" % [GameManager.clients_attended_today, GameManager.max_clients_per_day]
@@ -226,58 +208,8 @@ func _on_day_ended(day: int) -> void:
 	SFXManager.play_correct()
 
 
-## Muestra la pantalla de victoria al sobrevivir los 3 días completos (HU-06)
-func _on_game_won(stats: Dictionary) -> void:
-	if crosshair:
-		crosshair.visible = false
-	if prompt_label:
-		prompt_label.visible = false
-	if day_end_panel:
-		day_end_panel.visible = false
-	if _banner_tween and _banner_tween.is_valid():
-		_banner_tween.kill()
-	if day_banner:
-		day_banner.modulate.a = 0.0
-
-	var days_survived: int = int(stats.get("day", 3))
-	var max_d: int = int(stats.get("max_days", 3))
-	if victory_title:
-		victory_title.text = "🏆 ¡HAS GANADO! 🏆"
-	if victory_subtitle:
-		victory_subtitle.text = "¡Has sobrevivido los %d días de turno nocturno!" % days_survived
-	if victory_lore:
-		victory_lore.text = "Lograste resistir a las anomalías y escapar de la ciudad a salvo."
-
-	if victory_stat_days:
-		victory_stat_days.text = "📅 Días sobrevividos: %d/%d" % [days_survived, max_d]
-	if victory_stat_served:
-		victory_stat_served.text = "✅ Pedidos correctos: %d" % int(stats.get("total_correct", 0))
-	if victory_stat_wrong:
-		victory_stat_wrong.text = "❌ Pedidos equivocados: %d" % int(stats.get("total_wrong", 0))
-	if victory_stat_lost:
-		victory_stat_lost.text = "🏃 Clientes que se fueron: %d" % int(stats.get("total_lost", 0))
-
-	if victory_panel:
-		victory_panel.modulate.a = 0.0
-		victory_panel.visible = true
-		create_tween().tween_property(victory_panel, "modulate:a", 1.0, 0.5)
-
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	if SFXManager.has_method("play_victory"):
-		SFXManager.play_victory()
-	else:
-		SFXManager.play_correct()
-
-
-func _on_victory_restart_pressed() -> void:
-	if GameManager:
-		GameManager.restore_environment(get_tree())
-		GameManager.reset_game()
-	get_tree().reload_current_scene()
-
-
 func _on_next_day_pressed() -> void:
-	if GameManager.is_final_day() or GameManager.is_game_won:
+	if GameManager.is_final_day():
 		if GameManager:
 			GameManager.restore_environment(get_tree())
 			GameManager.reset_game()

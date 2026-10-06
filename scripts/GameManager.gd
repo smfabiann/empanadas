@@ -13,10 +13,8 @@ signal game_over(reason: String)
 signal day_started(day: int, max_clients: int)
 signal day_progress(attended: int, max_clients: int)
 signal day_ended(day: int)
-signal game_won(stats: Dictionary)
 
 var game_active: bool = true
-var is_game_won: bool = false
 var high_score: int = 0
 
 ## Contadores de clientes (totales de la partida)
@@ -29,8 +27,8 @@ var npcs_served_correctly: int = 0
 var current_day: int = 1
 ## Cupo de clientes por jornada. Lo sobrescribe NPCSpawner desde el Inspector.
 var max_clients_per_day: int = 8
-## Cantidad máxima de días de la partida para ganar (HU-06: 3 días por defecto; 0 = días infinitos).
-var max_days: int = 3
+## Cantidad máxima de días de la partida (0 = días infinitos). Lo sobrescribe NPCSpawner desde el Inspector.
+var max_days: int = 5
 ## Clientes cuya visita terminó hoy (atendidos con o sin éxito + los que se fueron)
 var clients_attended_today: int = 0
 var clients_served_correctly_today: int = 0
@@ -113,33 +111,19 @@ func is_day_quota_reached() -> bool:
 
 ## Indica si el spawner puede generar un nuevo cliente en este momento
 func can_spawn_npc() -> bool:
-	return game_active and day_active and not is_game_won and not is_day_quota_reached()
+	return game_active and day_active and not is_day_quota_reached()
 
 
-## Indica si el jugador puede moverse e interactuar (no durante el resumen del día, tras Game Over ni al ganar)
+## Indica si el jugador puede moverse e interactuar (no durante el resumen del día ni tras Game Over)
 func can_player_act() -> bool:
-	return game_active and day_active and not is_game_won
+	return game_active and day_active
 
 
-## Cierra la jornada actual y notifica a la UI para mostrar el resumen o la victoria (HU-06)
+## Cierra la jornada actual y notifica a la UI para mostrar el resumen
 func end_day() -> void:
 	if not day_active or not game_active:
 		return
 	day_active = false
-	if is_final_day():
-		is_game_won = true
-		game_active = false
-		var stats: Dictionary = {
-			"day": current_day,
-			"max_days": max_days,
-			"total_served": npcs_served,
-			"total_correct": npcs_served_correctly,
-			"total_wrong": npcs_served - npcs_served_correctly,
-			"total_lost": maxi(0, npcs_spawned - npcs_served),
-			"clients_attended_today": clients_attended_today,
-			"clients_correct_today": clients_served_correctly_today
-		}
-		game_won.emit(stats)
 	day_ended.emit(current_day)
 
 
@@ -203,7 +187,6 @@ func restore_environment(tree: SceneTree = null) -> void:
 
 func reset_game() -> void:
 	game_active = true
-	is_game_won = false
 	npcs_spawned = 0
 	npcs_served = 0
 	npcs_served_correctly = 0

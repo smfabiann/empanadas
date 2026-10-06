@@ -10,3 +10,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.54713345, 0)
 use_collision = true
 size = Vector3(3.5, 0.08, 0.7)
 material = SubResource("StandardMaterial3D_shelf")
+
+[node name="ShelfBack" type="CSGBox3D" parent="." unique_id=1092962858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.298007)
+size = Vector3(3.5, 1, 0.1)
+material = SubResource("StandardMaterial3D_shelf")
+
+[node name="ShelfUppper" type="CSGBox3D" parent="." unique_id=894883817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46520174, 0)
+use_collision = true
+size = Vector3(3.5, 0.08, 0.7)
+material = SubResource("StandardMaterial3D_shelf")

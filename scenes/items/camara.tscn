@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://cbkkg5kunltjd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bhunq"]
+albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_riqys"]
+albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sn0t7"]
+albedo_color = Color(1, 0.23137255, 0, 1)
+
+[node name="Camara" type="Node3D" unique_id=251904348]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="." unique_id=63664498]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004475236, 0.0046978295, 0.23325992)
+size = Vector3(1, 1, 1.3443604)
+material = SubResource("StandardMaterial3D_bhunq")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="CSGBox3D" unique_id=1965032888]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009992838, -0.013183594, 1.1130213)
+size = Vector3(0.4835205, 0.4404297, 1.0072861)
+material = SubResource("StandardMaterial3D_riqys")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGBox3D" unique_id=1491914714]
+transform = Transform3D(1, 0, 0, 0, -0.015819171, -0.9998749, 0, 0.9998749, -0.015819171, 0.30275905, 0.32367733, 0.66391444)
+radius = 0.13134766
+height = 0.15222168
+material = SubResource("StandardMaterial3D_sn0t7")
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1449821769]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 1.9363353)
