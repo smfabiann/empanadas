@@ -1,124 +1,45 @@
 extends Node
 ## Spawner de NPCs — solo 1 cliente a la vez frente a la ventana.
-## Gestiona el ciclo de vida, la asignación de eventos/anomalías y el cupo de
-## clientes por jornada (bucle de días).
-
-@export_group("Jornada / Días")
-## Cantidad de clientes que se atienden por día. Al alcanzarla deja de spawnear
-## y, cuando se retira el último cliente, termina la jornada.
-@export_range(1, 50, 1) var max_clients_per_day: int = 8
-## Cantidad máxima de días de la partida para ganar (HU-06: 3 días por defecto; 0 = días infinitos)
-@export_range(0, 30, 1) var max_days: int = 3
-## Segundos de espera antes del primer cliente de cada día
-@export var first_client_delay: float = 2.0
-
-@export_group("Eventos y Anomalías")
-## Referencia al nodo gestor de eventos en la escena. Si está vacío, se busca automáticamente.
-@export var event_manager: NPCEventManager
-
-## Activa o desactiva el sistema de eventos por completo
-@export var events_enabled: bool = true
-## Probabilidad base de que aparezca un evento aleatorio (0.0 = nunca, 1.0 = siempre)
-@export_range(0.0, 1.0, 0.05) var random_event_chance: float = 0.35
-## Forzar un evento específico por ID (ej. "big_head", "fast_npc", "robber") para debug. Dejar vacío para modo normal.
-@export var debug_force_event: String = ""
-## Si está activo, ignora el azar y siempre lanza un evento (100% de probabilidad)
-@export var debug_always_trigger_event: bool = false
-
-@export_subgroup("Eventos Estáticos")
-## Cantidad de clientes atendidos para activar el Ladrón (cambiar en Inspector para debug)
-@export var robber_trigger_served_count: int = 5
-
-@export_group("Puntos de Navegación (Handles)")
-## Marker en la escena donde aparecen los clientes
-@export var spawn_point: Marker3D
-## Marker frente al mostrador donde se detienen a ordenar
-@export var window_point: Marker3D
-## Marker hacia donde caminan para salir del mapa
-@export var exit_point: Marker3D
+## Cuando se va, espera un intervalo y genera el siguiente.
 
 var npc_scene: PackedScene = preload("res://scenes/NPC.tscn")
 var current_npc: Node = null
 
 @onready var timer: Timer = $Timer
+@onready var spawn_point: Marker3D
+@onready var window_point: Marker3D
+@onready var exit_point: Marker3D
 
 
 func _ready() -> void:
-	if event_manager == null:
-		event_manager = get_parent().get_node_or_null("NPCEventManager") as NPCEventManager
-	if event_manager == null:
-		event_manager = NPCEventManager.new()
-		get_parent().add_child.call_deferred(event_manager)
-
-	if robber_trigger_served_count > 0:
-		event_manager.set_static_event_trigger("robber", robber_trigger_served_count)
-
-	if spawn_point == null:
-		spawn_point = get_parent().get_node_or_null("SpawnPoint")
-	if window_point == null:
-		window_point = get_parent().get_node_or_null("WindowPoint")
-	if exit_point == null:
-		exit_point = get_parent().get_node_or_null("ExitPoint")
+	spawn_point = get_parent().get_node("SpawnPoint")
+	# Renombramos CounterPoint a WindowPoint en Main.tscn
+	window_point = get_parent().get_node("WindowPoint")
+	exit_point = get_parent().get_node("ExitPoint")
 
 	timer.wait_time = GameManager.get_spawn_interval()
 	timer.one_shot = true
 	timer.timeout.connect(_spawn_npc)
 
-	GameManager.set_max_clients_per_day(max_clients_per_day)
-	GameManager.set_max_days(max_days)
-	if not GameManager.day_started.is_connected(_on_day_started):
-		GameManager.day_started.connect(_on_day_started)
-	if not GameManager.game_won.is_connected(_on_game_won):
-		GameManager.game_won.connect(_on_game_won)
-
 	# Spawnear el primer NPC tras un breve delay
-	timer.start(first_client_delay)
-
-
-func _on_game_won(_stats: Dictionary) -> void:
-	if timer:
-		timer.stop()
+	timer.start(2.0)
 
 
 func _spawn_npc() -> void:
-	# Bloquea el spawn si terminó la partida, la jornada o se alcanzó el cupo del día
-	if not GameManager.can_spawn_npc():
+	if not GameManager.game_active:
 		return
 	if current_npc != null and is_instance_valid(current_npc):
 		return
 
-	var spawned_number: int = GameManager.register_npc_spawned()
-
-	# Sincronizar umbral configurado en Inspector
-	if robber_trigger_served_count > 0:
-		event_manager.set_static_event_trigger("robber", robber_trigger_served_count)
-
-	# 1. Seleccionar evento (estático, fijo, aleatorio o forzado por debug)
-	var event: NPCEvent = event_manager.pick_event_for_npc(
-		spawned_number,
-		GameManager.npcs_served,
-		events_enabled,
-		random_event_chance,
-		debug_force_event,
-		debug_always_trigger_event
-	)
-
-	# 2. Si el evento provee un modelo/escena de NPC propia (ej. RobberNPC), usarla
-	var scene_to_spawn: PackedScene = npc_scene
-	if event is StaticNPCEvent and event.custom_npc_scene != null:
-		scene_to_spawn = event.custom_npc_scene
-
-	var npc = scene_to_spawn.instantiate()
+	var npc = npc_scene.instantiate()
 	npc.spawn_pos = spawn_point.global_position
+	# La posicion de destino ahora sera la ventana
 	npc.target_pos = window_point.global_position
 	npc.exit_pos = exit_point.global_position
 
-	if event:
-		npc.assign_event(event)
-
 	current_npc = npc
 
-	# Re-conectamos las señales relevantes
+	# Re-conectamos las seales relevantes
 	npc.tree_exited.connect(_on_npc_removed)
 	
 	# Cambiamos estado inicial
@@ -129,19 +50,6 @@ func _spawn_npc() -> void:
 
 func _on_npc_removed() -> void:
 	current_npc = null
-	if not GameManager.game_active or not is_inside_tree():
-		return
-
-	# Cupo del día cumplido y ya no queda nadie en la ventana: fin de la jornada
-	if GameManager.day_active and GameManager.is_day_quota_reached():
-		timer.stop()
-		GameManager.end_day()
-		return
-
-	timer.wait_time = GameManager.get_spawn_interval()
-	timer.start()
-
-
-func _on_day_started(_day: int, _max_clients: int) -> void:
-	timer.stop()
-	timer.start(first_client_delay)
+	if GameManager.game_active:
+		timer.wait_time = GameManager.get_spawn_interval()
+		timer.start()
