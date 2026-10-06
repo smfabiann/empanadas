@@ -46,7 +46,11 @@ albedo_color = Color(1, 0.23137255, 0, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_menu"]
 albedo_color = Color(0.1, 0.25, 0.15, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mwfav"]
+albedo_color = Color(0.0039576306, 0.079299785, 0.035263643, 1)
+
 [sub_resource type="PlaneMesh" id="PlaneMesh_fk6vv"]
+material = SubResource("StandardMaterial3D_mwfav")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_c01mt"]
 data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
@@ -56,6 +60,9 @@ albedo_color = Color(0.2520276, 0.25202766, 0.25202763, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2a6q0"]
 albedo_color = Color(18.892157, 18.892157, 18.892157, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tem6s"]
+albedo_color = Color(0.24477637, 0.24477643, 0.24477634, 1)
 
 [node name="Main" type="Node3D" unique_id=1661772069]
 
@@ -68,6 +75,14 @@ environment = SubResource("Environment_2a6q0")
 transform = Transform3D(0.9659258, 0, -0.25881907, 0.18301271, 0.7071068, 0.6830127, 0.18301271, -0.7071068, 0.6830127, 0, 10, 0)
 light_color = Color(0.3403393, 0.34033933, 0.3403393, 1)
 light_energy = 0.001
+light_indirect_energy = 0.663
+shadow_enabled = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment/DirectionalLight3D" unique_id=245148827]
+transform = Transform3D(0.9659258, 0, -0.25881907, 0.18301271, 0.7071068, 0.6830127, 0.18301271, -0.7071068, 0.6830127, 0, 10, 0)
+visible = false
+light_color = Color(0.3403393, 0.34033933, 0.3403393, 1)
+light_energy = 3.281
 light_indirect_energy = 0.663
 shadow_enabled = true
 
@@ -154,7 +169,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 2.8999999, -0.60000014)
 light_energy = 0.901
 
 [node name="Floor" type="MeshInstance3D" parent="Map" unique_id=1040081921]
-transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4, 0, 10)
 mesh = SubResource("PlaneMesh_fk6vv")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Map/Floor" unique_id=2086776713]
@@ -168,13 +183,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
 [node name="Beredas" type="Node3D" parent="Map" unique_id=1380146062]
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Map/Beredas" unique_id=1326237948]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49999523, -0.35, -6.75)
-size = Vector3(115, 0.90000004, 2.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5000038, -0.35, -6.75)
+use_collision = true
+size = Vector3(205, 0.90000004, 2.9)
 material = SubResource("StandardMaterial3D_fk6vv")
 
 [node name="CSGBox3D2" type="CSGBox3D" parent="Map/Beredas" unique_id=1292904930]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4999952, -0.35, -19.75)
-size = Vector3(113, 0.90000004, 2.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5000038, -0.35, -19.75)
+use_collision = true
+size = Vector3(203, 0.90000004, 2.9)
 material = SubResource("StandardMaterial3D_fk6vv")
 
 [node name="Farol" type="Node3D" parent="Map" unique_id=362012533]
@@ -193,6 +210,14 @@ material = SubResource("StandardMaterial3D_2a6q0")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
 light_energy = 0.982
 omni_range = 10.6
+
+[node name="Calle" type="Node3D" parent="Map" unique_id=370333112]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Map/Calle" unique_id=847946879]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, -0.49934468, -0.25000095)
+size = Vector3(206.5, 1, 10.1)
+material = SubResource("StandardMaterial3D_tem6s")
 
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
