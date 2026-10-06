@@ -29,8 +29,6 @@ background_mode = 2
 background_color = Color(0.02, 0.01, 0.06, 1)
 background_energy_multiplier = 0.5
 sky = SubResource("Sky_nxtc6")
-ambient_light_source = 2
-ambient_light_color = Color(0.85, 0.78, 0.6, 1)
 ambient_light_energy = 0.4
 fog_enabled = true
 fog_light_color = Color(0.05, 0.03, 0.08, 1)
@@ -53,6 +51,12 @@ albedo_color = Color(0.1, 0.25, 0.15, 1)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_c01mt"]
 data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fk6vv"]
+albedo_color = Color(0.2520276, 0.25202766, 0.25202763, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2a6q0"]
+albedo_color = Color(18.892157, 18.892157, 18.892157, 1)
+
 [node name="Main" type="Node3D" unique_id=1661772069]
 
 [node name="Enviroment" type="Node" parent="." unique_id=2009176575]
@@ -62,13 +66,15 @@ environment = SubResource("Environment_2a6q0")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment" unique_id=1813892540]
 transform = Transform3D(0.9659258, 0, -0.25881907, 0.18301271, 0.7071068, 0.6830127, 0.18301271, -0.7071068, 0.6830127, 0, 10, 0)
-light_energy = 0.1
+light_color = Color(0.3403393, 0.34033933, 0.3403393, 1)
+light_energy = 0.001
+light_indirect_energy = 0.663
 shadow_enabled = true
 
 [node name="Map" type="Node3D" parent="." unique_id=925572269]
 
 [node name="Shop" parent="Map" unique_id=831494344 instance=ExtResource("1_c01mt")]
-transform = Transform3D(0.9999941, -0.0015523564, -0.0030701628, 0.0015251127, 0.9999596, -0.008857943, 0.0030837867, 0.00885321, 0.9999561, 3.4703743, 1.7049768, -0.22162199)
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 3.4703743, 1.7049768, -0.22162199)
 
 [node name="StepsCollision" parent="Map/Shop" unique_id=536071929 instance=ExtResource("3_wp0k4")]
 
@@ -122,6 +128,7 @@ outline_size = 4
 
 [node name="CeilingLight" type="SpotLight3D" parent="Map" unique_id=628936849]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -0.19571686, 3.0396004, 0.5)
+visible = false
 light_color = Color(1, 0.92, 0.75, 1)
 light_energy = 2.5
 shadow_enabled = true
@@ -130,6 +137,7 @@ spot_angle = 50.0
 
 [node name="ShelfLight" type="SpotLight3D" parent="Map" unique_id=66632339]
 transform = Transform3D(1, 0, 0, 0, -0.342, 0.9397, 0, -0.9397, -0.342, -0.19571686, 2.6396003, 2)
+visible = false
 light_color = Color(1, 0.9, 0.7, 1)
 light_energy = 1.5
 spot_range = 4.0
@@ -138,8 +146,12 @@ spot_angle = 40.0
 [node name="ShelfOmniLight" type="OmniLight3D" parent="Map" unique_id=136170235]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.19571686, 1.9396003, 2.7)
 light_color = Color(1, 0.95, 0.85, 1)
-light_energy = 2.2
+light_energy = 0.901
 omni_range = 4.5
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=597470549]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 2.8999999, -0.60000014)
+light_energy = 0.901
 
 [node name="Floor" type="MeshInstance3D" parent="Map" unique_id=1040081921]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
@@ -153,11 +165,34 @@ shape = SubResource("ConcavePolygonShape3D_c01mt")
 [node name="Patio" parent="Map" unique_id=1250973991 instance=ExtResource("7_bjd11")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
 
-[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=597470549]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 2.8999999, -0.6000001)
-light_energy = 5.865
+[node name="Beredas" type="Node3D" parent="Map" unique_id=1380146062]
 
-[node name="Node3D" type="Node3D" parent="Map" unique_id=1380146062]
+[node name="CSGBox3D" type="CSGBox3D" parent="Map/Beredas" unique_id=1326237948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.49999523, -0.35, -6.75)
+size = Vector3(115, 0.90000004, 2.9)
+material = SubResource("StandardMaterial3D_fk6vv")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Map/Beredas" unique_id=1292904930]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4999952, -0.35, -19.75)
+size = Vector3(113, 0.90000004, 2.9)
+material = SubResource("StandardMaterial3D_fk6vv")
+
+[node name="Farol" type="Node3D" parent="Map" unique_id=362012533]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, -7.9)
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Map/Farol" unique_id=305145367]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3841858e-07, 2.5, -8.940697e-08)
+radius = 0.1
+height = 5.0
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="Map/Farol" unique_id=573869632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.940697e-08, 4, 0)
+material = SubResource("StandardMaterial3D_2a6q0")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Map/Farol" unique_id=18893400]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
+light_energy = 0.982
+omni_range = 10.6
 
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
