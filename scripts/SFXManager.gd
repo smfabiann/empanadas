@@ -23,6 +23,10 @@ func play_correct() -> void:
 	_play_sequence([523.25, 659.25, 783.99], 0.08)
 
 
+func play_victory() -> void:
+	_play_sequence([523.25, 659.25, 783.99, 1046.50], 0.12)
+
+
 func play_incorrect() -> void:
 	_play_sequence([200.0, 150.0], 0.15)
 
@@ -34,6 +38,14 @@ func play_combo(level: int) -> void:
 
 func play_game_over() -> void:
 	_play_sequence([400.0, 350.0, 300.0, 200.0], 0.2)
+
+
+func play_gunshot() -> void:
+	_play_sequence([220.0, 110.0, 55.0], 0.06)
+
+
+func play_tense_anger() -> void:
+	_play_sequence([125.0, 105.0, 85.0, 65.0], 0.35)
 
 
 func play_npc_arrive() -> void:

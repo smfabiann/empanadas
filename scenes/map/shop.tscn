@@ -1,27 +1,13 @@
 [gd_scene format=3 uid="uid://dtdqocd2hb5r"]
 
-[ext_resource type="Script" path="res://scripts/SecurityMonitor.gd" id="2_monitor"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_monitor_frame"]
-albedo_color = Color(0.08, 0.08, 0.1, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_monitor_screen"]
-albedo_color = Color(0.02, 0.02, 0.05, 1)
-emission_enabled = true
-emission = Color(0.01, 0.01, 0.03, 1)
-emission_energy_multiplier = 0.2
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_monitor"]
-size = Vector3(0.05, 0.55, 0.75)
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_color = Color(0.22, 0.18, 0.15, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_back"]
-albedo_color = Color(0.28, 0.22, 0.18, 1)
+albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_side"]
-albedo_color = Color(0.25, 0.2, 0.17, 1)
+albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
 
 [sub_resource type="GDScript" id="GDScript_puerta"]
 script/source = "extends AnimatableBody3D
@@ -55,7 +41,7 @@ albedo_color = Color(0.15, 0.15, 0.18, 1)
 albedo_color = Color(0.2, 0.18, 0.16, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_front"]
-albedo_color = Color(0.25, 0.2, 0.17, 1)
+albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
 
 [sub_resource type="GDScript" id="GDScript_persiana"]
 script/source = "extends Node3D
@@ -124,21 +110,12 @@ albedo_color = Color(0.7, 0.2, 0.2, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sidewalk"]
 albedo_color = Color(0.2702219, 0.27022195, 0.27022177, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8mpt3"]
-albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fefuw"]
-albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_huoiy"]
-albedo_color = Color(1, 0.23137255, 0, 1)
-
 [node name="Shop" type="Node3D" unique_id=831494344]
 
 [node name="Floor" type="CSGBox3D" parent="." unique_id=328204686]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.6, -0.7022095)
 use_collision = true
-size = Vector3(8, 0.2, 10)
+size = Vector3(8, 0.2, 8.595581)
 material = SubResource("StandardMaterial3D_floor")
 
 [node name="WallBack" type="CSGBox3D" parent="." unique_id=809778567]
@@ -153,9 +130,9 @@ operation = 2
 size = Vector3(1.15, 2.25, 0.5)
 
 [node name="WallLeft" type="CSGBox3D" parent="." unique_id=512241074]
-transform = Transform3D(1.0588065, 0, 0, 0, 1.0433729, 0, 0, 0, 1, -7.8, 0, 0)
+transform = Transform3D(1.0588065, 0, 0, 0, 1.0433729, 0, 0, 0, 1, -7.8, 0, -0.69970703)
 use_collision = true
-size = Vector3(0.2, 3, 10)
+size = Vector3(0.2, 3, 8.600586)
 material = SubResource("StandardMaterial3D_wall_side")
 
 [node name="BackDoor" type="AnimatableBody3D" parent="." unique_id=900000001]
@@ -179,14 +156,14 @@ height = 0.2
 material = SubResource("StandardMaterial3D_register")
 
 [node name="WallRight" type="CSGBox3D" parent="." unique_id=1451498433]
-transform = Transform3D(1.009727, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+transform = Transform3D(1.009727, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.7011719)
 use_collision = true
-size = Vector3(0.2, 3, 10)
+size = Vector3(0.2, 3, 8.597656)
 material = SubResource("StandardMaterial3D_wall_side")
 
 [node name="Ceiling" type="CSGBox3D" parent="." unique_id=2042987931]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0069541, -3.9, 1.5, 0)
-size = Vector3(8, 0.15, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1.0069541, -3.9, 1.5, -0.71502095)
+size = Vector3(8, 0.15, 8.579834)
 material = SubResource("StandardMaterial3D_ceiling")
 
 [node name="Counter" type="CSGBox3D" parent="." unique_id=610533249]
@@ -245,55 +222,12 @@ size = Vector3(0.15, 0.15, 0.15)
 shape = SubResource("BoxShape3D_boton")
 
 [node name="Awning" type="CSGBox3D" parent="." unique_id=2030810770]
-transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, -3.9, 1.2545646, -3.8580353)
-size = Vector3(5, 0.1, 1.2060547)
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, -3.9, 1.2165253, -4)
+size = Vector3(5, 0.1, 1.5)
 material = SubResource("StandardMaterial3D_awning")
 
 [node name="Sidewalk" type="CSGBox3D" parent="." unique_id=1891771189]
-transform = Transform3D(0.9961373, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.62, -6.5)
+transform = Transform3D(0.9961373, 0, 0, 0, 1, 0, 0, 0, 1, -3.9, -1.62, -5.7161865)
 use_collision = true
-size = Vector3(8, 0.15, 6)
+size = Vector3(8, 0.15, 4.432373)
 material = SubResource("StandardMaterial3D_sidewalk")
-
-[node name="SecurityMonitor" type="StaticBody3D" parent="." unique_id=850000001]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.65, 0.2, -1.0)
-collision_layer = 2
-script = ExtResource("2_monitor")
-
-[node name="Frame" type="CSGBox3D" parent="SecurityMonitor" unique_id=850000002]
-size = Vector3(0.08, 0.65, 0.85)
-material = SubResource("StandardMaterial3D_monitor_frame")
-
-[node name="ScreenMesh" type="CSGBox3D" parent="SecurityMonitor" unique_id=850000003]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0.02, 0, 0)
-size = Vector3(0.05, 0.75, 0.55)
-material = SubResource("StandardMaterial3D_monitor_screen")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="SecurityMonitor" unique_id=850000004]
-shape = SubResource("BoxShape3D_monitor")
-
-[node name="SubViewport" type="SubViewport" parent="SecurityMonitor" unique_id=850000005]
-size = Vector2i(256, 192)
-render_target_update_mode = 3
-
-[node name="Camara" type="Node3D" parent="." unique_id=234723825]
-transform = Transform3D(0.112748295, -0.07688941, -0.29211664, 0.0102944635, 0.3463292, -0.07261926, 0.25282598, 0.02018731, 0.13322693, -0.2530322, 0.83284974, -5.328439)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="Camara" unique_id=2000649728]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004475236, 0.0046978295, 0.23325992)
-size = Vector3(1, 1, 1.3443604)
-material = SubResource("StandardMaterial3D_8mpt3")
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="Camara/CSGBox3D" unique_id=620995937]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009992838, -0.013183594, 1.1130213)
-size = Vector3(0.4835205, 0.4404297, 1.0072861)
-material = SubResource("StandardMaterial3D_fefuw")
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Camara/CSGBox3D" unique_id=237760557]
-transform = Transform3D(1, 0, 0, 0, -0.015819171, -0.9998749, 0, 0.9998749, -0.015819171, 0.30275905, 0.32367733, 0.66391444)
-radius = 0.13134766
-height = 0.15222168
-material = SubResource("StandardMaterial3D_huoiy")
-
-[node name="Camera3D" type="Camera3D" parent="Camara" unique_id=499935786]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 1.334404)
