@@ -24,16 +24,19 @@ var _bob_timer: float = 0.0
 var held_item: Interactable = null
 var is_dead: bool = false
 
+var is_viewing_monitor: bool = false
+
 
 func _ready() -> void:
 	add_to_group("player")
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	floor_snap_length = 0.25
 	floor_constant_speed = true
+	camera.current = true
 
 
 func _physics_process(delta: float) -> void:
-	if not GameManager.can_player_act() or is_dead:
+	if not GameManager.can_player_act() or is_dead or is_viewing_monitor:
 		return
 	_handle_movement(delta)
 
@@ -122,6 +125,15 @@ func _update_interaction_prompt() -> void:
 	if not ui or not ui.has_method("set_prompt"):
 		return
 
+	if is_viewing_monitor:
+		var sec_script = load("res://scripts/SecurityMonitor.gd")
+		if sec_script and sec_script.active_monitor:
+			var info: Dictionary = sec_script.active_monitor.get_interaction_prompt(self)
+			ui.set_prompt(info.get("text", ""), info.get("actionable", true))
+		else:
+			ui.set_prompt("[E] Volver a tu vista\n[F] Visión Nocturna", true)
+		return
+
 	# 1. Si miramos directamente a una estación de ingredientes 3D
 	if ray.is_colliding():
 		var col = ray.get_collider()
@@ -184,7 +196,7 @@ func _input(event: InputEvent) -> void:
 		return
 
 	# Rotar la vista con el ratón (360° horizontal, limitado vertical)
-	if event is InputEventMouseMotion:
+	if event is InputEventMouseMotion and not is_viewing_monitor:
 		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		camera.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
 		camera.rotation.x = clampf(camera.rotation.x, -PITCH_LIMIT, PITCH_LIMIT)
@@ -197,9 +209,27 @@ func _input(event: InputEvent) -> void:
 	# Soltar ítem
 	if event.is_action_pressed("drop_item"):
 		_drop_held_item()
+		
+	# Visión de anomalías en el monitor (tecla F)
+	if event is InputEventKey and event.keycode == KEY_F and event.pressed and not event.echo:
+		if is_viewing_monitor:
+			var sec_script = load("res://scripts/SecurityMonitor.gd")
+			if sec_script and sec_script.active_monitor:
+				sec_script.active_monitor.toggle_anomaly_vision()
+			elif ray.is_colliding():
+				var collider = ray.get_collider()
+				if collider.has_method("toggle_anomaly_vision"):
+					collider.toggle_anomaly_vision()
 
 
 func _handle_interact() -> void:
+	# Si ya estamos viendo el monitor, presionar E nos regresa inmediatamente
+	if is_viewing_monitor:
+		var sec_script = load("res://scripts/SecurityMonitor.gd")
+		if sec_script and sec_script.active_monitor:
+			sec_script.active_monitor.interact(self)
+			_update_interaction_prompt()
+			return
 	# Prioridad 1: Si apuntamos a una estación de ingredientes 3D
 	if ray.is_colliding():
 		var collider = ray.get_collider()

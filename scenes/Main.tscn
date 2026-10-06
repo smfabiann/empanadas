@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cegpnoa17isb7" path="res://scenes/UI.tscn" id="2_ui"]
 [ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
 [ext_resource type="PackedScene" uid="uid://deuv1f0onumkr" path="res://scenes/map/KitchenStations.tscn" id="4_kitchen"]
+[ext_resource type="PackedScene" path="res://scenes/SecurityMonitor.tscn" id="4_q8u5g"]
 [ext_resource type="Script" uid="uid://5gba233w2705" path="res://scripts/events/NPCEventManager.gd" id="5_eventmanager"]
 [ext_resource type="Shader" uid="uid://d2h8ainh7oeat" path="res://shaders/night_sky.gdshader" id="6_sky_shader"]
 
@@ -23,8 +24,12 @@ sky_material = SubResource("ShaderMaterial_sky")
 
 [sub_resource type="Environment" id="Environment_2a6q0"]
 background_mode = 2
+background_color = Color(0.02, 0.01, 0.06, 1)
 background_energy_multiplier = 0.5
 sky = SubResource("Sky_nxtc6")
+ambient_light_source = 2
+ambient_light_color = Color(0.85, 0.78, 0.6, 1)
+ambient_light_energy = 0.4
 fog_enabled = true
 fog_light_color = Color(0.05, 0.03, 0.08, 1)
 fog_density = 0.015
@@ -37,6 +42,15 @@ size = Vector3(0.05, 0.315, 3)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nxtc6"]
 size = Vector3(0.05, 0.27, 4.1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wp0k4"]
+albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bjd11"]
+albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qmy6f"]
+albedo_color = Color(1, 0.23137255, 0, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_menu"]
 albedo_color = Color(0.1, 0.25, 0.15, 1)
@@ -97,6 +111,31 @@ shape = SubResource("BoxShape3D_nxtc6")
 
 [node name="TrashBin" parent="Map/Shop" unique_id=522034830 instance=ExtResource("2_nxtc6")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1278753, -1.25, 3.1)
+
+[node name="SecurityMonitor" parent="Map/Shop" unique_id=185473119 instance=ExtResource("4_q8u5g")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.65, 0.2, -1)
+
+[node name="Camara" type="Node3D" parent="Map/Shop" unique_id=1301101136]
+transform = Transform3D(0.112748295, -0.07688941, -0.29211664, 0.0102944635, 0.3463292, -0.07261926, 0.25282598, 0.02018731, 0.13322693, -0.2530322, 0.83284974, -5.328439)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Map/Shop/Camara" unique_id=1728434844]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.004475236, 0.0046978295, 0.23325992)
+size = Vector3(1, 1, 1.3443604)
+material = SubResource("StandardMaterial3D_wp0k4")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Map/Shop/Camara/CSGBox3D" unique_id=1893143907]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.009992838, -0.013183594, 1.1130213)
+size = Vector3(0.4835205, 0.4404297, 1.0072861)
+material = SubResource("StandardMaterial3D_bjd11")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Map/Shop/Camara/CSGBox3D" unique_id=1256767048]
+transform = Transform3D(1, 0, 0, 0, -0.015819171, -0.9998749, 0, 0.9998749, -0.015819171, 0.30275905, 0.32367733, 0.66391444)
+radius = 0.13134766
+height = 0.15222168
+material = SubResource("StandardMaterial3D_qmy6f")
+
+[node name="Camera3D" type="Camera3D" parent="Map/Shop/Camara" unique_id=888276889]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 1.334404)
 
 [node name="KitchenStations" parent="Map" unique_id=1751640341 instance=ExtResource("4_kitchen")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000351429, 0, 0.3034718)
