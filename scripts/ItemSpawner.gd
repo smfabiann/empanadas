@@ -13,16 +13,6 @@ var item_scenes: Dictionary = {
 	"ItemSpawn_Completo": preload("res://scenes/items/Completo.tscn"),
 }
 
-@export_group("Puntos de Spawn en Estante (Handles)")
-## Marker para el punto de spawn de Sopaipilla
-@export var sopaipilla_marker: Marker3D
-## Marker para el punto de spawn de Bebida
-@export var bebida_marker: Marker3D
-## Marker para el punto de spawn de Empanada
-@export var empanada_marker: Marker3D
-## Marker para el punto de spawn de Completo
-@export var completo_marker: Marker3D
-
 const RESPAWN_DELAY := 3.0
 
 
@@ -31,17 +21,8 @@ func _ready() -> void:
 	# para evitar el error "Parent node is busy setting up children"
 	await get_tree().process_frame
 
-	var marker_map: Dictionary = {
-		"ItemSpawn_Sopaipilla": sopaipilla_marker,
-		"ItemSpawn_Bebida": bebida_marker,
-		"ItemSpawn_Empanada": empanada_marker,
-		"ItemSpawn_Completo": completo_marker,
-	}
-
 	for marker_name in item_scenes.keys():
-		var marker: Marker3D = marker_map.get(marker_name)
-		if marker == null:
-			marker = get_parent().get_node_or_null(marker_name) as Marker3D
+		var marker := get_parent().get_node_or_null(marker_name) as Marker3D
 		if marker:
 			_spawn_points[marker_name] = {
 				"scene": item_scenes[marker_name],

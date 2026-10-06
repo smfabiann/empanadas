@@ -2,29 +2,17 @@
 
 [ext_resource type="PackedScene" uid="uid://dtdqocd2hb5r" path="res://scenes/map/shop.tscn" id="1_c01mt"]
 [ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
-[ext_resource type="PackedScene" uid="uid://cbgsscdwdi50p" path="res://scenes/map/TrashBin.tscn" id="2_nxtc6"]
-[ext_resource type="PackedScene" uid="uid://cegpnoa17isb7" path="res://scenes/UI.tscn" id="2_ui"]
+[ext_resource type="PackedScene" uid="uid://2xor5082k24s" path="res://scenes/map/shelf.tscn" id="1_vcsgt"]
+[ext_resource type="PackedScene" path="res://scenes/UI.tscn" id="2_ui"]
 [ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
-[ext_resource type="PackedScene" uid="uid://deuv1f0onumkr" path="res://scenes/map/KitchenStations.tscn" id="4_kitchen"]
-[ext_resource type="Script" uid="uid://5gba233w2705" path="res://scripts/events/NPCEventManager.gd" id="5_eventmanager"]
-[ext_resource type="Shader" uid="uid://d2h8ainh7oeat" path="res://shaders/night_sky.gdshader" id="6_sky_shader"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
-shader = ExtResource("6_sky_shader")
-shader_parameter/sky_top_color = Color(0.01, 0.02, 0.05, 1)
-shader_parameter/horizon_color = Color(0.12, 0.07, 0.03, 1)
-shader_parameter/ground_color = Color(0.01, 0.015, 0.02, 1)
-shader_parameter/star_density = 150.0
-shader_parameter/star_threshold = 0.988
-shader_parameter/star_brightness = 2.0
-
-[sub_resource type="Sky" id="Sky_nxtc6"]
-sky_material = SubResource("ShaderMaterial_sky")
+[ext_resource type="Script" uid="uid://blrgh8r02xs6f" path="res://scripts/ItemSpawner.gd" id="4_itemspawner"]
 
 [sub_resource type="Environment" id="Environment_2a6q0"]
-background_mode = 2
-background_energy_multiplier = 0.5
-sky = SubResource("Sky_nxtc6")
+background_mode = 1
+background_color = Color(0.02, 0.01, 0.06, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.85, 0.78, 0.6, 1)
+ambient_light_energy = 0.4
 fog_enabled = true
 fog_light_color = Color(0.05, 0.03, 0.08, 1)
 fog_density = 0.015
@@ -33,10 +21,10 @@ fog_density = 0.015
 size = Vector3(0.05, 0.275, 7.978037)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fk6vv"]
-size = Vector3(0.05, 0.315, 3)
+size = Vector3(0.05, 0.315, 4.508203)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_nxtc6"]
-size = Vector3(0.05, 0.27, 4.1)
+size = Vector3(0.05, 0.27, 5.658036)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_menu"]
 albedo_color = Color(0.1, 0.25, 0.15, 1)
@@ -46,15 +34,6 @@ albedo_color = Color(0.1, 0.25, 0.15, 1)
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_c01mt"]
 data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jlsqs"]
-albedo_color = Color(0.32915837, 0.3291584, 0.3291584, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_q8u5g"]
-albedo_color = Color(0.049865827, 0.19073406, 0.09773817, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lhr70"]
-albedo_color = Color(0, 0, 0, 1)
-
 [node name="Main" type="Node3D" unique_id=1661772069]
 
 [node name="Enviroment" type="Node" parent="." unique_id=2009176575]
@@ -63,19 +42,20 @@ albedo_color = Color(0, 0, 0, 1)
 environment = SubResource("Environment_2a6q0")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment" unique_id=1813892540]
-transform = Transform3D(0.9659258, 0, -0.25881907, 0.18301271, 0.7071068, 0.6830127, 0.18301271, -0.7071068, 0.6830127, 0, 10, 0)
+transform = Transform3D(1, 0, 0, 0, 0.7071068, 0.7071068, 0, -0.7071068, 0.7071068, 0, 10, 0)
+light_color = Color(0.95, 0.85, 0.65, 1)
 light_energy = 0.1
 shadow_enabled = true
 
 [node name="Map" type="Node3D" parent="." unique_id=925572269]
 
 [node name="Shop" parent="Map" unique_id=831494344 instance=ExtResource("1_c01mt")]
-transform = Transform3D(0.9999941, -0.0015523564, -0.0030701628, 0.0015251127, 0.9999596, -0.008857943, 0.0030837867, 0.00885321, 0.9999561, 3.4703743, 1.7049768, -0.22162199)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.4703743, 1.7049768, -0.22162199)
 
 [node name="StepsCollision" type="Node3D" parent="Map/Shop" unique_id=1228593559]
 
 [node name="StaticBody3D2" type="StaticBody3D" parent="Map/Shop/StepsCollision" unique_id=1377821643]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.1743698, -1.6507076, -7.977507)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -2.1743698, -1.6507076, -9.577507)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Shop/StepsCollision/StaticBody3D2" unique_id=471322035]
 transform = Transform3D(0.6946584, -0.7193398, 0, 0.7193398, 0.6946584, 0, 0, 0, 1, 0, 0, -1.7220886)
@@ -85,37 +65,33 @@ shape = SubResource("BoxShape3D_c01mt")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17976522, -1.6535928, -7.2526736)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Shop/StepsCollision/StaticBody3D" unique_id=920825140]
-transform = Transform3D(0.69465286, -0.7193596, -2.3283064e-09, 0.7193299, 0.6946584, -1.5459955e-07, 1.2665987e-07, 4.377216e-08, 1, -2.3841858e-07, -5.2154064e-08, 0.75632524)
+transform = Transform3D(0.6946584, -0.7193398, 0, 0.7193398, 0.6946584, 0, 0, 0, 1, 0, 0, 0.0022249222)
 shape = SubResource("BoxShape3D_fk6vv")
 
 [node name="StaticBody3D3" type="StaticBody3D" parent="Map/Shop/StepsCollision" unique_id=1425694804]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -7.9590735, -1.6415551, -9.550568)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Shop/StepsCollision/StaticBody3D3" unique_id=662695441]
-transform = Transform3D(0.6946584, -0.7193477, 0, 0.7193477, 0.6946584, 0, 4.656613e-10, 2.142042e-08, 1, 4.7683716e-07, 1.4901161e-08, -3.6577215)
+transform = Transform3D(0.6946584, -0.7193398, 0, 0.7193398, 0.6946584, 0, 0, 0, 1, 4.7683716e-07, 0, -2.878704)
 shape = SubResource("BoxShape3D_nxtc6")
 
-[node name="TrashBin" parent="Map/Shop" unique_id=522034830 instance=ExtResource("2_nxtc6")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1278753, -1.25, 3.1)
-
-[node name="KitchenStations" parent="Map" unique_id=1751640341 instance=ExtResource("4_kitchen")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000351429, 0, 0.3034718)
+[node name="Shelf" parent="Map" unique_id=1829361409 instance=ExtResource("1_vcsgt")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.33141088, 1.6088865, 2.8198018)
 
 [node name="MenuBoard2" type="CSGBox3D" parent="Map" unique_id=1423350773]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.211559, 1.4849194, 3.1288998)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1115592, 1.4849194, 3.1288998)
 size = Vector3(1.862915, 1.5583801, 0.1)
 material = SubResource("StandardMaterial3D_menu")
 
 [node name="MenuText" type="Label3D" parent="Map/MenuBoard2" unique_id=2033375694]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.06)
 modulate = Color(1, 0.95, 0.8, 1)
-text = "MENÚ COMPLETOS
-• Italiano (Palta+Mayo)
-• Con Todo (P+M+K)
-• Palta / Mayo / Kétchup
-• Mayo-Kétchup
-(¡Base Vienesa obligatoria!)"
-font_size = 28
+text = "MENÚ
+Empanada  $1500
+Sopaipilla $500
+Completo  $2000
+Bebida    $1000"
+font_size = 40
 outline_size = 4
 
 [node name="CeilingLight" type="SpotLight3D" parent="Map" unique_id=628936849]
@@ -139,56 +115,14 @@ light_color = Color(1, 0.95, 0.85, 1)
 light_energy = 2.2
 omni_range = 4.5
 
-[node name="Floor" type="MeshInstance3D" parent="Map" unique_id=1040081921]
+[node name="PlaneMesh" type="MeshInstance3D" parent="Map" unique_id=1040081921]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
 mesh = SubResource("PlaneMesh_fk6vv")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Map/Floor" unique_id=2086776713]
+[node name="StaticBody3D" type="StaticBody3D" parent="Map/PlaneMesh" unique_id=2086776713]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/Floor/StaticBody3D" unique_id=115825919]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/PlaneMesh/StaticBody3D" unique_id=115825919]
 shape = SubResource("ConcavePolygonShape3D_c01mt")
-
-[node name="Patio" type="Node3D" parent="Map" unique_id=47647263]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
-
-[node name="Piso" type="CSGBox3D" parent="Map/Patio" unique_id=797540891]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8500004, -0.4, -2.8999996)
-use_collision = true
-size = Vector3(14.5, 1, 16.800001)
-material = SubResource("StandardMaterial3D_jlsqs")
-
-[node name="CSGBox3D2" type="CSGBox3D" parent="Map/Patio" unique_id=1068158309]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8500006, 0.75000006, 5.450001)
-use_collision = true
-size = Vector3(14.6, 1.3000001, 0.1)
-
-[node name="CSGBox3D3" type="CSGBox3D" parent="Map/Patio" unique_id=1535736516]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.3799367, 0.7617143, 1.4500003)
-use_collision = true
-size = Vector3(0.1, 1.3000001, 8.3)
-
-[node name="CSGBox3D4" type="CSGBox3D" parent="Map/Patio" unique_id=658371952]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.1, 0.75000006, -2.7999995)
-use_collision = true
-size = Vector3(0.1, 1.3000001, 17.2)
-
-[node name="Basurero" type="Node3D" parent="Map/Patio" unique_id=844883391]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.4, 0.6, -9.3)
-
-[node name="CSGBox3D" type="CSGBox3D" parent="Map/Patio/Basurero" unique_id=1165130479]
-use_collision = true
-size = Vector3(1.2, 1, 2.4)
-material = SubResource("StandardMaterial3D_q8u5g")
-
-[node name="CSGBox3D" type="CSGBox3D" parent="Map/Patio/Basurero/CSGBox3D" unique_id=1428894418]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.099999905, 2.3841858e-07)
-operation = 2
-size = Vector3(1, 1, 2.2)
-material = SubResource("StandardMaterial3D_lhr70")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=597470549]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 2.8999999, -0.6000001)
-light_energy = 5.865
 
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
@@ -198,34 +132,43 @@ text = "🫓 EMPANADAS 🫓"
 font_size = 80
 outline_size = 6
 
+[node name="ShelfSign" type="Label3D" parent="." unique_id=914320530]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 2.476743, 3.38)
+modulate = Color(1, 0.85, 0.4, 1)
+text = "🏪 ESTANTE DE PRODUCTOS 🏪"
+font_size = 40
+outline_size = 4
+
 [node name="SpawnPoint" type="Marker3D" parent="." unique_id=1205264049]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11)
-gizmo_extents = 0.5
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11.0)
 
 [node name="WindowPoint" type="Marker3D" parent="." unique_id=1722167390]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -4.5)
-gizmo_extents = 0.5
 
 [node name="ExitPoint" type="Marker3D" parent="." unique_id=299630482]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11)
-gizmo_extents = 0.5
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11.0)
+
+[node name="ItemSpawn_Sopaipilla" type="Marker3D" parent="." unique_id=1353490861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.1, 2.7)
+
+[node name="ItemSpawn_Bebida" type="Marker3D" parent="." unique_id=1994836890]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 1.1, 2.7)
+
+[node name="ItemSpawn_Empanada" type="Marker3D" parent="." unique_id=143338078]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 1.1, 2.7)
+
+[node name="ItemSpawn_Completo" type="Marker3D" parent="." unique_id=333254366]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 1.1, 2.7)
 
 [node name="Player" parent="." unique_id=332224679 instance=ExtResource("1_player")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.6, -2.3)
 
 [node name="UI" parent="." unique_id=519914083 instance=ExtResource("2_ui")]
 
-[node name="NPCSpawner" type="Node" parent="." unique_id=1541630979 node_paths=PackedStringArray("event_manager", "spawn_point", "window_point", "exit_point")]
+[node name="NPCSpawner" type="Node" parent="." unique_id=1541630979]
 script = ExtResource("3_spawner")
-event_manager = NodePath("../NPCEventManager")
-robber_trigger_served_count = 2
-spawn_point = NodePath("../SpawnPoint")
-window_point = NodePath("../WindowPoint")
-exit_point = NodePath("../ExitPoint")
 
 [node name="Timer" type="Timer" parent="NPCSpawner" unique_id=1455560433]
-wait_time = 0.5
 
-[node name="NPCEventManager" type="Node" parent="." unique_id=1829471920]
-script = ExtResource("5_eventmanager")
-robber_trigger_served_count = 1
+[node name="ItemSpawner" type="Node" parent="." unique_id=541989250]
+script = ExtResource("4_itemspawner")
