@@ -16,6 +16,8 @@ extends CanvasLayer
 @onready var debug_panel: PanelContainer = $HUD.get_node_or_null("DebugPanel")
 @onready var debug_spawned_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugSpawnedLabel")
 @onready var debug_served_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugServedLabel")
+@onready var debug_anomalies_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugAnomaliesLabel")
+var _anomalies_mgr: Node = null
 
 @onready var game_over_panel: PanelContainer = $HUD.get_node_or_null("GameOverPanel")
 @onready var game_over_label: Label = $HUD.get_node_or_null("GameOverPanel/VBoxContainer/GameOverLabel")
@@ -114,6 +116,7 @@ func _ready() -> void:
 		_on_day_progress(GameManager.clients_attended_today, GameManager.max_clients_per_day)
 		_show_day_banner(GameManager.current_day)
 
+	_setup_anomalies_debug()
 	_update_debug_visibility()
 
 
@@ -144,6 +147,31 @@ func _update_spawned_count(count: int) -> void:
 func _update_served_count(count: int) -> void:
 	if debug_served_label:
 		debug_served_label.text = "NPCs atendidos: %d" % count
+
+
+func _setup_anomalies_debug() -> void:
+	_anomalies_mgr = get_tree().root.find_child("AnomaliesManagement", true, false)
+	if _anomalies_mgr == null:
+		_anomalies_mgr = get_tree().root.find_child("anomaliesManagement", true, false)
+	if _anomalies_mgr:
+		if _anomalies_mgr.has_signal("anomaly_triggered"):
+			_anomalies_mgr.connect("anomaly_triggered", func(_d, _i): _update_anomalies_debug())
+		if _anomalies_mgr.has_signal("anomaly_resolved"):
+			_anomalies_mgr.connect("anomaly_resolved", func(_id, _i): _update_anomalies_debug())
+	_update_anomalies_debug()
+
+
+func _update_anomalies_debug() -> void:
+	if debug_anomalies_label:
+		if _anomalies_mgr:
+			var active: int = _anomalies_mgr.get("debug_active_count") if "debug_active_count" in _anomalies_mgr else 0
+			var last: String = _anomalies_mgr.get("debug_last_triggered") if "debug_last_triggered" in _anomalies_mgr else ""
+			if last.is_empty():
+				debug_anomalies_label.text = "Anomalías: %d activas" % active
+			else:
+				debug_anomalies_label.text = "Anomalías: %d (%s)" % [active, last]
+		else:
+			debug_anomalies_label.text = "Anomalías: Inactivas"
 
 
 # =========================================================

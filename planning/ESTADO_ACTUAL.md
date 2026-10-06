@@ -10,6 +10,7 @@
 4. El roadmap marca trabajo “En Curso” en anomalías (`/planning/ROADMAP.md`).
 5. Existe `ItemSpawner.gd` en código, pero `Main.tscn` no instancia nodo con ese script.
 6. Condición de victoria implementada (HU-06): al sobrevivir los 3 días canónicos, se detiene el flujo de eventos y se muestra la pantalla de victoria con narrativa de escape y botones de reinicio / menú principal.
+7. Arquitectura base y gestor de anomalías modulares implementado (HU-ANOM-13): `AnomaliesManager` (`AnomaliesManagement` en `Main.tscn`), plantilla base `AnomalyBase` (2D/3D), recurso `AnomalyData` con disparadores fijos, de umbral y de progresión, y ejemplo funcional `GlitchSpriteAnomaly` configurado al 3.er cliente.
 
 ## Limitaciones técnicas observadas
 

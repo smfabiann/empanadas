@@ -15,6 +15,8 @@ extends Node
 @export_group("Eventos y Anomalías")
 ## Referencia al nodo gestor de eventos en la escena. Si está vacío, se busca automáticamente.
 @export var event_manager: NPCEventManager
+## Referencia al gestor central de anomalías (anomaliesManagement)
+@export var anomalies_manager: AnomaliesManager
 
 ## Activa o desactiva el sistema de eventos por completo
 @export var events_enabled: bool = true
@@ -49,6 +51,11 @@ func _ready() -> void:
 	if event_manager == null:
 		event_manager = NPCEventManager.new()
 		get_parent().add_child.call_deferred(event_manager)
+
+	if anomalies_manager == null:
+		anomalies_manager = get_parent().get_node_or_null("AnomaliesManagement") as AnomaliesManager
+	if anomalies_manager == null:
+		anomalies_manager = get_parent().get_node_or_null("anomaliesManagement") as AnomaliesManager
 
 	if robber_trigger_served_count > 0:
 		event_manager.set_static_event_trigger("robber", robber_trigger_served_count)
@@ -125,6 +132,19 @@ func _spawn_npc() -> void:
 	npc.state = npc.State.APPROACHING
 
 	get_parent().add_child(npc)
+
+	# Evaluar si corresponde activar una anomalía modular para este cliente/turno
+	if anomalies_manager:
+		anomalies_manager.evaluate_and_trigger(
+			spawned_number,
+			GameManager.npcs_served,
+			GameManager.current_day,
+			{
+				"npc": npc,
+				"spawn_number": spawned_number,
+				"event": "npc_spawned"
+			}
+		)
 
 
 func _on_npc_removed() -> void:

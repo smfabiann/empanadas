@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c23luysxd33pj"]
 
 [ext_resource type="PackedScene" uid="uid://dtdqocd2hb5r" path="res://scenes/map/shop.tscn" id="1_c01mt"]
-[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
+[ext_resource type="PackedScene" uid="uid://dv0bjhe0oqo6" path="res://scenes/Player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://cbgsscdwdi50p" path="res://scenes/map/TrashBin.tscn" id="2_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://cegpnoa17isb7" path="res://scenes/UI.tscn" id="2_ui"]
 [ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
@@ -11,6 +11,10 @@
 [ext_resource type="Script" uid="uid://5gba233w2705" path="res://scripts/events/NPCEventManager.gd" id="5_eventmanager"]
 [ext_resource type="Shader" uid="uid://d2h8ainh7oeat" path="res://shaders/night_sky.gdshader" id="6_sky_shader"]
 [ext_resource type="PackedScene" uid="uid://bx0efxm1hjlgs" path="res://scenes/map/Patio.tscn" id="7_bjd11"]
+[ext_resource type="PackedScene" uid="uid://mue4ocm7ph4v" path="res://scenes/map/Farol.tscn" id="8_bjd11"]
+[ext_resource type="Script" uid="uid://dine3e1ujv6i7" path="res://scripts/anomalies/AnomaliesManager.gd" id="9_anomalies_manager"]
+[ext_resource type="Script" uid="uid://hx502d73tbjj" path="res://scripts/anomalies/AnomalyData.gd" id="14_3p2gp"]
+[ext_resource type="Resource" path="res://resources/anomalies/glitch_sprite_anomaly.tres" id="15_cvmbd"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
@@ -30,9 +34,11 @@ background_color = Color(0.02, 0.01, 0.06, 1)
 background_energy_multiplier = 0.5
 sky = SubResource("Sky_nxtc6")
 ambient_light_energy = 0.4
-fog_enabled = true
-fog_light_color = Color(0.05, 0.03, 0.08, 1)
-fog_density = 0.015
+fog_light_color = Color(0.4392157, 0.48235294, 0.54901963, 1)
+fog_density = 0.1
+fog_sky_affect = 0.0
+fog_depth_begin = 2.0
+fog_depth_end = 10.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wp0k4"]
 albedo_color = Color(0.14117648, 0.039215688, 0.007843138, 1)
@@ -56,10 +62,7 @@ material = SubResource("StandardMaterial3D_mwfav")
 data = PackedVector3Array(1, 0, 1, -1, 0, 1, 1, 0, -1, -1, 0, 1, -1, 0, -1, 1, 0, -1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fk6vv"]
-albedo_color = Color(0.2520276, 0.25202766, 0.25202763, 1)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2a6q0"]
-albedo_color = Color(18.892157, 18.892157, 18.892157, 1)
+albedo_color = Color(0.5014065, 0.50140655, 0.50140643, 1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tem6s"]
 albedo_color = Color(0.24477637, 0.24477643, 0.24477634, 1)
@@ -194,22 +197,8 @@ use_collision = true
 size = Vector3(203, 0.90000004, 2.9)
 material = SubResource("StandardMaterial3D_fk6vv")
 
-[node name="Farol" type="Node3D" parent="Map" unique_id=362012533]
+[node name="Farol" parent="Map" unique_id=516554597 instance=ExtResource("8_bjd11")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, -7.9)
-
-[node name="CSGCylinder3D" type="CSGCylinder3D" parent="Map/Farol" unique_id=305145367]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.3841858e-07, 2.5, -8.940697e-08)
-radius = 0.1
-height = 5.0
-
-[node name="CSGSphere3D" type="CSGSphere3D" parent="Map/Farol" unique_id=573869632]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.940697e-08, 4, 0)
-material = SubResource("StandardMaterial3D_2a6q0")
-
-[node name="OmniLight3D" type="OmniLight3D" parent="Map/Farol" unique_id=18893400]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
-light_energy = 0.982
-omni_range = 10.6
 
 [node name="Calle" type="Node3D" parent="Map" unique_id=370333112]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
@@ -244,9 +233,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.6, -2.3)
 
 [node name="UI" parent="." unique_id=519914083 instance=ExtResource("2_ui")]
 
-[node name="NPCSpawner" type="Node" parent="." unique_id=1541630979 node_paths=PackedStringArray("event_manager", "spawn_point", "window_point", "exit_point")]
+[node name="NPCSpawner" type="Node" parent="." unique_id=1541630979 node_paths=PackedStringArray("event_manager", "anomalies_manager", "spawn_point", "window_point", "exit_point")]
 script = ExtResource("3_spawner")
 event_manager = NodePath("../NPCEventManager")
+anomalies_manager = NodePath("../AnomaliesManagement")
 robber_trigger_served_count = 2
 spawn_point = NodePath("../SpawnPoint")
 window_point = NodePath("../WindowPoint")
@@ -258,3 +248,9 @@ wait_time = 0.5
 [node name="NPCEventManager" type="Node" parent="." unique_id=1829471920]
 script = ExtResource("5_eventmanager")
 robber_trigger_served_count = 1
+
+[node name="AnomaliesManagement" type="Node" parent="." unique_id=1987654321]
+script = ExtResource("9_anomalies_manager")
+random_anomaly_chance = 0.4
+max_concurrent_anomalies = 2
+registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd")])

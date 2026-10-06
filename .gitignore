@@ -9,3 +9,6 @@
 # Archivos del sistema
 Thumbs.db
 .DS_Store
+
+# errores
+*.tmp

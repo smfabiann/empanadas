@@ -1,4 +1,28 @@
 # Lista de cambios
+- **Sistema Base, Plantilla Modular y Gestor para Anomalías Configurables (HU-ANOM-13, Issue #24)**:
+  - **Plantilla y Escena Base (`AnomalyBase.tscn` / `AnomalyBase.gd`)**:
+	- Arquitectura desacoplada para anomalías independientes de los NPCs regulares.
+	- Contenedores modulares dedicados: `Visuals2D` (`CanvasLayer`) para sprites 2D (`Sprite2D`, `AnimatedSprite2D`, shaders y HUD) y `Visuals3D` para elementos espaciales (partículas, luces, mallas 3D).
+	- Ciclo de vida estandarizado: `_init_anomaly(context)`, `execute_behavior()`, `resolve()`, además de ganchos de eventos (`on_customer_arrived`, `on_customer_served`, `on_persiana_closed`, `interact`).
+  - **Empaquetado de Datos y Disparadores (`AnomalyData.gd`)**:
+	- Recurso (`.tres`) exportable con configuración granular en Inspector de Godot.
+	- Soporte completo de disparadores requeridos:
+	  - *Disparo garantizado absoluto*: por número de cliente/turno exacto (`trigger_exact_customer`).
+	  - *Umbral relativo acumulado*: por clientes atendidos (`trigger_min_served`).
+	  - *Progresión temporal*: restricción por calendario/días (`min_day`, `max_day`).
+	  - *Sorteo aleatorio ponderado*: por peso (`weight`) y tier cualitativo (`COMMON`, `UNCOMMON`, `RARE`, `NIGHTMARE`).
+	  - Restricción de activación única por partida (`trigger_once`).
+  - **Gestor Centralizado (`AnomaliesManager.gd` / `AnomaliesManagement.tscn`)**:
+	- Homologado a la estructura de `NPCEventManager` / `eventosManagement`.
+	- Integrado en `Main.tscn` como nodo `AnomaliesManagement` y conectado con `NPCSpawner` y `GameManager`.
+	- Registro en Inspector vía arrays de recursos (`registered_anomalies`) y escenas directas (`quick_packed_scenes`).
+	- Controles de depuración en tiempo de ejecución: forzar anomalía (`debug_force_anomaly`), forzar 100% chance (`debug_always_trigger`), contadores en vivo (`debug_active_count`, `debug_last_triggered`).
+  - **Ejemplo Práctico Mínimo (`GlitchSpriteAnomaly.tscn` / `glitch_sprite_anomaly.tres`)**:
+	- Escena heredada de `AnomalyBase` con `Sprite2D`, shader personalizado de distorsión y aberración cromática (`shaders/glitch_anomaly.gdshader`), animación errática en `AnimationPlayer`, audio de tensión y disparo garantizado al 3.er cliente.
+  - **Integración con HUD y Panel de Debug (F3)**:
+	- Indicador en tiempo real en la pantalla de depuración (`UI.gd` y `UI.tscn`): `Anomalías: X activas (Última: ID)`.
+  - **Guía Técnica de Integración**:
+	- Documentación completa paso a paso en [`docs/anomalies_workflow.md`](docs/anomalies_workflow.md) y actualización de [`scripts/events/README.md`](scripts/events/README.md).
 - **Corrección de Conteo Múltiple al Perder la Paciencia**:
   - Se corrigió un error en `NPC.gd` y `RobberNPC.gd` donde el cliente con paciencia agotada (`patience_remaining <= 0`) volvía a invocar `_timeout()` y `GameManager.register_npc_left()` en cada frame durante la espera de salida.
   - Se agregó el estado `State.REACTING` y la bandera `_is_order_resolved` para detener el procesamiento de paciencia inmediatamente al resolverse el pedido o agotarse el tiempo, garantizando que cada cliente se contabilice exactamente una única vez.

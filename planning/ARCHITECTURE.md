@@ -22,12 +22,17 @@
   - Base recogible: `/scripts/Interactable.gd`
   - Completo modular: `/scripts/CompletoItem.gd` + `/scenes/items/Completo.tscn`
   - Recursos de datos: `/resources/items/*.tres`
-- **Eventos/anomalías**:
+- **Eventos de NPCs**:
   - Base evento: `/scripts/events/NPCEvent.gd`
   - Selección/registro: `/scripts/events/NPCEventManager.gd`
   - Aleatorios: `BigHeadEvent.gd`, `fastNPC.gd`
   - Estático: `RobberEvent.gd` + NPC dedicado `/scripts/events/static/RobberNPC.gd`
-- **UI** (`/scripts/ui/UI.gd` + `/scenes/UI.tscn`): crosshair, prompt, debug, panel de jornada, pantalla de victoria (HU-06), game over y menu pausa.
+- **Anomalías modulares (`anomaliesManagement` - HU-ANOM-13)**:
+  - Base y ciclo de vida: `/scripts/anomalies/AnomalyBase.gd` + `/scenes/anomalies/AnomalyBase.tscn`
+  - Configuración y disparadores: `/scripts/anomalies/AnomalyData.gd` + `/resources/anomalies/*.tres`
+  - Gestor central: `/scripts/anomalies/AnomaliesManager.gd` (nodo `AnomaliesManagement` en `Main.tscn`)
+  - Ejemplo práctico: `/scripts/anomalies/GlitchSpriteAnomaly.gd` + `/scenes/anomalies/GlitchSpriteAnomaly.tscn`
+- **UI** (`/scripts/ui/UI.gd` + `/scenes/UI.tscn`): crosshair, prompt, debug (F3 con contador de anomalías), panel de jornada, pantalla de victoria (HU-06), game over y menu pausa.
 
 ## 3) Relaciones entre sistemas
 
@@ -51,6 +56,7 @@
   - `UI` (instancia `UI.tscn`)
   - `NPCSpawner` (con `Timer` hijo)
   - `NPCEventManager`
+  - `AnomaliesManagement` (gestor de anomalías)
 
 ## 5) Referencias cruzadas clave
 

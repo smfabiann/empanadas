@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://c_anomaly_base"]
+
+[ext_resource type="Script" path="res://scripts/anomalies/AnomalyBase.gd" id="1_base"]
+
+[node name="AnomalyBase" type="Node3D"]
+script = ExtResource("1_base")
+
+[node name="Visuals2D" type="CanvasLayer" parent="."]
+
+[node name="Visuals3D" type="Node3D" parent="."]
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="DurationTimer" type="Timer" parent="."]
+one_shot = true

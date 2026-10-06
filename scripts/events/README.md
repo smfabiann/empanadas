@@ -107,3 +107,13 @@ func _register_default_events() -> void:
 1. **Acceso seguro:** Usa `npc.get_node_or_null("NodeName")` o `if "prop" in npc:` para evitar caídas si la escena cambia.
 2. **NPCs con modelo propio:** En escenas personalizadas (como `RobberNPC.tscn`), activar `custom_appearance = true` en el nodo raíz para que `NPC.gd` no sobrescriba tus materiales con colores aleatorios.
 3. **Compensación de UI:** Si aumentas el tamaño del NPC o cabeza, sube `Label3D.position.y` y `PatienceBarPivot.position.y` para no tapar los pedidos.
+
+---
+
+## 👁️ Sistema de Anomalías Visuales y Configurables (`anomaliesManagement` - HU-ANOM-13)
+
+Para crear anomalías con escenas propias (sprites 2D/3D, animaciones, shaders, etc.) desacopladas de los NPCs estándar:
+- **Gestor**: [`AnomaliesManager.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/anomalies/AnomaliesManager.gd) (nodo `AnomaliesManagement` en `Main.tscn`).
+- **Base**: [`AnomalyBase.tscn`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scenes/anomalies/AnomalyBase.tscn) / [`AnomalyBase.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/anomalies/AnomalyBase.gd).
+- **Recurso**: [`AnomalyData.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/anomalies/AnomalyData.gd).
+- **Guía completa paso a paso**: Consulta [`docs/anomalies_workflow.md`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/docs/anomalies_workflow.md).

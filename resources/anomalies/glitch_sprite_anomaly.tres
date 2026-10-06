@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="AnomalyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/anomalies/AnomalyData.gd" id="1_data"]
+[ext_resource type="PackedScene" path="res://scenes/anomalies/GlitchSpriteAnomaly.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_data")
+id = "glitch_sprite"
+anomaly_name = "Distorsión Espectral"
+description = "Manifestación visual anómala con aberración cromática y animación de fallo que aparece ante el 3.er cliente."
+enabled = true
+tier = 2
+weight = 25.0
+trigger_exact_customer = 3
+trigger_min_served = 0
+min_day = 1
+max_day = 0
+trigger_once = true
+has_triggered = false
+anomaly_scene = ExtResource("2_scene")
