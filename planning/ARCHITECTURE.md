@@ -27,16 +27,17 @@
   - Selección/registro: `/scripts/events/NPCEventManager.gd`
   - Aleatorios: `BigHeadEvent.gd`, `fastNPC.gd`
   - Estático: `RobberEvent.gd` + NPC dedicado `/scripts/events/static/RobberNPC.gd`
-- **UI** (`/scripts/ui/UI.gd` + `/scenes/UI.tscn`): crosshair, prompt, debug, panel de jornada, game over y menú pausa.
+- **UI** (`/scripts/ui/UI.gd` + `/scenes/UI.tscn`): crosshair, prompt, debug, panel de jornada, pantalla de victoria (HU-06), game over y menu pausa.
 
 ## 3) Relaciones entre sistemas
 
 - `MainMenu.gd` inicia partida (`change_scene_to_file("res://scenes/Main.tscn")`) y resetea estado global.
-- `NPCSpawner.gd` depende de `GameManager` (cupos, jornada, timing) y de `NPCEventManager` (evento a aplicar).
+- `NPCSpawner.gd` depende de `GameManager` (cupos, jornada de 3 dias por defecto, timing) y de `NPCEventManager` (evento a aplicar). Detiene spawn y timer ante game_won.
 - Cada NPC reporta resultado a `GameManager` (`register_npc_served` / `register_npc_left`).
-- `UI.gd` escucha señales de `GameManager` para refrescar contador, jornada y game over.
-- `Player.gd` usa `RayCast3D` para interactuar con `Interactable`, estaciones y NPCs.
-- `shop.tscn` contiene scripts embebidos para persiana/puerta/botón; cierre de persiana notifica NPCs del grupo `npcs`.
+- `UI.gd` escucha señales de `GameManager` para refrescar contador, jornada, pantalla de victoria (`game_won`) y game over.
+- `Player.gd` usa `RayCast3D` para interactuar con `Interactable`, estaciones y NPCs. Se bloquea el control cuando `not GameManager.can_player_act()`.
+- `shop.tscn` contiene scripts embebidos para persiana/puerta/boton; cierre de persiana notifica NPCs del grupo `npcs`.
+- `GameManager.gd` controla `max_days` (3 por defecto). Al terminar el dia 3 sin morir, emite `game_won`, detiene eventos y bloquea spawner.
 
 ## 4) Nodo raíz de ejecución (escena de juego)
 

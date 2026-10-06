@@ -9,6 +9,7 @@
    - `/planning/TASKS.md` (`TASK-005`, `TASK-006`, `TASK-008`).
 4. El roadmap marca trabajo “En Curso” en anomalías (`/planning/ROADMAP.md`).
 5. Existe `ItemSpawner.gd` en código, pero `Main.tscn` no instancia nodo con ese script.
+6. Condición de victoria implementada (HU-06): al sobrevivir los 3 días canónicos, se detiene el flujo de eventos y se muestra la pantalla de victoria con narrativa de escape y botones de reinicio / menú principal.
 
 ## Limitaciones técnicas observadas
 

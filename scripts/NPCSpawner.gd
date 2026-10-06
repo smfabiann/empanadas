@@ -7,8 +7,8 @@ extends Node
 ## Cantidad de clientes que se atienden por día. Al alcanzarla deja de spawnear
 ## y, cuando se retira el último cliente, termina la jornada.
 @export_range(1, 50, 1) var max_clients_per_day: int = 8
-## Cantidad máxima de días de la partida (0 = días infinitos sin límite)
-@export_range(0, 30, 1) var max_days: int = 5
+## Cantidad máxima de días de la partida para ganar (HU-06: 3 días por defecto; 0 = días infinitos)
+@export_range(0, 30, 1) var max_days: int = 3
 ## Segundos de espera antes del primer cliente de cada día
 @export var first_client_delay: float = 2.0
 
@@ -64,14 +64,20 @@ func _ready() -> void:
 	timer.one_shot = true
 	timer.timeout.connect(_spawn_npc)
 
-	# Configurar la jornada y escuchar el inicio de cada nuevo día
 	GameManager.set_max_clients_per_day(max_clients_per_day)
 	GameManager.set_max_days(max_days)
 	if not GameManager.day_started.is_connected(_on_day_started):
 		GameManager.day_started.connect(_on_day_started)
+	if not GameManager.game_won.is_connected(_on_game_won):
+		GameManager.game_won.connect(_on_game_won)
 
 	# Spawnear el primer NPC tras un breve delay
 	timer.start(first_client_delay)
+
+
+func _on_game_won(_stats: Dictionary) -> void:
+	if timer:
+		timer.stop()
 
 
 func _spawn_npc() -> void:

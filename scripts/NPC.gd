@@ -1,7 +1,7 @@
 class_name NPC
 extends CharacterBody3D
 
-enum State { APPROACHING, WAITING, LEAVING }
+enum State { APPROACHING, WAITING, REACTING, LEAVING }
 
 @export var speed: float = 2.5
 ## Si es true, preserva los materiales y apariencia definidos en la escena del NPC
@@ -13,6 +13,7 @@ var SPEED: float:
 		speed = value
 
 var patience_drain_rate: float = 1.0
+var _is_order_resolved: bool = false
 
 @onready var label: Label3D = $Label3D
 @onready var body_mesh: CSGCylinder3D = $BodyMesh
@@ -140,6 +141,9 @@ func _physics_process(delta: float) -> void:
 		State.WAITING:
 			_update_patience(delta)
 
+		State.REACTING:
+			velocity = Vector3.ZERO
+
 		State.LEAVING:
 			_move_toward_point(exit_pos, delta)
 			if _is_close_to(exit_pos) or global_position.z <= -4.8:
@@ -172,6 +176,7 @@ func _is_close_to(point: Vector3) -> bool:
 
 func _arrive_at_counter() -> void:
 	state = State.WAITING
+	_is_order_resolved = false
 	is_at_counter = true
 	velocity = Vector3.ZERO
 
@@ -212,6 +217,9 @@ func _generate_completo_order() -> void:
 
 
 func _update_patience(delta: float) -> void:
+	if _is_order_resolved or state != State.WAITING:
+		return
+
 	patience_remaining -= delta * patience_drain_rate
 
 	var ratio := clampf(patience_remaining / patience_time, 0.0, 1.0)
@@ -231,36 +239,45 @@ func _update_patience(delta: float) -> void:
 
 
 func _timeout() -> void:
-	if state != State.WAITING:
+	if _is_order_resolved or state != State.WAITING:
 		return
-		
-	label.text = "¡Me voy!"
+
+	_is_order_resolved = true
+	state = State.REACTING
+	is_at_counter = false
 	patience_bar_pivot.visible = false
-	
+	label.text = "¡Me voy!"
+	SFXManager.play_npc_timeout()
+
 	GameManager.register_npc_left()
 
 	await get_tree().create_timer(1.0).timeout
-	_start_leaving()
+	if is_instance_valid(self):
+		_start_leaving()
 
 
 ## Determina si el NPC está en posición y estado para reaccionar a la persiana
 func can_react_to_persiana() -> bool:
-	return is_at_counter and state == State.WAITING
+	return not _is_order_resolved and is_at_counter and state == State.WAITING
 
 
 ## Se ejecuta cuando se cierra la persiana del mostrador
 func on_persiana_closed() -> void:
+	if not can_react_to_persiana():
+		return
 	_timeout()
 
 
 func can_receive_item() -> bool:
-	return state == State.WAITING and requested_item != null and is_at_counter
+	return not _is_order_resolved and state == State.WAITING and requested_item != null and is_at_counter
 
 
 func receive_item(item_node: Interactable) -> void:
-	if not can_receive_item() or item_node == null:
+	if _is_order_resolved or not can_receive_item() or item_node == null:
 		return
 
+	_is_order_resolved = true
+	state = State.REACTING
 	is_at_counter = false
 	var is_correct: bool = false
 
@@ -300,11 +317,12 @@ func receive_item(item_node: Interactable) -> void:
 	if item_node.get_parent():
 		item_node.get_parent().remove_child(item_node)
 	item_node.queue_free()
-	
+
 	GameManager.register_npc_served(is_correct)
 
 	await get_tree().create_timer(1.2).timeout
-	_start_leaving()
+	if is_instance_valid(self):
+		_start_leaving()
 
 
 func _start_leaving() -> void:

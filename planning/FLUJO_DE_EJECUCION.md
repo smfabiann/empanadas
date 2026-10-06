@@ -34,15 +34,22 @@
 7. `GameManager` registra resultado y emite señales.
 8. `UI.gd` actualiza contadores y estado visible.
 
-## 4. Cierre de jornada
+## 4. Cierre de jornada y condicion de victoria (HU-06)
 
-1. `GameManager` cuenta clientes atendidos/perdidos del día.
-2. Al cumplir cupo (`max_clients_per_day`) y salir el último NPC:
+1. `GameManager` cuenta clientes atendidos/perdidos del dia.
+2. Al cumplir cupo (`max_clients_per_day`) y salir el ultimo NPC:
    - `NPCSpawner` llama `GameManager.end_day()`.
-3. `UI.gd` muestra `DayEndPanel` con resumen.
-4. Botón siguiente día:
-   - si no es día final: `GameManager.start_next_day()`;
-   - si es final: restaura estado y recarga escena.
+3. Evaluacion de fin de jornada:
+   - Si no es el dia final (dias 1 y 2): `UI.gd` muestra `DayEndPanel` ("FIN DE LA JORNADA - Dia X completado").
+     - Boton "Comenzar Dia X+1": ejecuta `GameManager.start_next_day()` y reanuda el spawn.
+   - Si es el dia final (dia 3 sobrevivido):
+     - `GameManager.is_final_day()` es true.
+     - `GameManager` emite `game_won` con diccionario de estadisticas acumuladas.
+     - Se detiene el flujo de eventos (`game_active = false`, timer detenido en `NPCSpawner`).
+     - `UI.gd` muestra `VictoryPanel` con mensaje "HAS GANADO", narrativa de escape de la ciudad y resumen.
+     - Botones interactivos:
+       - "Reiniciar Partida": restaura ambiente, resetea estado global a dia 1 y recarga la escena.
+       - "Menu Principal": restaura ambiente, resetea estado global y regresa a `MainMenu.tscn`.
 
 ## 5. Interacciones especiales
 

@@ -97,7 +97,7 @@ func _exit_tree() -> void:
 
 
 func can_react_to_persiana() -> bool:
-	return (is_at_counter or is_about_to_shoot) and not is_game_over and state != State.LEAVING
+	return not _is_order_resolved and (is_at_counter or is_about_to_shoot) and not is_game_over and state != State.LEAVING
 
 
 func can_receive_item() -> bool:
@@ -196,6 +196,8 @@ func receive_item(item_node: Interactable) -> void:
 			_start_current_step()
 		else:
 			# ¡Minijuego completado con éxito!
+			_is_order_resolved = true
+			state = State.REACTING
 			is_at_counter = false
 			requested_item = null
 			patience_bar_pivot.visible = false
@@ -207,7 +209,8 @@ func receive_item(item_node: Interactable) -> void:
 			_holster_gun()
 			GameManager.register_npc_served(true)
 			await get_tree().create_timer(1.2).timeout
-			_start_leaving()
+			if is_instance_valid(self):
+				_start_leaving()
 	else:
 		# ¡Error! Iniciar secuencia de ira dramática antes de disparar
 		_start_anger_sequence("¡Le diste un completo incorrecto al ladrón!")
@@ -215,9 +218,10 @@ func receive_item(item_node: Interactable) -> void:
 
 ## Secuencia cinemática de ira: oscurece el entorno, niebla densa, avanza lentamente y prepara disparo fatal
 func _start_anger_sequence(reason: String) -> void:
-	if is_game_over or is_about_to_shoot:
+	if is_game_over or is_about_to_shoot or _is_order_resolved:
 		return
 	is_about_to_shoot = true
+	state = State.REACTING
 	_shot_cancelled = false
 	patience_bar_pivot.visible = false
 
@@ -432,10 +436,13 @@ func _holster_gun() -> void:
 
 ## Se ejecuta cuando el jugador cierra la persiana del mostrador frente al ladrón
 func on_persiana_closed() -> void:
-	if is_game_over or state == State.LEAVING:
+	if is_game_over or state == State.LEAVING or _is_order_resolved:
 		return
 	if state != State.WAITING and not is_about_to_shoot:
 		return
+
+	_is_order_resolved = true
+	state = State.REACTING
 
 	# Si estaba en la secuencia de ira a punto de disparar, el jugador salvó su vida
 	var saved_from_death: bool = is_about_to_shoot
@@ -484,15 +491,15 @@ func on_persiana_closed() -> void:
 
 	# Breve pausa para transmitir la reacción antes de huir
 	await get_tree().create_timer(0.8).timeout
-
-	# Escapa corriendo a gran velocidad
-	speed = 6.5
-	_start_leaving()
+	if is_instance_valid(self):
+		# Escapa corriendo a gran velocidad
+		speed = 6.5
+		_start_leaving()
 
 
 ## Se ejecuta cuando se agota el tiempo de espera
 func _timeout() -> void:
-	if state != State.WAITING or is_game_over or is_about_to_shoot:
+	if _is_order_resolved or state != State.WAITING or is_game_over or is_about_to_shoot:
 		return
 	_start_anger_sequence("¡Tardaste demasiado y el ladrón disparó!")
 

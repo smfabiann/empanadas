@@ -1,9 +1,14 @@
 # Lista de cambios
-- **Cielo Nocturno Urbano Procedimental (Sky Shader)**:
-  - Se reemplazó el `ProceduralSkyMaterial` con mapa de ruido plano por un shader de cielo procedimental dedicado en [night_sky.gdshader](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/shaders/night_sky.gdshader) configurado en el `WorldEnvironment` de [Main.tscn](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scenes/Main.tscn).
-  - Elimina distorsiones en los polos y no requiere cargar texturas pesadas.
-  - Calibrado para entorno urbano nocturno: gradiente con resplandor cálido de ciudad en el horizonte (`horizon_color`), noche profunda en el cenit (`sky_top_color`), transición oscura bajo el horizonte (`ground_color`) y atenuación de estrellas cerca del horizonte por contaminación lumínica.
-  - Controles con deslizadores (`hint_range`) en el Inspector para `star_density`, `star_threshold` (ajustado para cantidad moderada de estrellas) y `star_brightness`.
+- **Corrección de Conteo Múltiple al Perder la Paciencia**:
+  - Se corrigió un error en `NPC.gd` y `RobberNPC.gd` donde el cliente con paciencia agotada (`patience_remaining <= 0`) volvía a invocar `_timeout()` y `GameManager.register_npc_left()` en cada frame durante la espera de salida.
+  - Se agregó el estado `State.REACTING` y la bandera `_is_order_resolved` para detener el procesamiento de paciencia inmediatamente al resolverse el pedido o agotarse el tiempo, garantizando que cada cliente se contabilice exactamente una única vez.
+- **Condición de Victoria al Sobrevivir 3 Días (HU-06, Issue #9)**:
+  - **Meta de 3 Días Canónicos**: Se configuró la partida a un ciclo objetivo de 3 jornadas laborales (`max_days = 3` por defecto en `GameManager` y `NPCSpawner`), ajustable desde el Inspector.
+  - **Detención del Flujo de Eventos**: Al culminar con vida el Día 3, se detiene automáticamente el flujo de eventos, anomalías y spawners (`game_active = false`, `can_spawn_npc = false`, timers detenidos).
+  - **Pantalla de Victoria ("Has ganado" y Secuencia de Escape)**: Se implementó un panel visual de victoria (`VictoryPanel`) con diseño temático verde/esmeralda, título "🏆 ¡HAS GANADO! 🏆", texto narrativo de escape de la ciudad y estadísticas finales de la partida (días sobrevividos, pedidos correctos, equivocados y clientes huidos).
+  - **Fanfarria de Audio Procedural**: Nuevo arpegio triunfal en `SFXManager.play_victory()`.
+  - **Interactividad**: Se incluyeron botones interactivos para reiniciar la partida desde el Día 1 o volver al menú principal liberando el cursor del ratón.
+- **Sistema de Armado de Completos en 3D sin Interfaz (HU-11, Issue #14)**:
   - **Cocina Interactiva 3D**: Preparación física en el mundo 3D sin interfaces ni menús 2D; el jugador camina a cada estación para ensamblar el completo paso a paso con la tecla [E].
   - **Estaciones 3D en Cocina (`KitchenStations.tscn` e `IngredientStation.gd`)**: 6 estaciones modulares ubicadas en el estante y suelo del local:
 	- *Pan*: Dispensa un pan de completo en las manos vacías del jugador.
