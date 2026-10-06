@@ -7,7 +7,7 @@
 [ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
 [ext_resource type="PackedScene" uid="uid://deuv1f0onumkr" path="res://scenes/map/KitchenStations.tscn" id="4_kitchen"]
 [ext_resource type="Script" uid="uid://5gba233w2705" path="res://scripts/events/NPCEventManager.gd" id="5_eventmanager"]
-[ext_resource type="Shader" path="res://shaders/night_sky.gdshader" id="6_sky_shader"]
+[ext_resource type="Shader" uid="uid://d2h8ainh7oeat" path="res://shaders/night_sky.gdshader" id="6_sky_shader"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
@@ -186,6 +186,10 @@ operation = 2
 size = Vector3(1, 1, 2.2)
 material = SubResource("StandardMaterial3D_lhr70")
 
+[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=597470549]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 2.8999999, -0.6000001)
+light_energy = 5.865
+
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
 visible = false
@@ -214,7 +218,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.6, -2.3)
 [node name="NPCSpawner" type="Node" parent="." unique_id=1541630979 node_paths=PackedStringArray("event_manager", "spawn_point", "window_point", "exit_point")]
 script = ExtResource("3_spawner")
 event_manager = NodePath("../NPCEventManager")
-max_days = 3
 robber_trigger_served_count = 2
 spawn_point = NodePath("../SpawnPoint")
 window_point = NodePath("../WindowPoint")
