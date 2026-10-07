@@ -1,20 +1,25 @@
-# Planning del proyecto
+# Documentación del Proyecto (`planning/`)
 
-Esta carpeta centraliza documentación técnica **actualizada al estado real del repositorio** para mantener y extender el juego sin romper referencias.
+Documentación técnica centralizada y optimizada para proporcionar contexto claro y directo a agentes y desarrolladores.
 
-## Índice
+## Índice de Documentación
 
-- [Mapa de estructura del repositorio](./PROJECT_TREE.md)
-- [Arquitectura del juego](./ARCHITECTURE.md)
-- [Inventario técnico (escenas, scripts, recursos y config)](./INVENTARIO.md)
-- [Flujo de ejecución y juego](./FLUJO_DE_EJECUCION.md)
-- [Convenciones y guía de continuación](./GUIA_DESARROLLO.md)
-- [Estado actual, limitaciones, TODOs y riesgos](./ESTADO_ACTUAL.md)
-- [Roadmap histórico](./ROADMAP.md)
-- [Tablero histórico de tareas](./TASKS.md)
+1. **[Arquitectura y Flujo de Juego (`ARCHITECTURE.md`)](./ARCHITECTURE.md)**:
+   - Configuración base, autoloads y capas físicas 3D.
+   - Jerarquía de nodos de `Main.tscn` y módulos principales.
+   - Ciclo de juego (Game loop: arranque, jornadas, cocina 3D, victoria y derrota).
+2. **[Guía de Desarrollo y Convenciones (`GUIA_DESARROLLO.md`)](./GUIA_DESARROLLO.md)**:
+   - Reglas de oro y convenciones para no romper referencias de nodos ni señales.
+   - Cómo agregar nuevos eventos, anomalías y estaciones de cocina.
+   - Checklist de validación técnica.
+3. **[Roadmap y Backlog de Tareas (`ROADMAP.md`)](./ROADMAP.md)**:
+   - Visión del proyecto, estado actual y backlog activo de tareas prioritarias.
+   - Fases de desarrollo (Fase 1 completada, Fase 2 en curso, fases futuras).
 
-## Alcance
+---
 
-- Se documenta la estructura existente en `/home/runner/work/empanadas/empanadas`.
-- Se priorizan rutas y relaciones reales (`project.godot`, `scenes/`, `scripts/`, `resources/`).
-- No se inventan sistemas no presentes en código.
+## Otras Referencias Clave
+
+- [`docs/anomalies_workflow.md`](../docs/anomalies_workflow.md): Guía paso a paso para el sistema modular de anomalías.
+- [`scripts/events/README.md`](../scripts/events/README.md): Guía técnica del sistema de eventos de clientes.
+- [`changelog.md`](../changelog.md): Historial cronológico detallado de versiones y tareas completadas.

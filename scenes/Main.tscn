@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c23luysxd33pj"]
 
 [ext_resource type="PackedScene" uid="uid://dtdqocd2hb5r" path="res://scenes/map/shop.tscn" id="1_c01mt"]
-[ext_resource type="PackedScene" uid="uid://dv0bjhe0oqo6" path="res://scenes/Player.tscn" id="1_player"]
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1_player"]
 [ext_resource type="PackedScene" uid="uid://cbgsscdwdi50p" path="res://scenes/map/TrashBin.tscn" id="2_nxtc6"]
 [ext_resource type="PackedScene" uid="uid://cegpnoa17isb7" path="res://scenes/UI.tscn" id="2_ui"]
 [ext_resource type="Script" uid="uid://b5ck58hfbtrqf" path="res://scripts/NPCSpawner.gd" id="3_spawner"]
@@ -21,8 +21,8 @@ shader = ExtResource("6_sky_shader")
 shader_parameter/sky_top_color = Color(0.01, 0.02, 0.05, 1)
 shader_parameter/horizon_color = Color(0.058893472, 0.08326913, 0.14014357, 1)
 shader_parameter/ground_color = Color(0.01, 0.015, 0.02, 1)
-shader_parameter/star_density = 150.0
-shader_parameter/star_threshold = 0.995
+shader_parameter/star_density = 30.0
+shader_parameter/star_threshold = 0.9995
 shader_parameter/star_brightness = 2.0
 
 [sub_resource type="Sky" id="Sky_nxtc6"]

@@ -3,8 +3,8 @@ shader_type sky;
 uniform vec3 sky_top_color : source_color = vec3(0.01, 0.02, 0.05); // Noche profunda
 uniform vec3 horizon_color : source_color = vec3(0.12, 0.07, 0.03); // Resplandor de ciudad
 uniform vec3 ground_color : source_color = vec3(0.01, 0.015, 0.02);  // Base bajo el horizonte
-uniform float star_density : hint_range(20.0, 500.0, 1.0) = 150.0;
-uniform float star_threshold : hint_range(0.95, 0.9999, 0.0005) = 0.995; // Mayor umbral = menos estrellas (ciudad)
+uniform float star_density : hint_range(20.0, 500.0, 1.0) = 80.0;
+uniform float star_threshold : hint_range(0.95, 0.9999, 0.0005) = 0.998; // Mayor umbral = menos estrellas (ciudad)
 uniform float star_brightness : hint_range(0.1, 10.0, 0.1) = 2.0;
 
 // Generador de ruido hash para estrellas procedimentales

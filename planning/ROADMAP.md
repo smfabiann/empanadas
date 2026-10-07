@@ -1,34 +1,46 @@
-# Roadmap del Proyecto - Empanadas (Horror Retail 3D)
+# Roadmap y Backlog de Tareas
 
-## Vision General
-Juego 3D retro con atmosfera de terror psicologico y anomalias. Atencion nocturna de un local de comida rapida chilena en primera persona tras el mostrador.
+## Visión General
+Juego 3D retro con atmósfera de terror psicológico y anomalías. El jugador atiende un local nocturno de comida rápida chilena en primera persona tras el mostrador durante una semana de supervivencia laboral.
 
-## Fases
+---
 
-### Fase 1: Prototipo Core Retail (Completada)
-- Controlador de jugador 1ra persona, salto, sprint y raycast interactivo.
-- Items interactuables (empanada, sopaipilla, completo, bebida).
-- Spawner de NPCs con maquina de estados y barra de paciencia.
-- Autoloads GameManager y SFXManager.
-- UI minimalista y panel de depuracion (F3).
+## Backlog Activo (Próximas Tareas Prioritarias)
 
-### Fase 2: Sistema de Anomalias y Eventos (En Curso)
-- Arquitectura desacoplada de eventos (NPCEvent y NPCEventManager).
-- Arquitectura base y gestor central de anomalías configurables (`anomaliesManagement` / `AnomalyBase` / `AnomalyData`, HU-ANOM-13).
-- Anomalía implementada: GlitchSpriteAnomaly (manifestación aberrante con shader y animación, disparo al 3.er cliente).
-- Evento implementado: FastNPC (cliente rapido con paciencia reducida) y RobberNPC (minijuego de atraco armado).
-- Proximos eventos y anomalías:
-  - Cliente distorsionado o con glitch visual/audio.
-  - Cliente de proporciones alteradas o comportamiento bizarro.
-  - Cliente silencioso que no pide items o pide items imposibles.
-  - Eventos ambientales de iluminacion y sonido en el local.
+- **[TASK-005] Nueva Anomalía: Cliente silencioso / estático**:
+  - Cliente que llega al mostrador sin realizar pedido o solicitando ítems imposibles, aumentando la tensión psicológica.
+- **[TASK-006] Implementación de SFX Faltantes**:
+  - Efectos de sonido ambientales y de interacción: recoger/soltar ítem, timbre de pedido, pasos del jugador.
+- **[TASK-008] Efectos Ambientales de Terror**:
+  - Parpadeo de luces en mostrador y calle tras la aparición de anomalías o eventos de tensión.
 
-### Fase 3: Audio y Atmosfera
-- Efectos de sonido (recoger, soltar, pasos, timbre pedido, validacion).
-- Musica ambiental nocturna / tension retro lo-fi.
-- Eventos auditivos de baja frecuencia y estatica.
+---
 
-### Fase 4: Bucle de Terror y Progresion
-- Condiciones de tension o fallo por anomalias desatendidas.
-- Progresion de noches / turnos laborales (Noche 1, Noche 2, etc.).
-- Eventos ambientales en la calle y fuera de la ventana.
+## Fases del Proyecto
+
+### Fase 1: Prototipo Core Retail (✅ Completada)
+- Controlador de jugador FPS con sprint, salto y raycast interactivo.
+- Sistema de cocina interactiva 3D de completos (pan, vienesa, palta, mayo, ketchup, basurero).
+- IA de clientes con máquina de estados, pedidos y barra de paciencia.
+- Bucle de jornadas laborales (3 días canónicos), fin de jornada y condición de victoria (HU-06).
+- Autoloads `GameManager` y `SFXManager`, menús y HUD debug (F3).
+
+### Fase 2: Sistema de Anomalías y Eventos (🔄 En Curso)
+- Arquitectura desacoplada de eventos de NPCs (`NPCEventManager`, `BigHeadEvent`, `fastNPC`).
+- Evento estático del Ladrón (`RobberNPC`) con mecánica defensiva de persiana.
+- Gestor central de anomalías modulares (`AnomaliesManager` / `AnomalyBase` / `AnomalyData`, HU-ANOM-13).
+- Ejemplo práctico implementado: `GlitchSpriteAnomaly` al 3.er cliente.
+- *Pendiente:* Nuevas anomalías visuales y auditivas (TASK-005, eventos de luces TASK-008).
+
+### Fase 3: Audio y Atmósfera (⏳ Planificada)
+- Sonidos ambientales lo-fi retro y estática.
+- SFX de interacción física (TASK-006).
+- Eventos de audio posicional y frecuencias perturbadoras.
+
+### Fase 4: Bucle de Terror y Progresión Avanzada (⏳ Planificada)
+- Penalizaciones y consecuencias por ignorar anomalías.
+- Eventos dinámicos en el exterior y calle fuera de la ventana.
+
+---
+
+> Para el detalle histórico completo de cambios y tareas ya implementadas, consultar [`changelog.md`](../changelog.md).

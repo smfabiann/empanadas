@@ -8,12 +8,12 @@ Arquitectura modular para modificar la apariencia, comportamiento y lógica de l
 
 | Archivo | Rol |
 |---|---|
-| [`NPCEvent.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/events/NPCEvent.gd) | `Resource` base para anomalías aleatorias. Ganchos de ciclo de vida. |
-| [`StaticNPCEvent.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/events/static/StaticNPCEvent.gd) | Plantilla base para eventos estáticos / narrativos con condiciones y modelos propios. |
-| [`RobberNPC.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/events/static/RobberNPC.gd) | Controlador y comportamiento del NPC del Ladrón para el evento estático. |
-| [`NPCEventManager.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/events/NPCEventManager.gd) | Nodo en escena (`Main.tscn`) y catálogo central. Resuelve: Debug > Estáticos/Condicionales > Sorteo Ponderado. |
-| [`NPCSpawner.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/NPCSpawner.gd) | Consulta evento, instancia la escena (estándar o dedicada) y le asigna el evento. |
-| [`NPC.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/NPC.gd) | Invoca los ganchos del evento activo en sus transiciones de estado. |
+| [`NPCEvent.gd`](./NPCEvent.gd) | `Resource` base para anomalías aleatorias. Ganchos de ciclo de vida. |
+| [`StaticNPCEvent.gd`](./static/StaticNPCEvent.gd) | Plantilla base para eventos estáticos / narrativos con condiciones y modelos propios. |
+| [`RobberNPC.gd`](./static/RobberNPC.gd) | Controlador y comportamiento del NPC del Ladrón para el evento estático. |
+| [`NPCEventManager.gd`](./NPCEventManager.gd) | Nodo en escena (`Main.tscn`) y catálogo central. Resuelve: Debug > Estáticos/Condicionales > Sorteo Ponderado. |
+| [`NPCSpawner.gd`](../NPCSpawner.gd) | Consulta evento, instancia la escena (estándar o dedicada) y le asigna el evento. |
+| [`NPC.gd`](../NPC.gd) | Invoca los ganchos del evento activo en sus transiciones de estado. |
 
 ---
 
@@ -113,7 +113,7 @@ func _register_default_events() -> void:
 ## 👁️ Sistema de Anomalías Visuales y Configurables (`anomaliesManagement` - HU-ANOM-13)
 
 Para crear anomalías con escenas propias (sprites 2D/3D, animaciones, shaders, etc.) desacopladas de los NPCs estándar:
-- **Gestor**: [`AnomaliesManager.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/anomalies/AnomaliesManager.gd) (nodo `AnomaliesManagement` en `Main.tscn`).
-- **Base**: [`AnomalyBase.tscn`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scenes/anomalies/AnomalyBase.tscn) / [`AnomalyBase.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/anomalies/AnomalyBase.gd).
-- **Recurso**: [`AnomalyData.gd`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/scripts/anomalies/AnomalyData.gd).
-- **Guía completa paso a paso**: Consulta [`docs/anomalies_workflow.md`](file:///c:/Users/fabi/Documents/godot_projects/empanadas/empanadas/docs/anomalies_workflow.md).
+- **Gestor**: [`AnomaliesManager.gd`](../anomalies/AnomaliesManager.gd) (nodo `AnomaliesManagement` en `Main.tscn`).
+- **Base**: [`AnomalyBase.tscn`](../../scenes/anomalies/AnomalyBase.tscn) / [`AnomalyBase.gd`](../anomalies/AnomalyBase.gd).
+- **Recurso**: [`AnomalyData.gd`](../anomalies/AnomalyData.gd).
+- **Guía completa paso a paso**: Consulta [`docs/anomalies_workflow.md`](../../docs/anomalies_workflow.md).
