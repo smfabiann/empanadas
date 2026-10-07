@@ -34,10 +34,11 @@ func get_interaction_prompt(player: Node) -> Dictionary:
 
 		"sausage":
 			if is_completo:
-				if not held.has_sausage:
+				var count: int = held.get("sausage_count") if "sausage_count" in held else (1 if held.has_sausage else 0)
+				if count == 0:
 					return {"text": "[E] Poner Salchicha / Vienesa", "actionable": true}
 				else:
-					return {"text": "Ya tiene vienesa", "actionable": false}
+					return {"text": "[E] Poner otra Salchicha / Vienesa", "actionable": true}
 			elif held == null:
 				return {"text": "Toma primero un Pan para poner la vienesa", "actionable": false}
 			else:
@@ -45,10 +46,11 @@ func get_interaction_prompt(player: Node) -> Dictionary:
 
 		"palta":
 			if is_completo:
-				if not held.has_palta:
+				var count: int = held.get("palta_count") if "palta_count" in held else (1 if held.has_palta else 0)
+				if count == 0:
 					return {"text": "[E] Untar Palta", "actionable": true}
 				else:
-					return {"text": "Ya tiene palta", "actionable": false}
+					return {"text": "[E] Untar más Palta", "actionable": true}
 			elif held == null:
 				return {"text": "Toma primero un Pan para agregar palta", "actionable": false}
 			else:
@@ -56,10 +58,11 @@ func get_interaction_prompt(player: Node) -> Dictionary:
 
 		"mayo":
 			if is_completo:
-				if not held.has_mayo:
+				var count: int = held.get("mayo_count") if "mayo_count" in held else (1 if held.has_mayo else 0)
+				if count == 0:
 					return {"text": "[E] Echar Mayonesa", "actionable": true}
 				else:
-					return {"text": "Ya tiene mayonesa", "actionable": false}
+					return {"text": "[E] Echar más Mayonesa", "actionable": true}
 			elif held == null:
 				return {"text": "Toma primero un Pan para agregar mayo", "actionable": false}
 			else:
@@ -67,10 +70,11 @@ func get_interaction_prompt(player: Node) -> Dictionary:
 
 		"ketchup":
 			if is_completo:
-				if not held.has_ketchup:
+				var count: int = held.get("ketchup_count") if "ketchup_count" in held else (1 if held.has_ketchup else 0)
+				if count == 0:
 					return {"text": "[E] Echar Kétchup", "actionable": true}
 				else:
-					return {"text": "Ya tiene kétchup", "actionable": false}
+					return {"text": "[E] Echar más Kétchup", "actionable": true}
 			elif held == null:
 				return {"text": "Toma primero un Pan para agregar kétchup", "actionable": false}
 			else:
