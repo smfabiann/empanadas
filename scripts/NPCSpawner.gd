@@ -155,18 +155,25 @@ func _spawn_npc() -> void:
 
 	get_parent().add_child(npc)
 
-	# Evaluar si corresponde activar una anomalía modular para este cliente/turno
+	# Evaluar si corresponde activar una anomalía modular para este cliente/turno.
+	# IMPORTANTE: Eventos de NPCs y anomalías modulares son sistemas independientes.
+	# Si el cliente ya tiene un evento asignado (ej. UFO, Robber, BigHead), NO se dispara una anomalía.
 	if anomalies_manager:
-		anomalies_manager.evaluate_and_trigger(
-			spawned_number,
-			GameManager.npcs_served,
-			GameManager.current_day,
-			{
-				"npc": npc,
-				"spawn_number": spawned_number,
-				"event": "npc_spawned"
-			}
-		)
+		if event != null:
+			if event is StaticNPCEvent:
+				anomalies_manager.resolve_all_anomalies()
+		else:
+			anomalies_manager.evaluate_and_trigger(
+				spawned_number,
+				GameManager.npcs_served,
+				GameManager.current_day,
+				{
+					"npc": npc,
+					"spawn_number": spawned_number,
+					"event": "npc_spawned",
+					"has_event": false
+				}
+			)
 
 
 func _on_npc_removed() -> void:

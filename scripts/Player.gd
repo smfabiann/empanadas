@@ -26,6 +26,12 @@ var is_dead: bool = false
 
 var is_viewing_monitor: bool = false
 
+# --- Efectos de temblor de cámara (Screen Shake) ---
+var _shake_timer: float = 0.0
+var _shake_duration: float = 0.0
+var _shake_intensity: float = 0.0
+var _shake_is_crescendo: bool = false
+
 
 func _ready() -> void:
 	add_to_group("player")
@@ -36,9 +42,53 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_update_camera_shake(delta)
 	if not GameManager.can_player_act() or is_dead or is_viewing_monitor:
 		return
 	_handle_movement(delta)
+
+
+## Activa un temblor de pantalla que decae con el tiempo
+func shake_camera(duration: float, intensity: float = 0.06) -> void:
+	_shake_duration = maxf(duration, 0.05)
+	_shake_timer = _shake_duration
+	_shake_intensity = intensity
+	_shake_is_crescendo = false
+
+
+## Activa un temblor de pantalla que aumenta progresivamente en intensidad (in crescendo)
+func shake_camera_crescendo(duration: float, max_intensity: float = 0.08) -> void:
+	_shake_duration = maxf(duration, 0.05)
+	_shake_timer = _shake_duration
+	_shake_intensity = max_intensity
+	_shake_is_crescendo = true
+
+
+## Detiene inmediatamente cualquier temblor y resetea la cámara
+func stop_camera_shake() -> void:
+	_shake_timer = 0.0
+	if camera:
+		camera.h_offset = 0.0
+		camera.v_offset = 0.0
+
+
+func _update_camera_shake(delta: float) -> void:
+	if not camera:
+		return
+	if _shake_timer > 0.0:
+		_shake_timer -= delta
+		var progress: float = clampf(_shake_timer / _shake_duration, 0.0, 1.0)
+		var current_amp: float = 0.0
+		if _shake_is_crescendo:
+			current_amp = _shake_intensity * lerpf(1.0, 0.15, progress)
+		else:
+			current_amp = _shake_intensity * progress
+		camera.h_offset = randf_range(-current_amp, current_amp)
+		camera.v_offset = randf_range(-current_amp, current_amp)
+	else:
+		if camera.h_offset != 0.0 or camera.v_offset != 0.0:
+			camera.h_offset = 0.0
+			camera.v_offset = 0.0
 
 
 func _process(_delta: float) -> void:

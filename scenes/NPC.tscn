@@ -39,8 +39,8 @@ material = SubResource("StandardMaterial3D_npc")
 [node name="Head" type="CSGSphere3D" parent="." unique_id=2011213419]
 transform = Transform3D(1.104, 0, 0, 0, 1.104, 0, 0, 0, 1.104, 0, 1.5999999, 0)
 radius = 0.22
-radial_segments = 4
-rings = 2
+radial_segments = 6
+rings = 4
 material = SubResource("StandardMaterial3D_ktgr7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2690182]

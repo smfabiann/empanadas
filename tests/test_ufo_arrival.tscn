@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://uajx3ji7b2vr"]
+
+[ext_resource type="Script" path="res://tests/test_ufo_arrival.gd" id="1_test"]
+
+[node name="TestUfoArrival" type="Node"]
+script = ExtResource("1_test")

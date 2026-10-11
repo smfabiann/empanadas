@@ -16,8 +16,8 @@ var patience_drain_rate: float = 1.0
 var _is_order_resolved: bool = false
 
 @onready var label: Label3D = $Label3D
-@onready var body_mesh: CSGCylinder3D = $BodyMesh
-@onready var head: CSGSphere3D = $Head
+@onready var body_mesh: CSGCylinder3D = (get_node_or_null("BodyMesh") as CSGCylinder3D) if get_node_or_null("BodyMesh") else (get_node_or_null("ShipPivot/BodyMesh") as CSGCylinder3D)
+@onready var head: CSGSphere3D = (get_node_or_null("Head") as CSGSphere3D) if get_node_or_null("Head") else (get_node_or_null("ShipPivot/Head") as CSGSphere3D)
 @onready var patience_bar_bg: CSGBox3D = $PatienceBarPivot/PatienceBarBG
 @onready var patience_bar_fill: CSGBox3D = $PatienceBarPivot/PatienceBarFill
 @onready var patience_bar_pivot: Node3D = $PatienceBarPivot

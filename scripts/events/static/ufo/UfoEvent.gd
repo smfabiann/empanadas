@@ -14,7 +14,7 @@ func _init() -> void:
 	trigger_day_served_count = 1
 	trigger_served_count = 0
 	trigger_once = true
-	custom_npc_scene = preload("res://scenes/UfoNPC.tscn")
+	custom_npc_scene = preload("res://scenes/events/static/UfoNPC.tscn")
 
 
 func apply(npc: CharacterBody3D) -> void:

@@ -48,6 +48,108 @@ func play_tense_anger() -> void:
 	_play_sequence([125.0, 105.0, 85.0, 65.0], 0.35)
 
 
+## Estallido sónico / salida de hiperespacio (Star Wars shock boom)
+func play_sonic_boom() -> void:
+	var player := _get_available_player()
+	if player == null:
+		return
+
+	var duration := 0.85
+	var stream := AudioStreamGenerator.new()
+	stream.mix_rate = 22050.0
+	stream.buffer_length = duration + 0.05
+
+	player.stream = stream
+	player.volume_db = -1.5
+	player.play()
+
+	var playback: AudioStreamGeneratorPlayback = player.get_stream_playback()
+	var sample_count := int(22050.0 * duration)
+	var phase := 0.0
+
+	for i in sample_count:
+		var t := float(i) / float(sample_count)
+		var freq := lerpf(360.0, 36.0, pow(t, 0.38))
+		var increment := freq / 22050.0
+		var noise := randf_range(-0.45, 0.45) if t < 0.09 else 0.0
+		var tone := sin(phase * TAU) * 0.65
+		var envelope := pow(1.0 - t, 1.8)
+		var sample: float = (tone + noise) * envelope
+
+		playback.push_frame(Vector2(sample, sample))
+		phase += increment
+		if phase >= 1.0:
+			phase -= 1.0
+
+
+## Vibración / zumbido cósmico premonitorio
+func play_cosmic_rumble(duration: float = 2.2) -> void:
+	var player := _get_available_player()
+	if player == null:
+		return
+
+	var stream := AudioStreamGenerator.new()
+	stream.mix_rate = 22050.0
+	stream.buffer_length = duration + 0.05
+
+	player.stream = stream
+	player.volume_db = -3.5
+	player.play()
+
+	var playback: AudioStreamGeneratorPlayback = player.get_stream_playback()
+	var sample_count := int(22050.0 * duration)
+	var phase1 := 0.0
+	var phase2 := 0.0
+
+	for i in sample_count:
+		var t := float(i) / float(sample_count)
+		var inc1 := 48.0 / 22050.0
+		var inc2 := 56.0 / 22050.0
+		var envelope := lerpf(0.15, 0.75, pow(t, 1.4))
+		var pulse := 0.7 + 0.3 * sin(t * 22.0 * TAU)
+		var sample: float = (sin(phase1 * TAU) * 0.5 + sin(phase2 * TAU) * 0.4) * envelope * pulse
+
+		playback.push_frame(Vector2(sample, sample))
+		phase1 += inc1
+		if phase1 >= 1.0:
+			phase1 -= 1.0
+		phase2 += inc2
+		if phase2 >= 1.0:
+			phase2 -= 1.0
+
+
+## Tono misterioso / suspenso alienígena tras el destello sónico
+func play_alien_suspense(duration: float = 1.8) -> void:
+	var player := _get_available_player()
+	if player == null:
+		return
+
+	var stream := AudioStreamGenerator.new()
+	stream.mix_rate = 22050.0
+	stream.buffer_length = duration + 0.05
+
+	player.stream = stream
+	player.volume_db = -5.0
+	player.play()
+
+	var playback: AudioStreamGeneratorPlayback = player.get_stream_playback()
+	var sample_count := int(22050.0 * duration)
+	var phase := 0.0
+
+	for i in sample_count:
+		var t := float(i) / float(sample_count)
+		var vibrato := sin(t * 7.5 * TAU) * 18.0
+		var freq := 460.0 + vibrato
+		var increment := freq / 22050.0
+		var envelope := sin(t * PI)
+		var sample: float = sin(phase * TAU) * 0.45 * envelope
+
+		playback.push_frame(Vector2(sample, sample))
+		phase += increment
+		if phase >= 1.0:
+			phase -= 1.0
+
+
 func play_npc_arrive() -> void:
 	_play_sequence([880.0, 1100.0], 0.05)
 

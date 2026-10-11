@@ -159,6 +159,14 @@ func evaluate_and_trigger(
 	if max_concurrent_anomalies > 0 and active_anomalies.size() >= max_concurrent_anomalies:
 		return null
 
+	# Prevenir disparos si el contexto o el NPC indica un evento activo (ej. UFO, Robber, BigHead)
+	# Eventos de NPCs y anomalías son sistemas desacoplados e independientes.
+	if context.get("has_event", false) or context.get("is_static_event", false):
+		return null
+	var target_npc = context.get("npc")
+	if target_npc and ("active_event" in target_npc) and target_npc.active_event != null:
+		return null
+
 	# Prevenir doble evaluación redundante en el mismo cliente si llega tanto de NPCSpawner como de GameManager
 	if spawn_count > 0 and spawn_count == _last_evaluated_spawn and context.get("event") == "npc_spawned":
 		return null
@@ -197,8 +205,9 @@ func evaluate_and_trigger(
 				return spawned
 			last_spawned = spawned
 
-	# 4. Sorteo Probabilístico Ponderado por Rareza
-	if last_spawned == null or allow_concurrent_anomalies:
+	# 4. Sorteo Probabilístico Ponderado por Rareza (solo al spawnear clientes normales, no al atender pedidos)
+	var is_spawn_event: bool = context.get("event", "npc_spawned") == "npc_spawned"
+	if is_spawn_event and (last_spawned == null or allow_concurrent_anomalies):
 		var chance: float = 1.0 if debug_always_trigger else random_anomaly_chance
 		if randf() <= chance:
 			var chosen_data: AnomalyData = _pick_weighted_random_anomaly(current_day)
@@ -416,11 +425,14 @@ func _on_game_npc_spawned(total_spawned: int) -> void:
 			if current_npc:
 				anom.on_customer_arrived(current_npc)
 
-	# Evaluar si una nueva anomalía debe dispararse con este spawn
-	evaluate_and_trigger(current_spawn_count, current_served_count, current_day_count, {
-		"event": "npc_spawned",
-		"spawn_number": total_spawned
-	})
+	# Si NPCSpawner existe en la escena, él es responsable de invocar evaluate_and_trigger
+	# tras instanciar el cliente y comprobar si tiene un evento activo (ej. UFO, Robber, BigHead).
+	var spawner := get_tree().root.find_child("NPCSpawner", true, false)
+	if spawner == null:
+		evaluate_and_trigger(current_spawn_count, current_served_count, current_day_count, {
+			"event": "npc_spawned",
+			"spawn_number": total_spawned
+		})
 
 
 func _on_game_npc_served(total_served: int, is_correct: bool) -> void:

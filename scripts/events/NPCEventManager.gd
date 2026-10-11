@@ -1,9 +1,9 @@
 class_name NPCEventManager
 extends Node
-## Administrador central de eventos y anomalías para los NPCs.
-## Gestiona el catálogo de anomalías, condiciones de activación y selección de eventos.
+## Administrador central de eventos para los NPCs.
+## Gestiona el catálogo de eventos (modificadores de clientes y eventos narrativos estáticos).
 
-@export_group("Configuración de Anomalías")
+@export_group("Configuración de Eventos de NPC")
 ## Activa o desactiva el sistema de eventos por completo
 @export var events_enabled: bool = true
 ## Probabilidad base de que aparezca un evento aleatorio (0.0 = nunca, 1.0 = siempre)
@@ -169,7 +169,7 @@ func pick_event_for_npc(
 	var always_trigger := override_always_trigger or debug_always_trigger_event
 	var effective_chance := 1.0 if always_trigger else chance
 	if randf() > effective_chance:
-		return null # Cliente normal, sin anomalía
+		return null # Cliente normal, sin evento
 
 	return _pick_weighted_random_event()
 

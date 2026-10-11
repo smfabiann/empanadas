@@ -1,0 +1,174 @@
+[gd_scene format=3 uid="uid://t5krkb3p3lhg"]
+
+[ext_resource type="Script" uid="uid://c5dikof103y7w" path="res://scripts/events/static/ufo/UfoNPC.gd" id="1_1hbj2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_saucer_hull"]
+albedo_color = Color(0.16, 0.2, 0.25, 1)
+metallic = 0.85
+roughness = 0.25
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_saucer_rim"]
+albedo_color = Color(0.1, 0.9, 0.6, 1)
+emission_enabled = true
+emission = Color(0.15, 1, 0.55, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_saucer_dome"]
+transparency = 1
+albedo_color = Color(0.3, 0.9, 0.8, 0.35)
+metallic = 0.1
+roughness = 0.05
+emission_enabled = true
+emission = Color(0.1, 0.6, 0.5, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_beam_emitter"]
+albedo_color = Color(0.1, 1, 0.45, 1)
+emission_enabled = true
+emission = Color(0.1, 1, 0.45, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufo"]
+albedo_color = Color(0.15, 1, 0.25, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.2, 1, 0.35, 1)
+emission_energy_multiplier = 2.2
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_saucer"]
+height = 0.9
+radius = 0.95
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_bg"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_fill"]
+albedo_color = Color(0.2, 0.9, 0.3, 1)
+
+[sub_resource type="Animation" id="Animation_ufo_pulse"]
+resource_name = "ufo_pulse"
+length = 2.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ShipPivot/TractorBeam:light_energy")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [2.5, 4.5, 2.5]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("ShipPivot/AlienGlow:light_energy")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [1.6, 2.4, 1.6]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ufo"]
+_data = {
+&"ufo_pulse": SubResource("Animation_ufo_pulse")
+}
+
+[node name="UfoNPC" type="CharacterBody3D" unique_id=2026101101]
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_1hbj2")
+custom_appearance = true
+
+[node name="ShipPivot" type="Node3D" parent="." unique_id=101010101]
+
+[node name="SaucerHull" type="CSGSphere3D" parent="ShipPivot" unique_id=101010102]
+transform = Transform3D(0.9, 0, 0, 0, 0.22, 0, 0, 0, 0.9, 0, 0.2, 0)
+radius = 1.0
+radial_segments = 24
+rings = 8
+material = SubResource("StandardMaterial3D_saucer_hull")
+
+[node name="SaucerRim" type="CSGTorus3D" parent="ShipPivot" unique_id=101010103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+inner_radius = 0.78
+outer_radius = 0.92
+sides = 20
+ring_sides = 8
+material = SubResource("StandardMaterial3D_saucer_rim")
+
+[node name="SaucerBottomCore" type="CSGCylinder3D" parent="ShipPivot" unique_id=101010104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+radius = 0.32
+height = 0.1
+material = SubResource("StandardMaterial3D_beam_emitter")
+
+[node name="SaucerDome" type="CSGSphere3D" parent="ShipPivot" unique_id=101010105]
+transform = Transform3D(0.5, 0, 0, 0, 0.42, 0, 0, 0, 0.5, 0, 0.36, 0)
+radius = 1.0
+radial_segments = 16
+rings = 8
+material = SubResource("StandardMaterial3D_saucer_dome")
+
+[node name="BodyMesh" type="CSGCylinder3D" parent="ShipPivot" unique_id=265668372]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.35, 0)
+radius = 0.25
+height = 0.65
+material = SubResource("StandardMaterial3D_ufo")
+
+[node name="Head" type="CSGSphere3D" parent="ShipPivot" unique_id=2011213419]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.55, 0)
+radius = 0.28
+radial_segments = 12
+rings = 6
+material = SubResource("StandardMaterial3D_ufo")
+
+[node name="TractorBeam" type="SpotLight3D" parent="ShipPivot" unique_id=101010106]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.05, 0)
+light_color = Color(0.2, 1, 0.4, 1)
+light_energy = 2.5
+spot_range = 8.0
+spot_angle = 35.0
+
+[node name="AlienGlow" type="OmniLight3D" parent="ShipPivot" unique_id=-1268866194]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+light_color = Color(0.2, 1, 0.35, 1)
+light_energy = 1.6
+omni_range = 4.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2690182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+shape = SubResource("CylinderShape3D_saucer")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=478587550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+billboard = 1
+no_depth_test = true
+render_priority = 2
+modulate = Color(0.25, 1, 0.45, 1)
+font_size = 40
+outline_size = 8
+
+[node name="PatienceBarPivot" type="Node3D" parent="." unique_id=2022891483]
+transform = Transform3D(1.6, 0, 0, 0, -1.6, 2.4159328e-07, 0, -2.4159328e-07, -1.6, 0, 0.85, -0.65)
+
+[node name="PatienceBarBG" type="CSGBox3D" parent="PatienceBarPivot" unique_id=107966569]
+size = Vector3(0.6, 0.06, 0.04)
+material = SubResource("StandardMaterial3D_bar_bg")
+
+[node name="PatienceBarFill" type="CSGBox3D" parent="PatienceBarPivot" unique_id=1207582909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.58, 0.04, 0.04)
+material = SubResource("StandardMaterial3D_bar_fill")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=101010107]
+libraries = {
+&"": SubResource("AnimationLibrary_ufo")
+}
+autoplay = "ufo_pulse"
