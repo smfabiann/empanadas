@@ -1,0 +1,68 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/events/static/ufo/UfoNPC.gd" id="1_ufo"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufo"]
+albedo_color = Color(0.15, 1, 0.25, 1)
+roughness = 0.3
+emission_enabled = true
+emission = Color(0.2, 1, 0.35, 1)
+emission_energy_multiplier = 2.2
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
+radius = 0.35
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_bg"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_fill"]
+albedo_color = Color(0.2, 0.9, 0.3, 1)
+
+[node name="UfoNPC" type="CharacterBody3D" unique_id=2026101101]
+collision_layer = 4
+script = ExtResource("1_ufo")
+custom_appearance = true
+
+[node name="BodyMesh" type="CSGCylinder3D" parent="." unique_id=265668372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+radius = 0.3
+height = 1.6
+material = SubResource("StandardMaterial3D_ufo")
+
+[node name="Head" type="CSGSphere3D" parent="." unique_id=2011213419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+radius = 0.22
+radial_segments = 8
+rings = 4
+material = SubResource("StandardMaterial3D_ufo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2690182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_npc")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=478587550]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, 0)
+billboard = 1
+no_depth_test = true
+render_priority = 2
+modulate = Color(0.25, 1, 0.45, 1)
+font_size = 40
+outline_size = 8
+
+[node name="PatienceBarPivot" type="Node3D" parent="." unique_id=2022891483]
+transform = Transform3D(1.6, 0, 0, 0, -1.6, 2.4159328e-07, 0, -2.4159328e-07, -1.6, 0, 1.015012, -0.4141082)
+
+[node name="PatienceBarBG" type="CSGBox3D" parent="PatienceBarPivot" unique_id=107966569]
+size = Vector3(0.6, 0.06, 0.04)
+material = SubResource("StandardMaterial3D_bar_bg")
+
+[node name="PatienceBarFill" type="CSGBox3D" parent="PatienceBarPivot" unique_id=1207582909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.58, 0.04, 0.04)
+material = SubResource("StandardMaterial3D_bar_fill")
+
+[node name="AlienGlow" type="OmniLight3D" parent="." unique_id=3026101102]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+light_color = Color(0.2, 1, 0.35, 1)
+light_energy = 1.6
+omni_range = 4.5

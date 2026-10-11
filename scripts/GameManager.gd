@@ -152,6 +152,15 @@ func start_next_day() -> void:
 	day_progress.emit(clients_attended_today, max_clients_per_day)
 
 
+## Fuerza el avance al siguiente día inmediatamente para depuración
+func debug_advance_to_next_day() -> void:
+	if not game_active:
+		return
+	day_active = false
+	start_next_day()
+	print("[GameManager DEBUG] Avanzado manualmente al día %d (Atendidos hoy: %d/%d)" % [current_day, clients_attended_today, max_clients_per_day])
+
+
 func _reset_day_counters() -> void:
 	clients_attended_today = 0
 	clients_served_correctly_today = 0

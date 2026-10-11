@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://b6547fxse71w"]
+
+[ext_resource type="Script" uid="uid://dlb1i8qmn0pjy" path="res://scripts/map/exterior_bulp.gd" id="1_nxs2v"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2a6q0"]
+albedo_color = Color(14.736848, 12.201406, 6.214941, 1)
+
+[node name="ExteriorBulp" type="Node3D" unique_id=826666554]
+transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 0, 0, 0)
+script = ExtResource("1_nxs2v")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=2144002601]
+material = SubResource("StandardMaterial3D_2a6q0")
+
+[node name="CSGSphere3D2" type="CSGSphere3D" parent="." unique_id=805612265]
+transform = Transform3D(1.295, 0, 0, 0, 1.295, 0, 0, 0, 1.295, 0, 0, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGSphere3D2" unique_id=1876385978]
+transform = Transform3D(0.77220064, 0, 0, 0, 0.77220064, 0, 0, 0, 0.77220064, 3.5390258e-08, 0, 0.27027035)
+operation = 2
+size = Vector3(1.4, 1.4, 0.7)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=114516165]
+light_color = Color(0.44743097, 0.3948332, 0.21446893, 1)
+light_energy = 1.904
+shadow_enabled = true
+
+[node name="Timer" type="Timer" parent="." unique_id=1872483386]

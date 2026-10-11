@@ -1,0 +1,108 @@
+# Lista de cambios
+- **Nuevo Evento Estático: El Visitante Espacial / OVNI (Día 2)**:
+  - **Condiciones Temporales en Eventos Estáticos (`StaticNPCEvent.gd`)**:
+    - Se extendió la plantilla base de eventos estáticos con soporte para umbrales por jornada: `trigger_day` (día mínimo del evento) y `trigger_day_served_count` (clientes atendidos requeridos en el día en curso), manteniendo compatibilidad total con los umbrales globales.
+  - **Arquitectura Dedicada en `scripts/events/static/ufo/`**:
+    - [`UfoEvent.gd`](scripts/events/static/ufo/UfoEvent.gd): Definición del evento estático (`id = "ufo"`), configurado para dispararse en el Día 2 tras atender a 1 cliente (`trigger_day = 2`, `trigger_day_served_count = 1`, `trigger_once = true`).
+    - [`UfoNPC.gd`](scripts/events/static/ufo/UfoNPC.gd): Controlador específico del cliente extraterrestre con apariencia verde fosforescente brillante (`StandardMaterial3D` con emisión), luz ambiental verde (`OmniLight3D`) y mecánica de descenso suave desde el cielo (`enable_sky_descent`, `descent_height = 8.0`) antes de avanzar al mostrador.
+    - [`scenes/UfoNPC.tscn`](scenes/UfoNPC.tscn): Escena física del visitante alienígena con mallas emisivas y nodo de iluminación incorporado.
+  - **Integración y Herramientas de Depuración (`NPCEventManager.gd` y `NPCSpawner.gd`)**:
+    - Parámetros configurables en el Inspector: `ufo_trigger_day`, `ufo_trigger_served_in_day` y `debug_force_ufo` para forzar su aparición de inmediato.
+    - Avance rápido de jornada en tiempo de ejecución: tecla de depuración `debug_advance_day_key = KEY_F6` para saltar directamente al siguiente día y probar el flujo de días sin esperas.
+  - **Restricción del Ladrón al Día 1 (`RobberEvent.gd`)**:
+    - Se configuró `trigger_day = 1` y `trigger_max_day = 1` en el evento estático del ladrón, garantizando que su aparición ocurra exclusivamente durante la primera jornada de trabajo y no interfiera con los eventos del Día 2 en adelante.
+- **Corrección de Efecto Rojo en Anomalías (Filtro de Pantalla Completa y Preservación del Cielo)**:
+  - **Filtro Rojo Uniforme a Pantalla Completa (`shaders/red_anomaly_filter.gdshader`)**:
+	- Se implementó un shader post-procesado en `ScreenOverlay` (`CanvasLayer`) que aplica un tinte rojo estilizado, viñeta perimetral y pulso respiratorio sutil a toda la pantalla, cubriendo de forma coherente tanto la geometría 3D como el cielo procedural exterior (`night_sky.gdshader`).
+  - **Desacoplamiento de la Niebla (`GlitchSpriteAnomaly.gd` y `GlitchSpriteAnomaly.tscn`)**:
+	- Se eliminó la modificación de `fog_light_color` hacia rojo en el `WorldEnvironment`, la cual provocaba que solo los objetos con profundidad 3D se volvieran rojos dejando el cielo intacto y desentonado.
+	- La niebla (`fog_density`) ahora solo se espesa volumétricamente manteniendo su color atmosférico nocturno original, mientras que todo el tinte rojo es manejado por el filtro de pantalla.
+- **Apilamiento Modular y Multicapas de Ingredientes con Renderizado 3D Reactivo**:
+  - **Mecánica de Apilamiento y Capas Repetidas (`IngredientStation.gd` y `CompletoItem.gd`)**:
+	- Se eliminaron las restricciones que bloqueaban la adición de ingredientes duplicados en las estaciones de armado. El jugador ahora puede untar doble palta, doble mayo, agregar múltiples vienesas o combinar salsas libremente sin consecuencias negativas.
+	- Se implementó conteo granular por unidades (`sausage_count`, `palta_count`, `mayo_count`, `ketchup_count`) y registro cronológico de capas (`layers`), preservando propiedades retrocompatibles (`has_sausage`, `has_palta`, etc.).
+	- Libertad total en la secuencia de armado: colocar ingredientes en cualquier orden (ej. mayonesa primero, luego palta, luego vienesa) es completamente válido y no penaliza la preparación.
+  - **Representación Visual 3D y Apilamiento Vertical sin Z-Fighting (`CompletoItem.gd` y `Completo.tscn`)**:
+	- Cada capa instanciada calcula un offset vertical acumulativo en base al grosor físico del ingrediente y un microespaciado de separación, eliminando por completo cualquier parpadeo de textura (Z-fighting).
+	- Variaciones laterales sutiles (offset en eje Z) para salsas y vienesas múltiples, otorgando un aspecto físico, artesanal y volumétrico a la silueta 3D del completo.
+	- Ajuste automático de los límites de colisión (`CollisionShape3D`) y de la etiqueta 3D flotante (`Label3D`) para acompañar la altura total acumulada y mostrar los agregados extra (ej. `[2x Vienesa, 2x Palta, 2x Mayo]`).
+	- Animación reactiva de pop (squash and stretch) en cada capa añadida sobre el pan.
+  - **Validación y Aceptación de Pedidos por Clientes (`NPC.gd` y `RobberNPC.gd`)**:
+	- Los NPCs y el ladrón aceptan cualquier completo que contenga la base obligatoria (pan y vienesa) y al menos una unidad de cada ingrediente solicitado, sin importar el orden de las capas ni la presencia de capas duplicadas adicionales.
+	- Rechazo consistente con retroalimentación explícita si falta la base obligatoria o alguno de los ingredientes requeridos en el pedido.
+- **Sistema Base, Plantilla Modular y Gestor para Anomalías Configurables (HU-ANOM-13, Issue #24)**:
+  - **Plantilla y Escena Base (`AnomalyBase.tscn` / `AnomalyBase.gd`)**:
+	- Arquitectura desacoplada para anomalías independientes de los NPCs regulares.
+	- Contenedores modulares dedicados: `Visuals2D` (`CanvasLayer`) para sprites 2D (`Sprite2D`, `AnimatedSprite2D`, shaders y HUD) y `Visuals3D` para elementos espaciales (partículas, luces, mallas 3D).
+	- Ciclo de vida estandarizado: `_init_anomaly(context)`, `execute_behavior()`, `resolve()`, además de ganchos de eventos (`on_customer_arrived`, `on_customer_served`, `on_persiana_closed`, `interact`).
+  - **Empaquetado de Datos y Disparadores (`AnomalyData.gd`)**:
+	- Recurso (`.tres`) exportable con configuración granular en Inspector de Godot.
+	- Soporte completo de disparadores requeridos:
+	  - *Disparo garantizado absoluto*: por número de cliente/turno exacto (`trigger_exact_customer`).
+	  - *Umbral relativo acumulado*: por clientes atendidos (`trigger_min_served`).
+	  - *Progresión temporal*: restricción por calendario/días (`min_day`, `max_day`).
+	  - *Sorteo aleatorio ponderado*: por peso (`weight`) y tier cualitativo (`COMMON`, `UNCOMMON`, `RARE`, `NIGHTMARE`).
+	  - Restricción de activación única por partida (`trigger_once`).
+  - **Gestor Centralizado (`AnomaliesManager.gd` / `AnomaliesManagement.tscn`)**:
+	- Homologado a la estructura de `NPCEventManager` / `eventosManagement`.
+	- Integrado en `Main.tscn` como nodo `AnomaliesManagement` y conectado con `NPCSpawner` y `GameManager`.
+	- Registro en Inspector vía arrays de recursos (`registered_anomalies`) y escenas directas (`quick_packed_scenes`).
+	- Controles de depuración en tiempo de ejecución: forzar anomalía (`debug_force_anomaly`), forzar 100% chance (`debug_always_trigger`), contadores en vivo (`debug_active_count`, `debug_last_triggered`).
+  - **Ejemplo Práctico Mínimo (`GlitchSpriteAnomaly.tscn` / `glitch_sprite_anomaly.tres`)**:
+	- Escena heredada de `AnomalyBase` con `Sprite2D`, shader personalizado de distorsión y aberración cromática (`shaders/glitch_anomaly.gdshader`), animación errática en `AnimationPlayer`, audio de tensión y disparo garantizado al 3.er cliente.
+  - **Integración con HUD y Panel de Debug (F3)**:
+	- Indicador en tiempo real en la pantalla de depuración (`UI.gd` y `UI.tscn`): `Anomalías: X activas (Última: ID)`.
+  - **Guía Técnica de Integración**:
+	- Documentación completa paso a paso en [`docs/anomalies_workflow.md`](docs/anomalies_workflow.md) y actualización de [`scripts/events/README.md`](scripts/events/README.md).
+- **Corrección de Conteo Múltiple al Perder la Paciencia**:
+  - Se corrigió un error en `NPC.gd` y `RobberNPC.gd` donde el cliente con paciencia agotada (`patience_remaining <= 0`) volvía a invocar `_timeout()` y `GameManager.register_npc_left()` en cada frame durante la espera de salida.
+  - Se agregó el estado `State.REACTING` y la bandera `_is_order_resolved` para detener el procesamiento de paciencia inmediatamente al resolverse el pedido o agotarse el tiempo, garantizando que cada cliente se contabilice exactamente una única vez.
+- **Condición de Victoria al Sobrevivir 3 Días (HU-06, Issue #9)**:
+  - **Meta de 3 Días Canónicos**: Se configuró la partida a un ciclo objetivo de 3 jornadas laborales (`max_days = 3` por defecto en `GameManager` y `NPCSpawner`), ajustable desde el Inspector.
+  - **Detención del Flujo de Eventos**: Al culminar con vida el Día 3, se detiene automáticamente el flujo de eventos, anomalías y spawners (`game_active = false`, `can_spawn_npc = false`, timers detenidos).
+  - **Pantalla de Victoria ("Has ganado" y Secuencia de Escape)**: Se implementó un panel visual de victoria (`VictoryPanel`) con diseño temático verde/esmeralda, título "🏆 ¡HAS GANADO! 🏆", texto narrativo de escape de la ciudad y estadísticas finales de la partida (días sobrevividos, pedidos correctos, equivocados y clientes huidos).
+  - **Fanfarria de Audio Procedural**: Nuevo arpegio triunfal en `SFXManager.play_victory()`.
+  - **Interactividad**: Se incluyeron botones interactivos para reiniciar la partida desde el Día 1 o volver al menú principal liberando el cursor del ratón.
+- **Sistema de Armado de Completos en 3D sin Interfaz (HU-11, Issue #14)**:
+  - **Cocina Interactiva 3D**: Preparación física en el mundo 3D sin interfaces ni menús 2D; el jugador camina a cada estación para ensamblar el completo paso a paso con la tecla [E].
+  - **Estaciones 3D en Cocina (`KitchenStations.tscn` e `IngredientStation.gd`)**: 6 estaciones modulares ubicadas en el estante y suelo del local:
+	- *Pan*: Dispensa un pan de completo en las manos vacías del jugador.
+	- *Vienesa*: Aplica la salchicha obligatoria al pan que lleva en mano.
+	- *Palta*, *Mayonesa*, *Kétchup*: Agregan condimentos y agregados sobre el completo.
+	- *Basurero*: Permite tirar a la basura cualquier ítem o completo mal preparado para volver a empezar.
+  - **Regla de Base Obligatoria (Pan + Vienesa)**: Todo completo requiere pan y vienesa como base obligatoria. Si se entrega un completo sin salchicha, el cliente lo rechazará de inmediato con feedback explícito.
+  - **Modelo 3D Reactivo y Modular (`CompletoItem.gd` y `Completo.tscn`)**: Cada ingrediente cuenta con su propia geometría 3D visible que aparece con una animación de rebote pop (squash and stretch) al colocarse en la estación.
+  - **Recetas Chilenas y Validación Estricta en Clientes (`NPC.gd`)**:
+	- Recetas: Completo Italiano (Palta+Mayo), Con Todo (Palta+Mayo+Kétchup), Solo Palta, Solo Mayo, Solo Kétchup y Mayo-Kétchup.
+	- Validación exacta de agregados con feedback detallado de qué ingrediente falta o sobra en caso de error.
+  - **Adaptación del Ladrón (`RobberNPC.gd`)**: El evento del ladrón exige ahora una secuencia de recetas específicas de completos bajo amenaza armada.
+  - **Pizarra de Menú (`MenuBoard2`)**: Actualizada en 3D con el menú de completos y el recordatorio de la base de vienesa obligatoria.
+- **Bucle de Días / Rondas basado en Clientes (HU-01, Issue #3)**:
+  - Se implementó un ciclo de jornadas laborales donde cada día cuenta con un cupo configurable de clientes (`max_clients_per_day` en `NPCSpawner` y `GameManager`).
+  - Al alcanzar el cupo de clientes del día (atendidos o retirados), se bloquea el spawn de nuevos NPCs.
+  - Al marcharse el último cliente de la jornada, se activa automáticamente la pantalla de **Fin de la Jornada** con resumen de desempeño (clientes atendidos, pedidos correctos, equivocados y clientes que se fueron).
+  - Botón para avanzar a la siguiente jornada ("Comenzar Día N"), el cual resetea los contadores del día, actualiza el indicador en HUD ("Día N · Clientes 0/X"), muestra el banner animado "DÍA N" y reanuda el spawn tras un delay configurable.
+  - Durante el panel de fin de jornada, se libera el cursor del ratón y se bloquea el movimiento/interacción del jugador hasta iniciar el nuevo día.
+- Se agrego la capacidad de saltar, hecho principalmente para obstaculos pequeños en el desarrollo del mapa
+- Se arreglo la oprientacio nde la barra de paciencia de los npc
+- Se implementó el evento FastNPC: cliente más rápido y con menor paciencia (la barra se drena más rápido)
+- Se agregaron contadores de depuración en la UI (arriba a la derecha) para NPCs aparecidos y atendidos, con opción de activar/desactivar en el Inspector y tecla F3
+- **Evento Estático del Ladrón y Minijuego de Secuencia**:
+  - Se implementó el cliente especial Ladrón (`RobberNPC.tscn` y `RobberEvent.gd`), el cual aparece armado con una pistola.
+  - El arma comienza oculta y se desenfunda suavemente hacia la pose de apuntado mediante un `Tween` al llegar a la ventana.
+  - **Ambientación Dinámica**: Al aparecer el ladrón, la iluminación y ambiente de la tienda se atenúan sutilmente para generar tensión; al marcharse satisfecho, el entorno recupera de manera suave sus valores normales originales de luz y niebla.
+  - Funciona como un minijuego de secuencia: exige una lista ordenada de ítems (Completo, Bebida y Empanada) con tiempo de paciencia individual por ítem y progreso visual en el cartel.
+- **Sistema de Game Over y Cinemática de Muerte**:
+  - Al fallar un ítem o agotarse el tiempo, se activa una cinemática de ira: el ambiente se oscurece, se espesa una densa niebla negra que cubre el exterior, suena un tono de tensión y el ladrón avanza lentamente hacia el mostrador temblando de rabia.
+  - Disparo con retroceso (recoil) en el arma y sonido procedimental de disparo (`play_gunshot()`).
+  - Caída abatida del jugador: la cámara se desploma contra el suelo, quedando ladeada e inclinada, inhabilitando los controles.
+  - Pantalla de Game Over con destello rojo de impacto, estadísticas de clientes atendidos y botones de "Reintentar" y "Menú Principal".
+  - Restauración automática del fog, iluminación y estado del juego al reiniciar la partida.
+- **Reorganización del Código (`scripts/`)**:
+  - Se estructuró la carpeta `scripts/events/` (con `static/` conteniendo `RobberEvent.gd` y `RobberNPC.gd`, y `NPCEventManager.gd` en la raíz de eventos).
+  - Se creó `scripts/ui/` para agrupar los controladores de interfaz (`UI.gd`, `MainMenu.gd`, `PauseMenu.gd`, `FloatingText.gd`).
+  - Se actualizaron todas las rutas y dependencias en escenas `.tscn` para prevenir enlaces rotos.
+- **Handles 3D y Conexiones Visuales en el Editor de Godot**:
+  - Se agregaron handles visuales con `gizmo_extents` para puntos de spawn y navegación de clientes (`SpawnPoint`, `WindowPoint`, `ExitPoint`), así como para los puntos de comida en el estante.
+  - Conexión de referencias visuales mediante `@export` en el Inspector de `NPCSpawner` e `ItemSpawner`.
+  - Se agregaron markers visuales (`GunAimMarker` y `GunHiddenMarker`) en `RobberNPC.tscn` para ajustar la pose del arma directamente desde la vista 3D de Godot.

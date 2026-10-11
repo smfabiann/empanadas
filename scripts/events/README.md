@@ -11,6 +11,8 @@ Arquitectura modular para modificar la apariencia, comportamiento y lógica de l
 | [`NPCEvent.gd`](./NPCEvent.gd) | `Resource` base para anomalías aleatorias. Ganchos de ciclo de vida. |
 | [`StaticNPCEvent.gd`](./static/StaticNPCEvent.gd) | Plantilla base para eventos estáticos / narrativos con condiciones y modelos propios. |
 | [`RobberNPC.gd`](./static/RobberNPC.gd) | Controlador y comportamiento del NPC del Ladrón para el evento estático. |
+| [`UfoEvent.gd`](./static/ufo/UfoEvent.gd) | Evento estático del Visitante Espacial / OVNI (Día 2). |
+| [`UfoNPC.gd`](./static/ufo/UfoNPC.gd) | Controlador del NPC alienígena verde fosforescente con descenso del cielo. |
 | [`NPCEventManager.gd`](./NPCEventManager.gd) | Nodo en escena (`Main.tscn`) y catálogo central. Resuelve: Debug > Estáticos/Condicionales > Sorteo Ponderado. |
 | [`NPCSpawner.gd`](../NPCSpawner.gd) | Consulta evento, instancia la escena (estándar o dedicada) y le asigna el evento. |
 | [`NPC.gd`](../NPC.gd) | Invoca los ganchos del evento activo en sus transiciones de estado. |
@@ -66,7 +68,9 @@ func _init() -> void:
 	super._init()
 	id = "mi_evento_estatico"
 	event_name = "Evento Especial"
-	trigger_served_count = 5       # Se activa tras atender X clientes
+	trigger_day = 2                # Opcional: día mínimo (ej. día 2)
+	trigger_day_served_count = 1   # Opcional: clientes atendidos en la jornada
+	trigger_served_count = 5       # Opcional: clientes atendidos totales
 	trigger_once = true            # Ocurre 1 sola vez por partida
 	custom_npc_scene = preload("res://scenes/MiNPCScene.tscn") # Escena con modelo propio (opcional)
 
@@ -89,17 +93,23 @@ func _register_default_events() -> void:
 	register_event(BigHeadEvent.new())
 	register_event(FastNPCEvent.new())
 	register_event(RobberEvent.new()) # Evento estático del ladrón
+	register_event(UfoEvent.new())    # Evento estático del ovni / extraterrestre
 ```
 
 ---
 
-## 🧪 Depuración (`NPCSpawner` en Inspector)
+## 🧪 Depuración (`NPCSpawner` y `NPCEventManager` en Inspector)
 
 - **`events_enabled`**: Activar / desactivar sistema.
 - **`random_chance`**: Probabilidad base de anomalía aleatoria (ej. `0.35` = 35%).
-- **`debug_force_event`**: Escribe el `id` (ej. `"robber"`, `"big_head"`) para forzarlo en **todos** los spawns.
+- **`debug_force_event`**: Escribe el `id` (ej. `"robber"`, `"ufo"`, `"big_head"`) para forzarlo en **todos** los spawns.
+- **`debug_force_ufo`**: Toggle booleano para forzar la aparición inmediata del OVNI en el próximo cliente.
+- **`debug_advance_day_key`**: Tecla rápida en tiempo de ejecución (por defecto `F6`) para avanzar inmediatamente al siguiente día.
 - **`debug_always_trigger_event`**: Fuerza 100% de probabilidad en el sorteo aleatorio.
-- **`robber_trigger_served_count`**: Cantidad de clientes atendidos para disparar el Ladrón (poner en `1` para probar inmediatamente).
+- **`robber_trigger_served_count`**: Cantidad de clientes atendidos para disparar el Ladrón.
+- **`robber_max_day`**: Día límite para el Ladrón (por defecto: `1`, asegurando que solo aparezca en el Día 1).
+- **`ufo_trigger_day`**: Día de activación del OVNI (por defecto: `2`).
+- **`ufo_trigger_served_in_day`**: Clientes atendidos en la jornada antes de que aparezca el OVNI (por defecto: `1`).
 
 ---
 

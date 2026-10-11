@@ -1,17 +1,23 @@
 # Lista de cambios
+- **Corrección de Efecto Rojo en Anomalías (Filtro de Pantalla Completa y Preservación del Cielo)**:
+  - **Filtro Rojo Uniforme a Pantalla Completa (`shaders/red_anomaly_filter.gdshader`)**:
+	- Se implementó un shader post-procesado en `ScreenOverlay` (`CanvasLayer`) que aplica un tinte rojo estilizado, viñeta perimetral y pulso respiratorio sutil a toda la pantalla, cubriendo de forma coherente tanto la geometría 3D como el cielo procedural exterior (`night_sky.gdshader`).
+  - **Desacoplamiento de la Niebla (`GlitchSpriteAnomaly.gd` y `GlitchSpriteAnomaly.tscn`)**:
+	- Se eliminó la modificación de `fog_light_color` hacia rojo en el `WorldEnvironment`, la cual provocaba que solo los objetos con profundidad 3D se volvieran rojos dejando el cielo intacto y desentonado.
+	- La niebla (`fog_density`) ahora solo se espesa volumétricamente manteniendo su color atmosférico nocturno original, mientras que todo el tinte rojo es manejado por el filtro de pantalla.
 - **Apilamiento Modular y Multicapas de Ingredientes con Renderizado 3D Reactivo**:
   - **Mecánica de Apilamiento y Capas Repetidas (`IngredientStation.gd` y `CompletoItem.gd`)**:
-    - Se eliminaron las restricciones que bloqueaban la adición de ingredientes duplicados en las estaciones de armado. El jugador ahora puede untar doble palta, doble mayo, agregar múltiples vienesas o combinar salsas libremente sin consecuencias negativas.
-    - Se implementó conteo granular por unidades (`sausage_count`, `palta_count`, `mayo_count`, `ketchup_count`) y registro cronológico de capas (`layers`), preservando propiedades retrocompatibles (`has_sausage`, `has_palta`, etc.).
-    - Libertad total en la secuencia de armado: colocar ingredientes en cualquier orden (ej. mayonesa primero, luego palta, luego vienesa) es completamente válido y no penaliza la preparación.
+	- Se eliminaron las restricciones que bloqueaban la adición de ingredientes duplicados en las estaciones de armado. El jugador ahora puede untar doble palta, doble mayo, agregar múltiples vienesas o combinar salsas libremente sin consecuencias negativas.
+	- Se implementó conteo granular por unidades (`sausage_count`, `palta_count`, `mayo_count`, `ketchup_count`) y registro cronológico de capas (`layers`), preservando propiedades retrocompatibles (`has_sausage`, `has_palta`, etc.).
+	- Libertad total en la secuencia de armado: colocar ingredientes en cualquier orden (ej. mayonesa primero, luego palta, luego vienesa) es completamente válido y no penaliza la preparación.
   - **Representación Visual 3D y Apilamiento Vertical sin Z-Fighting (`CompletoItem.gd` y `Completo.tscn`)**:
-    - Cada capa instanciada calcula un offset vertical acumulativo en base al grosor físico del ingrediente y un microespaciado de separación, eliminando por completo cualquier parpadeo de textura (Z-fighting).
-    - Variaciones laterales sutiles (offset en eje Z) para salsas y vienesas múltiples, otorgando un aspecto físico, artesanal y volumétrico a la silueta 3D del completo.
-    - Ajuste automático de los límites de colisión (`CollisionShape3D`) y de la etiqueta 3D flotante (`Label3D`) para acompañar la altura total acumulada y mostrar los agregados extra (ej. `[2x Vienesa, 2x Palta, 2x Mayo]`).
-    - Animación reactiva de pop (squash and stretch) en cada capa añadida sobre el pan.
+	- Cada capa instanciada calcula un offset vertical acumulativo en base al grosor físico del ingrediente y un microespaciado de separación, eliminando por completo cualquier parpadeo de textura (Z-fighting).
+	- Variaciones laterales sutiles (offset en eje Z) para salsas y vienesas múltiples, otorgando un aspecto físico, artesanal y volumétrico a la silueta 3D del completo.
+	- Ajuste automático de los límites de colisión (`CollisionShape3D`) y de la etiqueta 3D flotante (`Label3D`) para acompañar la altura total acumulada y mostrar los agregados extra (ej. `[2x Vienesa, 2x Palta, 2x Mayo]`).
+	- Animación reactiva de pop (squash and stretch) en cada capa añadida sobre el pan.
   - **Validación y Aceptación de Pedidos por Clientes (`NPC.gd` y `RobberNPC.gd`)**:
-    - Los NPCs y el ladrón aceptan cualquier completo que contenga la base obligatoria (pan y vienesa) y al menos una unidad de cada ingrediente solicitado, sin importar el orden de las capas ni la presencia de capas duplicadas adicionales.
-    - Rechazo consistente con retroalimentación explícita si falta la base obligatoria o alguno de los ingredientes requeridos en el pedido.
+	- Los NPCs y el ladrón aceptan cualquier completo que contenga la base obligatoria (pan y vienesa) y al menos una unidad de cada ingrediente solicitado, sin importar el orden de las capas ni la presencia de capas duplicadas adicionales.
+	- Rechazo consistente con retroalimentación explícita si falta la base obligatoria o alguno de los ingredientes requeridos en el pedido.
 - **Sistema Base, Plantilla Modular y Gestor para Anomalías Configurables (HU-ANOM-13, Issue #24)**:
   - **Plantilla y Escena Base (`AnomalyBase.tscn` / `AnomalyBase.gd`)**:
 	- Arquitectura desacoplada para anomalías independientes de los NPCs regulares.

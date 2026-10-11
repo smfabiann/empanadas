@@ -8,8 +8,10 @@ func _init() -> void:
 	super._init()
 	id = "robber"
 	event_name = "El Ladrón"
-	description = "Un sospechoso cliente con intenciones dudosas que aparece tras atender clientes."
+	description = "Un sospechoso cliente con intenciones dudosas que aparece tras atender clientes en el Día 1."
 	trigger_served_count = 5
+	trigger_day = 1
+	trigger_max_day = 1
 	trigger_once = true
 	custom_npc_scene = preload("res://scenes/RobberNPC.tscn")
 

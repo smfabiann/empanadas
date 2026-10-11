@@ -200,8 +200,8 @@ Cada recurso `AnomalyData` cuenta con los siguientes disparadores configurables:
 
 **Efectos de la anomalía al activarse:**
 - 🔦 **Luces parpadean erráticamente** — OmniLights y SpotLights de la escena parpadean con intensidad variable.
-- 🌫️ **Niebla se espesa** — La densidad de fog aumenta 4x y su color se torna rojizo.
-- 🔴 **Overlay cromático** — Un `ColorRect` semitransparente rojo cubre la pantalla para dar sensación de distorsión.
+- 🌫️ **Niebla atmosférica se espesa** — La densidad de niebla aumenta para mayor densidad espacial, conservando su color natural de noche para no desentonar con el cielo.
+- 🔴 **Filtro rojo a pantalla completa** — Shader post-procesado (`red_anomaly_filter.gdshader`) con viñeta, respiración/pulso tenue y tinte rojo uniforme que cubre tanto la geometría 3D como el cielo exterior.
 - 👻 **Sprite fantasma con glitch** — Un sprite con shader de aberración cromática aparece en el HUD, vibrando y saltando de posición aleatoriamente.
 - ⚠️ **Aviso en pantalla** — Texto parpadeante "ANOMALÍA DETECTADA: DISTORSIÓN ESPECTRAL".
 - 🔊 **Efecto sonoro de tensión** — `SFXManager.play_tense_anger()`.
