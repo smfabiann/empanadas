@@ -1,23 +1,33 @@
 class_name NPCEventManager
 extends Node
-## Administrador central de eventos y anomalías para los NPCs.
-## Gestiona el catálogo de anomalías, condiciones de activación y selección de eventos.
+## Administrador central de eventos para los NPCs.
+## Gestiona el catálogo de eventos (modificadores de clientes y eventos narrativos estáticos).
 
-@export_group("Configuración de Anomalías")
+@export_group("Configuración de Eventos de NPC")
 ## Activa o desactiva el sistema de eventos por completo
 @export var events_enabled: bool = true
 ## Probabilidad base de que aparezca un evento aleatorio (0.0 = nunca, 1.0 = siempre)
 @export_range(0.0, 1.0, 0.05) var random_event_chance: float = 0.35
 
 @export_group("Depuración (Debug)")
-## Forzar un evento específico por ID (ej. "big_head", "fast_npc", "robber"). Dejar vacío para modo normal.
+## Forzar un evento específico por ID (ej. "big_head", "fast_npc", "robber", "ufo"). Dejar vacío para modo normal.
 @export var debug_force_event: String = ""
 ## Si está activo, siempre lanza un evento (100% de probabilidad en sorteos)
 @export var debug_always_trigger_event: bool = false
+## Tecla rápida para avanzar de día inmediatamente en tiempo de ejecución (por defecto: F6)
+@export var debug_advance_day_key: Key = KEY_F6
 
 @export_group("Eventos Estáticos")
 ## Clientes atendidos para que aparezca el Ladrón (ajustar a 1 o 2 para debug rápido)
 @export var robber_trigger_served_count: int = 5
+## Día máximo en el cual puede aparecer el Ladrón (por defecto: 1, solo en Día 1)
+@export var robber_max_day: int = 1
+## Día en que se activa el evento OVNI/UFO (por defecto: día 2)
+@export var ufo_trigger_day: int = 2
+## Clientes atendidos en dicho día antes de que aparezca el UFO (por defecto: 1)
+@export var ufo_trigger_served_in_day: int = 1
+## Forzar aparición del UFO en el próximo cliente (para debug rápido)
+@export var debug_force_ufo: bool = false
 
 var registered_events: Dictionary = {} # id -> NPCEvent
 
@@ -36,6 +46,16 @@ func _ready() -> void:
 	if registered_events.is_empty():
 		_register_default_events()
 	set_static_event_trigger("robber", robber_trigger_served_count)
+	set_static_event_day_range("robber", 1, robber_max_day)
+	set_static_event_day_trigger("ufo", ufo_trigger_day, ufo_trigger_served_in_day)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if debug_advance_day_key != KEY_NONE and event is InputEventKey and event.pressed and not event.is_echo():
+		if event.keycode == debug_advance_day_key:
+			var gm = get_node_or_null("/root/GameManager")
+			if gm and gm.has_method("debug_advance_to_next_day"):
+				gm.debug_advance_to_next_day()
 
 
 ## REGISTRO DE EVENTOS DISPONIBLES
@@ -46,6 +66,7 @@ func _register_default_events() -> void:
 	
 	# Eventos estáticos / narrativos (heredan de StaticNPCEvent, weight = 0)
 	register_event(RobberEvent.new())
+	register_event(UfoEvent.new())
 
 
 func register_event(event: NPCEvent) -> void:
@@ -62,6 +83,22 @@ func set_static_event_trigger(event_id: String, served_count: int) -> void:
 	var ev := get_event(event_id)
 	if ev is StaticNPCEvent:
 		ev.trigger_served_count = served_count
+
+
+## Permite cambiar el día y atendidos en el día de un evento estático (usado por debug e Inspector)
+func set_static_event_day_trigger(event_id: String, day: int, served_in_day: int) -> void:
+	var ev := get_event(event_id)
+	if ev is StaticNPCEvent:
+		ev.trigger_day = day
+		ev.trigger_day_served_count = served_in_day
+
+
+## Permite cambiar el rango de días de un evento estático (usado por debug e Inspector)
+func set_static_event_day_range(event_id: String, min_day: int, max_day: int) -> void:
+	var ev := get_event(event_id)
+	if ev is StaticNPCEvent:
+		ev.trigger_day = min_day
+		ev.trigger_max_day = max_day
 
 
 ## Reinicia el estado de los eventos estáticos (para nuevas partidas)
@@ -89,13 +126,17 @@ func pick_event_for_npc(
 	if not is_enabled:
 		return null
 
-	# Sincronizar umbral configurado en Inspector
+	# Sincronizar umbrales configurados en Inspector
 	set_static_event_trigger("robber", robber_trigger_served_count)
+	set_static_event_day_range("robber", 1, robber_max_day)
+	set_static_event_day_trigger("ufo", ufo_trigger_day, ufo_trigger_served_in_day)
 
-	# 1. Modo Debug: Forzar ID específico
+	# 1. Modo Debug: Forzar ID específico o toggle rápido
 	var forced := override_force_id.strip_edges()
 	if forced.is_empty():
 		forced = debug_force_event.strip_edges()
+	if forced.is_empty() and debug_force_ufo:
+		forced = "ufo"
 
 	if not forced.is_empty():
 		if registered_events.has(forced):
@@ -104,8 +145,11 @@ func pick_event_for_npc(
 			push_warning("NPCEventManager: Evento de debug '%s' no encontrado." % forced)
 
 	# 2. Eventos Estáticos y Condicionales
+	var gm = get_node_or_null("/root/GameManager")
+	var cur_day: int = gm.current_day if gm else 1
+	var cur_day_served: int = gm.clients_attended_today if gm else 0
 	for event in registered_events.values():
-		if event is StaticNPCEvent and event.can_trigger(spawn_count, served_count):
+		if event is StaticNPCEvent and event.can_trigger(spawn_count, served_count, cur_day, cur_day_served):
 			event.mark_triggered()
 			return event
 
@@ -125,7 +169,7 @@ func pick_event_for_npc(
 	var always_trigger := override_always_trigger or debug_always_trigger_event
 	var effective_chance := 1.0 if always_trigger else chance
 	if randf() > effective_chance:
-		return null # Cliente normal, sin anomalía
+		return null # Cliente normal, sin evento
 
 	return _pick_weighted_random_event()
 

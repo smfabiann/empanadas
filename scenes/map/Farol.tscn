@@ -17,4 +17,5 @@ material = SubResource("StandardMaterial3D_2a6q0")
 [node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=149182643]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, 0)
 light_energy = 0.982
+shadow_enabled = true
 omni_range = 10.6

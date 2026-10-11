@@ -1,9 +1,15 @@
 [gd_scene format=3 uid="uid://cbjys6l3en4dd"]
 
 [ext_resource type="Script" uid="uid://d0qu7kueql6hb" path="res://scripts/NPC.gd" id="1_npc"]
+[ext_resource type="Texture2D" uid="uid://c36uydbf1c0uc" path="res://resources/npc_textures/nachito.jpg" id="2_6xvi5"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_npc"]
 albedo_color = Color(0.6, 0.2, 0.5, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ktgr7"]
+albedo_color = Color(0.81650907, 0.81650907, 0.81650907, 0)
+albedo_texture = ExtResource("2_6xvi5")
+uv1_offset = Vector3(0, 0.14, 0)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
 radius = 0.35
@@ -14,22 +20,28 @@ albedo_color = Color(0.15, 0.15, 0.15, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bar_fill"]
 albedo_color = Color(0.2, 0.8, 0.2, 1)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2a6q0"]
+albedo_color = Color(0.8362173, 0.59480137, 0.68522584, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fk6vv"]
+albedo_color = Color(0.30699706, 0.09079873, 0.17116693, 1)
+
 [node name="NPC" type="CharacterBody3D" unique_id=1323159594]
 collision_layer = 4
 script = ExtResource("1_npc")
 
 [node name="BodyMesh" type="CSGCylinder3D" parent="." unique_id=265668372]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-radius = 0.3
-height = 1.6
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70000005, 0)
+radius = 0.19873047
+height = 1.4000001
 material = SubResource("StandardMaterial3D_npc")
 
 [node name="Head" type="CSGSphere3D" parent="." unique_id=2011213419]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+transform = Transform3D(1.104, 0, 0, 0, 1.104, 0, 0, 0, 1.104, 0, 1.5999999, 0)
 radius = 0.22
-radial_segments = 8
+radial_segments = 6
 rings = 4
-material = SubResource("StandardMaterial3D_npc")
+material = SubResource("StandardMaterial3D_ktgr7")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2690182]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -46,6 +58,7 @@ outline_size = 8
 
 [node name="PatienceBarPivot" type="Node3D" parent="." unique_id=2022891483]
 transform = Transform3D(1.6, 0, 0, 0, -1.6, 2.4159328e-07, 0, -2.4159328e-07, -1.6, 0, 1.015012, -0.4141082)
+visible = false
 
 [node name="PatienceBarBG" type="CSGBox3D" parent="PatienceBarPivot" unique_id=107966569]
 size = Vector3(0.6, 0.06, 0.04)
@@ -55,3 +68,17 @@ material = SubResource("StandardMaterial3D_bar_bg")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
 size = Vector3(0.58, 0.04, 0.04)
 material = SubResource("StandardMaterial3D_bar_fill")
+
+[node name="Node3D" type="Node3D" parent="." unique_id=2121152519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+visible = false
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Node3D" unique_id=1017447969]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, 0.5, 0, -0.5, 0.8660254, 0, 1, -0.46166992)
+size = Vector3(0.13476563, 1, 0.076660156)
+material = SubResource("StandardMaterial3D_2a6q0")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Node3D/CSGBox3D" unique_id=1336265197]
+transform = Transform3D(1, 0, 0, 0, 0.9659257, 0.25881898, 0, -0.25881898, 0.9659257, 0, 0.53577113, -0.009647876)
+size = Vector3(0.13476563, 0.1, 0.076660156)
+material = SubResource("StandardMaterial3D_fk6vv")

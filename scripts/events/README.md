@@ -1,6 +1,18 @@
-# 🎪 Sistema de Eventos y Anomalías (NPCs)
+# 🎪 Sistema de Eventos de NPCs (NPC Events)
 
-Arquitectura modular para modificar la apariencia, comportamiento y lógica de los clientes. Pensado para rápida creación por desarrolladores y agentes de IA.
+Arquitectura modular para modificar la apariencia, comportamiento y lógica de los clientes que se presentan en la ventana. Pensado para rápida creación por desarrolladores y agentes de IA.
+
+---
+
+## 📌 Diferencia entre Eventos y Anomalías
+
+| Sistema | Ubicación | Rol y Alcance |
+|---|---|---|
+| **Eventos (`NPCEvent`)** | `scripts/events/` | Modifican o reemplazan directamente a los clientes/NPCs en el mostrador (ej. `BigHead`, `FastNPC`, `RobberEvent`, `UfoEvent`). |
+| **Anomalías (`AnomalyBase`)** | `scripts/anomalies/` | Fenómenos audiovisuales/ambientales independientes: shaders de distorsión, parpadeo de luces, niebla espesa o entidades de HUD. |
+
+> [!NOTE]
+> Para crear o editar anomalías visuales e independientes, consulta la guía dedicada: [`scripts/anomalies/README.md`](../anomalies/README.md).
 
 ---
 
@@ -8,9 +20,11 @@ Arquitectura modular para modificar la apariencia, comportamiento y lógica de l
 
 | Archivo | Rol |
 |---|---|
-| [`NPCEvent.gd`](./NPCEvent.gd) | `Resource` base para anomalías aleatorias. Ganchos de ciclo de vida. |
+| [`NPCEvent.gd`](./NPCEvent.gd) | `Resource` base para eventos aleatorios de clientes. Ganchos de ciclo de vida. |
 | [`StaticNPCEvent.gd`](./static/StaticNPCEvent.gd) | Plantilla base para eventos estáticos / narrativos con condiciones y modelos propios. |
-| [`RobberNPC.gd`](./static/RobberNPC.gd) | Controlador y comportamiento del NPC del Ladrón para el evento estático. |
+| [`RobberNPC.gd`](./static/RobberNPC.gd) | Controlador y comportamiento del NPC del Ladrón para el evento estático (Día 1). |
+| [`UfoEvent.gd`](./static/ufo/UfoEvent.gd) | Evento estático del Visitante Espacial / OVNI (Día 2). |
+| [`UfoNPC.gd`](./static/ufo/UfoNPC.gd) | Controlador del NPC alienígena: temblor de pantalla previo, flash supersónico (Star Wars stop), planeo por el cielo, descenso flotante y retirada al cosmos. |
 | [`NPCEventManager.gd`](./NPCEventManager.gd) | Nodo en escena (`Main.tscn`) y catálogo central. Resuelve: Debug > Estáticos/Condicionales > Sorteo Ponderado. |
 | [`NPCSpawner.gd`](../NPCSpawner.gd) | Consulta evento, instancia la escena (estándar o dedicada) y le asigna el evento. |
 | [`NPC.gd`](../NPC.gd) | Invoca los ganchos del evento activo en sus transiciones de estado. |
@@ -29,7 +43,7 @@ Implementa solo los métodos que necesites:
 
 ---
 
-## 🚀 Plantilla 1: Evento Aleatorio / Anomalía Rápida
+## 🚀 Plantilla 1: Evento Aleatorio Rápido
 
 Crea un script en `res://scripts/events/MiEventoRandom.gd`:
 
@@ -66,7 +80,9 @@ func _init() -> void:
 	super._init()
 	id = "mi_evento_estatico"
 	event_name = "Evento Especial"
-	trigger_served_count = 5       # Se activa tras atender X clientes
+	trigger_day = 2                # Opcional: día mínimo (ej. día 2)
+	trigger_day_served_count = 1   # Opcional: clientes atendidos en la jornada
+	trigger_served_count = 5       # Opcional: clientes atendidos totales
 	trigger_once = true            # Ocurre 1 sola vez por partida
 	custom_npc_scene = preload("res://scenes/MiNPCScene.tscn") # Escena con modelo propio (opcional)
 
@@ -89,31 +105,35 @@ func _register_default_events() -> void:
 	register_event(BigHeadEvent.new())
 	register_event(FastNPCEvent.new())
 	register_event(RobberEvent.new()) # Evento estático del ladrón
+	register_event(UfoEvent.new())    # Evento estático del ovni / extraterrestre
 ```
 
 ---
 
-## 🧪 Depuración (`NPCSpawner` en Inspector)
+## 🧪 Depuración (`NPCSpawner` y `NPCEventManager` en Inspector)
 
-- **`events_enabled`**: Activar / desactivar sistema.
-- **`random_chance`**: Probabilidad base de anomalía aleatoria (ej. `0.35` = 35%).
-- **`debug_force_event`**: Escribe el `id` (ej. `"robber"`, `"big_head"`) para forzarlo en **todos** los spawns.
-- **`debug_always_trigger_event`**: Fuerza 100% de probabilidad en el sorteo aleatorio.
-- **`robber_trigger_served_count`**: Cantidad de clientes atendidos para disparar el Ladrón (poner en `1` para probar inmediatamente).
+- **`events_enabled`**: Activar / desactivar sistema de eventos.
+- **`random_event_chance`**: Probabilidad base de evento aleatorio (ej. `0.35` = 35%).
+- **`debug_force_event`**: Escribe el `id` (ej. `"robber"`, `"ufo"`, `"big_head"`) para forzarlo en **todos** los spawns.
+- **`debug_force_ufo`**: Toggle booleano para forzar la aparición inmediata del OVNI en el próximo cliente.
+- **`debug_advance_day_key`**: Tecla rápida en tiempo de ejecución (por defecto `F6`) para avanzar inmediatamente al siguiente día.
+- **`debug_always_trigger_event`**: Fuerza 100% de probabilidad en el sorteo aleatorio de eventos.
+- **`robber_trigger_served_count`**: Cantidad de clientes atendidos para disparar el Ladrón.
+- **`robber_max_day`**: Día límite para el Ladrón (por defecto: `1`, asegurando que solo aparezca en el Día 1).
+- **`ufo_trigger_day`**: Día de activación del OVNI (por defecto: `2`).
+- **`ufo_trigger_served_in_day`**: Clientes atendidos en la jornada antes de que aparezca el OVNI (por defecto: `1`).
 
 ---
 
 ## ⚠️ Reglas Clave de Implementación
 1. **Acceso seguro:** Usa `npc.get_node_or_null("NodeName")` o `if "prop" in npc:` para evitar caídas si la escena cambia.
-2. **NPCs con modelo propio:** En escenas personalizadas (como `RobberNPC.tscn`), activar `custom_appearance = true` en el nodo raíz para que `NPC.gd` no sobrescriba tus materiales con colores aleatorios.
+2. **NPCs con modelo propio:** En escenas personalizadas (como `RobberNPC.tscn` o `UfoNPC.tscn`), activar `custom_appearance = true` en el nodo raíz para que `NPC.gd` no sobrescriba tus materiales con colores aleatorios.
 3. **Compensación de UI:** Si aumentas el tamaño del NPC o cabeza, sube `Label3D.position.y` y `PatienceBarPivot.position.y` para no tapar los pedidos.
+4. **Desacoplamiento:** Los eventos de NPC nunca deben activar anomalías del gestor de anomalías sobre el mismo cliente.
 
 ---
 
-## 👁️ Sistema de Anomalías Visuales y Configurables (`anomaliesManagement` - HU-ANOM-13)
-
-Para crear anomalías con escenas propias (sprites 2D/3D, animaciones, shaders, etc.) desacopladas de los NPCs estándar:
-- **Gestor**: [`AnomaliesManager.gd`](../anomalies/AnomaliesManager.gd) (nodo `AnomaliesManagement` en `Main.tscn`).
-- **Base**: [`AnomalyBase.tscn`](../../scenes/anomalies/AnomalyBase.tscn) / [`AnomalyBase.gd`](../anomalies/AnomalyBase.gd).
-- **Recurso**: [`AnomalyData.gd`](../anomalies/AnomalyData.gd).
-- **Guía completa paso a paso**: Consulta [`docs/anomalies_workflow.md`](../../docs/anomalies_workflow.md).
+## 👁️ Sistema de Anomalías Modulares (`scripts/anomalies/`)
+Para la creación y gestión de anomalías independientes con escenas propias (`AnomalyBase`, `AnomalyData`, shaders y `AnomaliesManager`), consulta:
+- **Documentación principal**: [`scripts/anomalies/README.md`](../anomalies/README.md)
+- **Flujo de trabajo detallado**: [`docs/anomalies_workflow.md`](../../docs/anomalies_workflow.md)

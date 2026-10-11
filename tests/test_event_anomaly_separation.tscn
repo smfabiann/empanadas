@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b7v2y28anom1"]
+
+[ext_resource type="Script" path="res://tests/test_event_anomaly_separation.gd" id="1_test"]
+
+[node name="TestEventAnomalySeparation" type="Node"]
+script = ExtResource("1_test")

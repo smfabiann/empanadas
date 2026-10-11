@@ -1,7 +1,8 @@
 class_name NPCEvent
 extends Resource
-## Clase base para eventos y anomalías de los NPCs.
-## Diseñada para ser escalable: cada anomalía o evento nuevo solo necesita heredar de esta clase.
+## Clase base para eventos de los NPCs (modificadores de clientes y personajes especiales).
+## Diseñada para ser escalable: cada evento nuevo solo necesita heredar de esta clase.
+## (Para anomalías modulares ambientales/HUD con escenas propias, ver AnomalyBase).
 
 @export var id: String = ""
 @export var event_name: String = ""

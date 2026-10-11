@@ -30,6 +30,14 @@ extends Node
 @export_subgroup("Eventos Estáticos")
 ## Cantidad de clientes atendidos para activar el Ladrón (cambiar en Inspector para debug)
 @export var robber_trigger_served_count: int = 5
+## Día máximo para que aparezca el Ladrón (por defecto 1: solo aparece en Día 1)
+@export var robber_max_day: int = 1
+## Día de activación para el evento OVNI/UFO (cambiar en Inspector para debug)
+@export var ufo_trigger_day: int = 2
+## Clientes atendidos en el día para activar el UFO (cambiar en Inspector para debug)
+@export var ufo_trigger_served_in_day: int = 1
+## Forzar aparición del UFO en el próximo cliente para debug
+@export var debug_force_ufo: bool = false
 
 @export_group("Puntos de Navegación (Handles)")
 ## Marker en la escena donde aparecen los clientes
@@ -59,6 +67,12 @@ func _ready() -> void:
 
 	if robber_trigger_served_count > 0:
 		event_manager.set_static_event_trigger("robber", robber_trigger_served_count)
+	if robber_max_day > 0:
+		event_manager.set_static_event_day_range("robber", 1, robber_max_day)
+	if ufo_trigger_day > 0:
+		event_manager.set_static_event_day_trigger("ufo", ufo_trigger_day, ufo_trigger_served_in_day)
+	if debug_force_ufo:
+		event_manager.debug_force_ufo = true
 
 	if spawn_point == null:
 		spawn_point = get_parent().get_node_or_null("SpawnPoint")
@@ -96,9 +110,17 @@ func _spawn_npc() -> void:
 
 	var spawned_number: int = GameManager.register_npc_spawned()
 
-	# Sincronizar umbral configurado en Inspector
+	# Sincronizar umbrales configurados en Inspector
 	if robber_trigger_served_count > 0:
 		event_manager.set_static_event_trigger("robber", robber_trigger_served_count)
+	if robber_max_day > 0:
+		event_manager.set_static_event_day_range("robber", 1, robber_max_day)
+	if ufo_trigger_day > 0:
+		event_manager.set_static_event_day_trigger("ufo", ufo_trigger_day, ufo_trigger_served_in_day)
+
+	var force_id := debug_force_event
+	if force_id.is_empty() and debug_force_ufo:
+		force_id = "ufo"
 
 	# 1. Seleccionar evento (estático, fijo, aleatorio o forzado por debug)
 	var event: NPCEvent = event_manager.pick_event_for_npc(
@@ -106,7 +128,7 @@ func _spawn_npc() -> void:
 		GameManager.npcs_served,
 		events_enabled,
 		random_event_chance,
-		debug_force_event,
+		force_id,
 		debug_always_trigger_event
 	)
 
@@ -133,18 +155,25 @@ func _spawn_npc() -> void:
 
 	get_parent().add_child(npc)
 
-	# Evaluar si corresponde activar una anomalía modular para este cliente/turno
+	# Evaluar si corresponde activar una anomalía modular para este cliente/turno.
+	# IMPORTANTE: Eventos de NPCs y anomalías modulares son sistemas independientes.
+	# Si el cliente ya tiene un evento asignado (ej. UFO, Robber, BigHead), NO se dispara una anomalía.
 	if anomalies_manager:
-		anomalies_manager.evaluate_and_trigger(
-			spawned_number,
-			GameManager.npcs_served,
-			GameManager.current_day,
-			{
-				"npc": npc,
-				"spawn_number": spawned_number,
-				"event": "npc_spawned"
-			}
-		)
+		if event != null:
+			if event is StaticNPCEvent:
+				anomalies_manager.resolve_all_anomalies()
+		else:
+			anomalies_manager.evaluate_and_trigger(
+				spawned_number,
+				GameManager.npcs_served,
+				GameManager.current_day,
+				{
+					"npc": npc,
+					"spawn_number": spawned_number,
+					"event": "npc_spawned",
+					"has_event": false
+				}
+			)
 
 
 func _on_npc_removed() -> void:
@@ -163,5 +192,8 @@ func _on_npc_removed() -> void:
 
 
 func _on_day_started(_day: int, _max_clients: int) -> void:
+	if current_npc != null and is_instance_valid(current_npc):
+		current_npc.queue_free()
+		current_npc = null
 	timer.stop()
 	timer.start(first_client_delay)

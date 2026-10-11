@@ -17,6 +17,10 @@ extends AnomalyBase
 @export var play_tension_sound: bool = true
 ## Si es true, la niebla se espesa durante la anomalía
 @export var thicken_fog: bool = true
+## Intensidad del filtro rojo en pantalla (0.0 = sin filtro, 1.0 = filtro completo)
+@export_range(0.0, 1.0, 0.05) var red_filter_intensity: float = 0.65
+## Color del filtro rojo espectral
+@export var red_filter_color: Color = Color(0.85, 0.05, 0.1, 1.0)
 
 @onready var glitch_sprite: Sprite2D = $Visuals2D.get_node_or_null("GlitchSprite") as Sprite2D
 @onready var warning_label: Label = $Visuals2D.get_node_or_null("WarningLabel") as Label
@@ -29,6 +33,7 @@ var _original_fog_color: Color = Color(0.05, 0.03, 0.08, 1)
 var _original_dir_light_energy: float = 0.1
 var _flicker_tween: Tween = null
 var _jitter_tween: Tween = null
+var _overlay_tween: Tween = null
 var _elapsed: float = 0.0
 
 
@@ -44,10 +49,16 @@ func _init_anomaly(context: Dictionary = {}) -> void:
 	# Capturar estado ambiental original para poder restaurarlo
 	_capture_environment_state()
 
-	# Configurar el overlay de pantalla completa (aberración cromática / tinte rojo)
+	# Configurar el overlay de pantalla completa (filtro rojo que afecta mundo y cielo)
 	if screen_overlay:
 		screen_overlay.visible = false
-		screen_overlay.modulate.a = 0.0
+		var mat := screen_overlay.material as ShaderMaterial
+		if mat:
+			mat.set_shader_parameter("filter_intensity", 0.0)
+			mat.set_shader_parameter("filter_color", red_filter_color)
+		else:
+			screen_overlay.modulate.a = 0.0
+			screen_overlay.color.a = 0.0
 
 	# Configurar el sprite fantasma
 	if glitch_sprite:
@@ -135,12 +146,11 @@ func _distort_environment() -> void:
 		# Oscurecer luz ambiental
 		tween.tween_property(env, "ambient_light_energy",
 			_original_ambient_energy * (1.0 - darkness_intensity), 0.8)
-		# Aumentar niebla
+		# Aumentar niebla (manteniendo color original para que el tinte rojo provenga
+		# uniformemente del filtro de pantalla ScreenOverlay y no deje el cielo de otro color)
 		if thicken_fog:
 			tween.tween_property(env, "fog_density",
-				_original_fog_density * 4.0, 1.0)
-			tween.tween_property(env, "fog_light_color",
-				Color(0.15, 0.02, 0.05, 1), 1.2)
+				_original_fog_density * 3.5, 1.0)
 
 	# Oscurecer luz direccional
 	var dir_light := tree.root.find_child("DirectionalLight3D", true, false) as DirectionalLight3D
@@ -149,16 +159,27 @@ func _distort_environment() -> void:
 			_original_dir_light_energy * 0.2, 0.6)
 
 
-## Overlay de aberración cromática / tinte rojo a pantalla completa
+## Filtro rojo cinematográfico / espectral a pantalla completa (cubre geometría 3D y cielo)
 func _activate_screen_overlay() -> void:
 	if screen_overlay == null:
 		return
+
+	if _overlay_tween and _overlay_tween.is_valid():
+		_overlay_tween.kill()
+
 	screen_overlay.visible = true
-	screen_overlay.color = Color(0.6, 0.0, 0.05, 0.0)
-	var tween: Tween = create_tween()
-	tween.tween_property(screen_overlay, "color:a", 0.12, 0.5)
-	tween.tween_property(screen_overlay, "color:a", 0.06, 0.3)
-	tween.set_loops(3)
+	var mat := screen_overlay.material as ShaderMaterial
+	if mat:
+		mat.set_shader_parameter("filter_color", red_filter_color)
+		mat.set_shader_parameter("filter_intensity", 0.0)
+		_overlay_tween = create_tween()
+		_overlay_tween.tween_method(func(val: float):
+			mat.set_shader_parameter("filter_intensity", val)
+		, 0.0, red_filter_intensity, 0.8).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	else:
+		screen_overlay.color = Color(red_filter_color.r, red_filter_color.g, red_filter_color.b, 0.0)
+		_overlay_tween = create_tween()
+		_overlay_tween.tween_property(screen_overlay, "color:a", red_filter_intensity * 0.4, 0.8)
 
 
 ## Muestra el texto de alerta con un fade-in/out cíclico
@@ -239,10 +260,27 @@ func resolve() -> void:
 	if warning_label:
 		warning_label.modulate.a = 0.0
 
-	# Fade out del overlay
+	# Fade out suave del filtro rojo
 	if screen_overlay:
-		var overlay_tween: Tween = create_tween()
-		overlay_tween.tween_property(screen_overlay, "color:a", 0.0, 0.3)
+		if _overlay_tween and _overlay_tween.is_valid():
+			_overlay_tween.kill()
+
+		var mat := screen_overlay.material as ShaderMaterial
+		if mat:
+			_overlay_tween = create_tween()
+			var current_val: float = mat.get_shader_parameter("filter_intensity")
+			_overlay_tween.tween_method(func(val: float):
+				mat.set_shader_parameter("filter_intensity", val)
+			, current_val, 0.0, 0.6).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+			_overlay_tween.tween_callback(func():
+				screen_overlay.visible = false
+			)
+		else:
+			_overlay_tween = create_tween()
+			_overlay_tween.tween_property(screen_overlay, "color:a", 0.0, 0.4)
+			_overlay_tween.tween_callback(func():
+				screen_overlay.visible = false
+			)
 
 	# Fade out del sprite
 	if glitch_sprite:

@@ -16,8 +16,8 @@ var patience_drain_rate: float = 1.0
 var _is_order_resolved: bool = false
 
 @onready var label: Label3D = $Label3D
-@onready var body_mesh: CSGCylinder3D = $BodyMesh
-@onready var head: CSGSphere3D = $Head
+@onready var body_mesh: CSGCylinder3D = (get_node_or_null("BodyMesh") as CSGCylinder3D) if get_node_or_null("BodyMesh") else (get_node_or_null("ShipPivot/BodyMesh") as CSGCylinder3D)
+@onready var head: CSGSphere3D = (get_node_or_null("Head") as CSGSphere3D) if get_node_or_null("Head") else (get_node_or_null("ShipPivot/Head") as CSGSphere3D)
 @onready var patience_bar_bg: CSGBox3D = $PatienceBarPivot/PatienceBarBG
 @onready var patience_bar_fill: CSGBox3D = $PatienceBarPivot/PatienceBarFill
 @onready var patience_bar_pivot: Node3D = $PatienceBarPivot
@@ -107,10 +107,17 @@ func _ready() -> void:
 	global_position = spawn_pos
 
 	if not custom_appearance:
-		var mat := StandardMaterial3D.new()
-		mat.albedo_color = NPC_COLORS.pick_random()
-		body_mesh.material = mat
-		if head:
+		var random_color: Color = NPC_COLORS.pick_random()
+
+		# Preservar materiales o texturas configurados en la escena
+		if body_mesh and not _should_preserve_material(body_mesh.material):
+			var mat := StandardMaterial3D.new()
+			mat.albedo_color = random_color
+			body_mesh.material = mat
+
+		if head and not _should_preserve_material(head.material):
+			var mat := StandardMaterial3D.new()
+			mat.albedo_color = random_color
 			head.material = mat
 
 	patience_time = GameManager.get_patience_time()
@@ -118,6 +125,28 @@ func _ready() -> void:
 
 	if active_event:
 		_apply_active_event()
+
+
+## Determina si el material asignado en la escena debe preservarse (ej. si contiene texturas o shaders)
+func _should_preserve_material(mat: Material) -> bool:
+	if mat == null:
+		return false
+	if mat is StandardMaterial3D or mat is ORMMaterial3D:
+		return mat.albedo_texture != null
+	return true
+
+
+## Asigna o reemplaza la textura de la cabeza del NPC (preparado para eventos de rareza)
+func set_head_texture(tex: Texture2D) -> void:
+	if head:
+		if head.material is StandardMaterial3D:
+			var mat: StandardMaterial3D = head.material.duplicate()
+			mat.albedo_texture = tex
+			head.material = mat
+		else:
+			var mat := StandardMaterial3D.new()
+			mat.albedo_texture = tex
+			head.material = mat
 
 
 func assign_event(event: NPCEvent) -> void:
