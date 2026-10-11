@@ -1,16 +1,45 @@
 # Lista de cambios
-- **Nuevo Evento Estático: El Visitante Espacial / OVNI (Día 2)**:
+- **Evento Estático: El Visitante Espacial / OVNI (Día 2) y Entrada Cinemática Dramática**:
+  - **Llegada Cinemática en 6 Fases (`UfoNPC.gd` y `scenes/events/static/UfoNPC.tscn`)**:
+    - `PRE_RUMBLE`: Temblor de cámara *in crescendo* y zumbido cósmico procedural (nave aún oculta).
+    - `HYPER_FLASH`: Destello blanco/cian a pantalla completa, estruendo supersónico (`play_sonic_boom`) y sacudida de cámara (nave oculta).
+    - `SUSPENSE_PAUSE`: Pausa en penumbra con vibrato alienígena oscilante (`play_alien_suspense`) para aumentar la tensión antes de la aparición.
+    - `FAR_EMERGENCE`: Destello puntual en el cielo lejano y frenado abrupto en seco estilo *Star Wars* con inclinación e inercia angular.
+    - `SKY_CRUISE`: Desplazamiento lento y majestuoso (`sky_cruise_speed = 3.2 m/s`) cruzando el firmamento hacia la tienda.
+    - `DESCENT`: Descenso flotante suave hasta la altura del mostrador de atención para ordenar.
+  - **Calibración de la Línea de Visión desde la Ventana de la Tienda**:
+    - Se recalibraron las alturas y distancias de aproximación (`far_sky_height = 3.2`, `far_sky_distance = 26.0`, `sky_descent_height = 2.2`).
+    - Al estar el jugador detrás del mostrador (`Y ≈ 2.2, Z = -2.3`) mirando a través de la abertura de la ventana (`Z = -3.72`, `Y ∈ [0.90, 2.30]`), el platillo volador se mantiene dentro del campo visual (`Y ≈ 2.26`) permitiendo verlo aproximarse de frente por la calle desde el primer segundo.
+  - **Retirada Cósmica hacia el Espacio**:
+    - Al completarse la orden o agotarse la paciencia, la nave despega suavemente en ascenso vertical acelerado hacia las estrellas desvaneciéndose en la distancia.
   - **Condiciones Temporales en Eventos Estáticos (`StaticNPCEvent.gd`)**:
     - Se extendió la plantilla base de eventos estáticos con soporte para umbrales por jornada: `trigger_day` (día mínimo del evento) y `trigger_day_served_count` (clientes atendidos requeridos en el día en curso), manteniendo compatibilidad total con los umbrales globales.
   - **Arquitectura Dedicada en `scripts/events/static/ufo/`**:
     - [`UfoEvent.gd`](scripts/events/static/ufo/UfoEvent.gd): Definición del evento estático (`id = "ufo"`), configurado para dispararse en el Día 2 tras atender a 1 cliente (`trigger_day = 2`, `trigger_day_served_count = 1`, `trigger_once = true`).
-    - [`UfoNPC.gd`](scripts/events/static/ufo/UfoNPC.gd): Controlador específico del cliente extraterrestre con apariencia verde fosforescente brillante (`StandardMaterial3D` con emisión), luz ambiental verde (`OmniLight3D`) y mecánica de descenso suave desde el cielo (`enable_sky_descent`, `descent_height = 8.0`) antes de avanzar al mostrador.
-    - [`scenes/UfoNPC.tscn`](scenes/UfoNPC.tscn): Escena física del visitante alienígena con mallas emisivas y nodo de iluminación incorporado.
+    - [`UfoNPC.gd`](scripts/events/static/ufo/UfoNPC.gd): Controlador específico con iluminación fosforescente, rotación constante del anillo exterior (`SaucerRim`), vaivén de flotación orgánico y haz de luz tractor.
+    - [`scenes/events/static/UfoNPC.tscn`](scenes/events/static/UfoNPC.tscn): Escena física del platillo volador con domo, núcleo de propulsión, foco tractor y animaciones pulsantes.
   - **Integración y Herramientas de Depuración (`NPCEventManager.gd` y `NPCSpawner.gd`)**:
     - Parámetros configurables en el Inspector: `ufo_trigger_day`, `ufo_trigger_served_in_day` y `debug_force_ufo` para forzar su aparición de inmediato.
     - Avance rápido de jornada en tiempo de ejecución: tecla de depuración `debug_advance_day_key = KEY_F6` para saltar directamente al siguiente día y probar el flujo de días sin esperas.
   - **Restricción del Ladrón al Día 1 (`RobberEvent.gd`)**:
     - Se configuró `trigger_day = 1` y `trigger_max_day = 1` en el evento estático del ladrón, garantizando que su aparición ocurra exclusivamente durante la primera jornada de trabajo y no interfiera con los eventos del Día 2 en adelante.
+- **Desacoplamiento Total de Eventos de NPCs y Anomalías Espectrales**:
+  - **Corrección de Falso Positivo Espectral en Eventos**:
+    - Se solucionó el problema por el cual el OVNI disparaba simultáneamente la alerta en HUD y el filtro rojo de "Distorsión Espectral detectada".
+    - `NPCSpawner.gd` y `AnomaliesManager.gd` ahora garantizan que cualquier cliente con evento asignado (`has_event` o `npc.active_event`) no active anomalías.
+    - Los eventos estáticos resuelven y limpian anomalías activas residuales al tomar control del turno.
+  - **Documentación Técnica Modular**:
+    - [`scripts/anomalies/README.md`](scripts/anomalies/README.md): Guía paso a paso para la creación modular de nuevas anomalías independientes (estructura, disparadores, ciclo de vida y shaders).
+    - [`scripts/events/README.md`](scripts/events/README.md): Documentación actualizada distinguiendo modularmente entre Eventos de NPCs (variaciones o clientes estáticos con interacción) y Anomalías Espectrales/Ambientales (fenómenos paranormales no ligados al flujo de cocina).
+- **Sistema de Temblor de Cámara (Camera Shake en `Player.gd`)**:
+  - Métodos `shake_camera()`, `shake_camera_crescendo()` y `stop_camera_shake()` con amortiguación gradual basada en Tweens para impactos, explosiones y acumulación de tensión dramática.
+- **Síntesis Procedural de Audio Espacial (`SFXManager.gd`)**:
+  - `play_sonic_boom()`: Choque supersónico con barrido tonal grave y ruido blanco para simular la ruptura de barrera sónica.
+  - `play_cosmic_rumble()`: Resonancia y zumbido subgrave modulado para advertencias y temblores premonitorios.
+  - `play_alien_suspense()`: Tono cósmico oscilante tipo *theremin* para pausas de suspenso e incertidumbre.
+- **Suites de Pruebas Automatizadas (Godot Engine)**:
+  - [`tests/test_ufo_arrival.tscn`](tests/test_ufo_arrival.tscn): 31 pruebas unitarias cubriendo la estructura de la nave, ocultamiento durante el suspenso, emergencia en el cielo lejano, altitud dentro del marco de la ventana, llegada al mostrador y despegue final.
+  - [`tests/test_event_anomaly_separation.tscn`](tests/test_event_anomaly_separation.tscn): 13 pruebas que validan el desacople estricto entre eventos y anomalías.
 - **Corrección de Efecto Rojo en Anomalías (Filtro de Pantalla Completa y Preservación del Cielo)**:
   - **Filtro Rojo Uniforme a Pantalla Completa (`shaders/red_anomaly_filter.gdshader`)**:
 	- Se implementó un shader post-procesado en `ScreenOverlay` (`CanvasLayer`) que aplica un tinte rojo estilizado, viñeta perimetral y pulso respiratorio sutil a toda la pantalla, cubriendo de forma coherente tanto la geometría 3D como el cielo procedural exterior (`night_sky.gdshader`).
