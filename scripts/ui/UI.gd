@@ -250,20 +250,20 @@ func _on_game_won(stats: Dictionary) -> void:
 	var days_survived: int = int(stats.get("day", 3))
 	var max_d: int = int(stats.get("max_days", 3))
 	if victory_title:
-		victory_title.text = "🏆 YOU WON! 🏆"
+		victory_title.text = " YOU WON! "
 	if victory_subtitle:
 		victory_subtitle.text = "You survived all %d night shifts!" % days_survived
 	if victory_lore:
 		victory_lore.text = "You managed to survive the night and safely finish your job."
 
 	if victory_stat_days:
-		victory_stat_days.text = "📅 Days survived: %d/%d" % [days_survived, max_d]
+		victory_stat_days.text = " Days survived: %d/%d" % [days_survived, max_d]
 	if victory_stat_served:
-		victory_stat_served.text = "✅ Correct orders: %d" % int(stats.get("total_correct", 0))
+		victory_stat_served.text = " Correct orders: %d" % int(stats.get("total_correct", 0))
 	if victory_stat_wrong:
-		victory_stat_wrong.text = "❌ Wrong orders: %d" % int(stats.get("total_wrong", 0))
+		victory_stat_wrong.text = " Wrong orders: %d" % int(stats.get("total_wrong", 0))
 	if victory_stat_lost:
-		victory_stat_lost.text = "🏃 Customers who left: %d" % int(stats.get("total_lost", 0))
+		victory_stat_lost.text = " Customers who left: %d" % int(stats.get("total_lost", 0))
 
 	if victory_panel:
 		victory_panel.modulate.a = 0.0
@@ -326,7 +326,7 @@ func _on_game_over(reason: String) -> void:
 		final_score_label.text = reason if reason != "" else "Has sido eliminado."
 
 	if delivery_stat_label:
-		delivery_stat_label.text = "📦 Clientes atendidos: %d  ·  Día %d" % [GameManager.npcs_served, GameManager.current_day]
+		delivery_stat_label.text = " Clientes atendidos: %d  ·  Día %d" % [GameManager.npcs_served, GameManager.current_day]
 
 	if day_end_panel:
 		day_end_panel.visible = false

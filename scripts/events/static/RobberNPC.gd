@@ -163,7 +163,7 @@ func _update_robber_dialogue() -> void:
 	if not label or requested_item == null or is_game_over:
 		return
 	var progress := "[%d/%d]" % [current_step + 1, robber_recipes.size()]
-	label.text = "😈 ¡Pasa ya: %s %s!" % [progress, requested_item.display_name]
+	label.text = " ¡Pasa ya: %s %s!" % [progress, requested_item.display_name]
 	label.modulate = Color(1.0, 0.25, 0.25, 1.0)
 
 
@@ -217,7 +217,7 @@ func receive_item(item_node: Interactable) -> void:
 			patience_bar_pivot.visible = false
 			
 			if label:
-				label.text = "😈 ¡Trato hecho! Me voy satisfecho con mis completos... 💰"
+				label.text = " ¡Trato hecho! Me voy satisfecho con mis completos... "
 				label.modulate = Color(0.2, 1.0, 0.4, 1.0)
 			
 			_holster_gun()
@@ -241,7 +241,7 @@ func _start_anger_sequence(reason: String) -> void:
 
 	# 1. Diálogo de furia
 	if label:
-		label.text = "😠 ¿¿Qué es esto...?? ¡Te dije que no jugaras conmigo!"
+		label.text = " ¿¿Qué es esto...?? ¡Te dije que no jugaras conmigo!"
 		label.modulate = Color(1.0, 0.1, 0.1, 1.0)
 		label.visible = true
 
@@ -412,7 +412,7 @@ func _darken_environment() -> void:
 ## Disparo fatal y caída del jugador
 func _execute_shot(reason: String) -> void:
 	if label:
-		label.text = "💥 ¡BANG!"
+		label.text = " ¡BANG!"
 		label.modulate = Color(1.0, 0.05, 0.05, 1.0)
 
 	# Sonido de disparo
@@ -477,9 +477,9 @@ func on_persiana_closed() -> void:
 	# Diálogo de furia y frustración (reacción especial si el jugador se salvó cerrando la persiana)
 	if label:
 		if saved_from_death:
-			label.text = "💥 ¡CLANG! 🤬 ¡¿Cerraste la persiana?! ¡Te salvaste por ahora!"
+			label.text = " ¡CLANG!  ¡¿Cerraste la persiana?! ¡Te salvaste por ahora!"
 		else:
-			label.text = "🤬 ¡¿Me cerraste la persiana?! ¡Ya vas a ver!"
+			label.text = " ¡¿Me cerraste la persiana?! ¡Ya vas a ver!"
 		label.modulate = Color(1.0, 0.2, 0.2, 1.0)
 		label.visible = true
 

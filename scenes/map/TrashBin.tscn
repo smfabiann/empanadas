@@ -43,6 +43,6 @@ material = SubResource("StandardMaterial3D_trash_rim")
 [node name="Label3D" type="Label3D" parent="Station_Trash" unique_id=797754422]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 billboard = 1
-text = "🗑️ BASURERO"
+text = " BASURERO"
 font_size = 24
 outline_size = 4

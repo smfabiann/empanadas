@@ -13,9 +13,9 @@ func _ready() -> void:
 func get_interaction_prompt(player: Node) -> Dictionary:
 	var held = player.get("held_item")
 	if held != null and held.has_method("add_ingredient"):
-		return {"text": "[E] Añadir caca al Completo 💩", "actionable": true}
+		return {"text": "[E] Añadir caca al Completo ", "actionable": true}
 	elif held == null:
-		return {"text": "[E] Recoger Caca 💩", "actionable": true}
+		return {"text": "[E] Recoger Caca ", "actionable": true}
 	else:
 		return {"text": "Manos ocupadas", "actionable": false}
 

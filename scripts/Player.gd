@@ -223,7 +223,7 @@ func _update_interaction_prompt() -> void:
 	# Si miramos al cliente con las manos vacías, mostrar lo que pide
 	var target_npc := _get_target_npc()
 	if target_npc != null and target_npc.requested_item != null:
-		ui.set_prompt("👤 Cliente pide: " + target_npc.requested_item.display_name, false)
+		ui.set_prompt(" Cliente pide: " + target_npc.requested_item.display_name, false)
 		return
 
 	ui.set_prompt("", false)

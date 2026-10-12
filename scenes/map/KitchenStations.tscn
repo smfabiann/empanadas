@@ -68,7 +68,7 @@ material = SubResource("StandardMaterial3D_pan")
 [node name="Label3D" type="Label3D" parent="Station_Bread" unique_id=1640933598]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
 billboard = 1
-text = "🥖 PAN (Base)"
+text = " PAN (Base)"
 font_size = 26
 outline_size = 4
 
@@ -105,7 +105,7 @@ material = SubResource("StandardMaterial3D_sausage")
 [node name="Label3D" type="Label3D" parent="Station_Sausage" unique_id=1755250244]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
 billboard = 1
-text = "🌭 VIENESAS (Base)"
+text = " VIENESAS (Base)"
 font_size = 26
 outline_size = 4
 
@@ -138,7 +138,7 @@ material = SubResource("StandardMaterial3D_palta")
 [node name="Label3D" type="Label3D" parent="Station_Palta" unique_id=882654529]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
 billboard = 1
-text = "🥑 PALTA"
+text = " PALTA"
 font_size = 26
 outline_size = 4
 
@@ -171,7 +171,7 @@ material = SubResource("StandardMaterial3D_mayo_bottle")
 [node name="Label3D" type="Label3D" parent="Station_Mayo" unique_id=654504154]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
 billboard = 1
-text = "⚪ MAYO"
+text = " MAYO"
 font_size = 26
 outline_size = 4
 
@@ -204,7 +204,7 @@ material = SubResource("StandardMaterial3D_ketchup_bottle")
 [node name="Label3D" type="Label3D" parent="Station_Ketchup" unique_id=1724399684]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42, 0)
 billboard = 1
-text = "🔴 KÉTCHUP"
+text = " KÉTCHUP"
 font_size = 26
 outline_size = 4
 

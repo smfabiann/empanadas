@@ -79,7 +79,7 @@ func _ready() -> void:
 func _trigger_debug_force_on_start() -> void:
 	var target_id := _normalize_anomaly_id(debug_force_anomaly)
 	if not target_id.is_empty() and anomalies_by_id.has(target_id):
-		print("[AnomaliesManager] 🚀 Auto-disparando anomalía de debug al iniciar: '", target_id, "'")
+		print("[AnomaliesManager]  Auto-disparando anomalía de debug al iniciar: '", target_id, "'")
 		force_trigger_anomaly(target_id)
 
 

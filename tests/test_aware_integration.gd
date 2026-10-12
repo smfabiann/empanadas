@@ -79,8 +79,8 @@ func _ready() -> void:
 
 func _finish(success: bool, msg: String) -> void:
 	if success:
-		_log_msg("✅ ÉXITO: " + msg)
+		_log_msg(" ÉXITO: " + msg)
 		get_tree().quit(0)
 	else:
-		push_error("❌ ERROR: " + msg)
+		push_error(" ERROR: " + msg)
 		get_tree().quit(1)

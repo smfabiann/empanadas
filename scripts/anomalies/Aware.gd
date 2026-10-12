@@ -69,7 +69,7 @@ func execute_behavior() -> void:
 	if eye_root:
 		eye_root.visible = false
 		eye_root.modulate.a = 0.0
-	print("[Aware] 👁️ Anomalía Aware activada. Está al acecho: interactúa con el monitor de seguridad [E] en la pared izquierda para verla.")
+	print("[Aware]  Anomalía Aware activada. Está al acecho: interactúa con el monitor de seguridad [E] en la pared izquierda para verla.")
 
 
 func _process(delta: float) -> void:
@@ -86,13 +86,13 @@ func _process(delta: float) -> void:
 	if viewing and not _is_viewing_now:
 		_is_viewing_now = true
 		monitor_viewed.emit()
-		print("[Aware] 👁️ El Consciente detecta que lo observas a través del monitor.")
+		print("[Aware]  El Consciente detecta que lo observas a través del monitor.")
 		if typeof(SFXManager) != TYPE_NIL and SFXManager != null and SFXManager.has_method("play_tense_anger"):
 			SFXManager.play_tense_anger()
 	elif not viewing and _is_viewing_now:
 		_is_viewing_now = false
 		monitor_averted.emit()
-		print("[Aware] 👁️ El Consciente deja de verte (dejaste de mirar el monitor).")
+		print("[Aware]  El Consciente deja de verte (dejaste de mirar el monitor).")
 
 	if viewing:
 		eye_root.visible = true

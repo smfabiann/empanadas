@@ -1,10 +1,10 @@
-# 🎪 Sistema de Eventos de NPCs (NPC Events)
+#  Sistema de Eventos de NPCs (NPC Events)
 
 Arquitectura modular para modificar la apariencia, comportamiento y lógica de los clientes que se presentan en la ventana. Pensado para rápida creación por desarrolladores y agentes de IA.
 
 ---
 
-## 📌 Diferencia entre Eventos y Anomalías
+##  Diferencia entre Eventos y Anomalías
 
 | Sistema | Ubicación | Rol y Alcance |
 |---|---|---|
@@ -16,7 +16,7 @@ Arquitectura modular para modificar la apariencia, comportamiento y lógica de l
 
 ---
 
-## 🏗️ Arquitectura
+##  Arquitectura
 
 | Archivo | Rol |
 |---|---|
@@ -31,7 +31,7 @@ Arquitectura modular para modificar la apariencia, comportamiento y lógica de l
 
 ---
 
-## ⏱️ Ciclo de Vida (`NPCEvent`)
+## ⏱ Ciclo de Vida (`NPCEvent`)
 
 Implementa solo los métodos que necesites:
 
@@ -43,7 +43,7 @@ Implementa solo los métodos que necesites:
 
 ---
 
-## 🚀 Plantilla 1: Evento Aleatorio Rápido
+##  Plantilla 1: Evento Aleatorio Rápido
 
 Crea un script en `res://scripts/events/MiEventoRandom.gd`:
 
@@ -63,12 +63,12 @@ func apply(npc: CharacterBody3D) -> void:
 func on_arrive(npc: CharacterBody3D) -> void:
 	var label = npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		label.text = "👾 " + label.text
+		label.text = " " + label.text
 ```
 
 ---
 
-## 🗿 Plantilla 2: Evento Estático / Narrativo (con Modelo Propio)
+##  Plantilla 2: Evento Estático / Narrativo (con Modelo Propio)
 
 Crea un script en `res://scripts/events/static/MiEventoEstatico.gd` heredando de `StaticNPCEvent`:
 
@@ -97,7 +97,7 @@ func on_arrive(npc: CharacterBody3D) -> void:
 
 ---
 
-## ⚙️ Registro de Eventos (`NPCEventManager.gd`)
+##  Registro de Eventos (`NPCEventManager.gd`)
 
 Registra cualquier nuevo evento en `_register_default_events()`:
 ```gdscript
@@ -110,7 +110,7 @@ func _register_default_events() -> void:
 
 ---
 
-## 🧪 Depuración (`NPCSpawner` y `NPCEventManager` en Inspector)
+##  Depuración (`NPCSpawner` y `NPCEventManager` en Inspector)
 
 - **`events_enabled`**: Activar / desactivar sistema de eventos.
 - **`random_event_chance`**: Probabilidad base de evento aleatorio (ej. `0.35` = 35%).
@@ -125,7 +125,7 @@ func _register_default_events() -> void:
 
 ---
 
-## ⚠️ Reglas Clave de Implementación
+##  Reglas Clave de Implementación
 1. **Acceso seguro:** Usa `npc.get_node_or_null("NodeName")` o `if "prop" in npc:` para evitar caídas si la escena cambia.
 2. **NPCs con modelo propio:** En escenas personalizadas (como `RobberNPC.tscn` o `UfoNPC.tscn`), activar `custom_appearance = true` en el nodo raíz para que `NPC.gd` no sobrescriba tus materiales con colores aleatorios.
 3. **Compensación de UI:** Si aumentas el tamaño del NPC o cabeza, sube `Label3D.position.y` y `PatienceBarPivot.position.y` para no tapar los pedidos.
@@ -133,7 +133,7 @@ func _register_default_events() -> void:
 
 ---
 
-## 👁️ Sistema de Anomalías Modulares (`scripts/anomalies/`)
+##  Sistema de Anomalías Modulares (`scripts/anomalies/`)
 Para la creación y gestión de anomalías independientes con escenas propias (`AnomalyBase`, `AnomalyData`, shaders y `AnomaliesManager`), consulta:
 - **Documentación principal**: [`scripts/anomalies/README.md`](../anomalies/README.md)
 - **Flujo de trabajo detallado**: [`docs/anomalies_workflow.md`](../../docs/anomalies_workflow.md)

@@ -345,13 +345,13 @@ func get_completo_name() -> String:
 	if sausage_count == 0:
 		if palta_count == 0 and mayo_count == 0 and ketchup_count == 0:
 			if poop_count > 0:
-				base_name = "Pan con Caca 💩"
+				base_name = "Pan con Caca "
 			else:
 				base_name = "Pan de Completo (Solo)"
 		else:
 			base_name = "Pan con agregados (Sin vienesa)"
 			if poop_count > 0:
-				base_name = "%s con Caca 💩" % base_name
+				base_name = "%s con Caca " % base_name
 	else:
 		# Con salchicha:
 		if palta_count > 0 and mayo_count > 0 and ketchup_count > 0:
@@ -372,7 +372,7 @@ func get_completo_name() -> String:
 			base_name = "Completo Simple (Solo vienesa)"
 
 		if poop_count > 0:
-			base_name = "%s con Caca 💩" % base_name
+			base_name = "%s con Caca " % base_name
 
 	var extras: Array[String] = []
 	if sausage_count > 1:
@@ -398,7 +398,7 @@ func _update_labels() -> void:
 		item_data.display_name = c_name
 
 	if label:
-		label.text = "🌭 " + c_name
+		label.text = " " + c_name
 
 
 ## Compara la composición actual con los requisitos de una orden
@@ -436,7 +436,7 @@ func get_match_error(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ket
 func get_interaction_prompt(player: Node) -> Dictionary:
 	var held = player.get("held_item")
 	if held != null and (held.is_in_group("poop") or (held.get("item_data") and held.item_data.id == "poop")):
-		return {"text": "[E] Untar caca en el Completo 💩", "actionable": true}
+		return {"text": "[E] Untar caca en el Completo ", "actionable": true}
 	elif held == null:
 		return {"text": "[E] Recoger " + get_completo_name(), "actionable": true}
 	return {"text": get_completo_name(), "actionable": false}

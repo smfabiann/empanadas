@@ -18,14 +18,14 @@ Juego 3D retro con atmósfera de terror psicológico y anomalías. El jugador at
 
 ## Fases del Proyecto
 
-### Fase 1: Prototipo Core Retail (✅ Completada)
+### Fase 1: Prototipo Core Retail ( Completada)
 - Controlador de jugador FPS con sprint, salto y raycast interactivo.
 - Sistema de cocina interactiva 3D de completos (pan, vienesa, palta, mayo, ketchup, basurero).
 - IA de clientes con máquina de estados, pedidos y barra de paciencia.
 - Bucle de jornadas laborales (3 días canónicos), fin de jornada y condición de victoria (HU-06).
 - Autoloads `GameManager` y `SFXManager`, menús y HUD debug (F3).
 
-### Fase 2: Sistema de Anomalías y Eventos (🔄 En Curso)
+### Fase 2: Sistema de Anomalías y Eventos ( En Curso)
 - Arquitectura desacoplada de eventos de NPCs (`NPCEventManager`, `BigHeadEvent`, `fastNPC`).
 - Evento estático del Ladrón (`RobberNPC`) con mecánica defensiva de persiana.
 - Gestor central de anomalías modulares (`AnomaliesManager` / `AnomalyBase` / `AnomalyData`, HU-ANOM-13).

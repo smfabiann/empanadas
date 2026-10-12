@@ -96,7 +96,7 @@ material = SubResource("StandardMaterial3D_pipe")
 
 [node name="DoorSign" type="Label3D" parent="Door" unique_id=1719784803]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53, 1.45, -0.04)
-text = "🚻 WC QUÍMICO"
+text = " WC QUÍMICO"
 font_size = 22
 outline_size = 3
 
@@ -140,7 +140,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
 [node name="Label3D" type="Label3D" parent="Toilet" unique_id=1837223604]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
 billboard = 1
-text = "🚽 Inodoro Químico"
+text = " Inodoro Químico"
 font_size = 24
 outline_size = 4
 
@@ -153,6 +153,6 @@ omni_range = 2.6
 
 [node name="HeaderSign" type="Label3D" parent="." unique_id=131006520]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.12, -0.635)
-text = "🚻 BAÑO QUÍMICO"
+text = " BAÑO QUÍMICO"
 font_size = 24
 outline_size = 4

@@ -210,7 +210,7 @@ func _arrive_at_counter() -> void:
 	velocity = Vector3.ZERO
 
 	_generate_completo_order()
-	label.text = "💬 Quiero: %s\n(%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
+	label.text = " Quiero: %s\n(%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
 	label.visible = true
 
 	patience_bar_pivot.visible = true
@@ -325,20 +325,20 @@ func receive_item(item_node: Interactable) -> void:
 		var completo = item_node
 		if not completo.is_valid_base():
 			is_correct = false
-			label.text = "😠 ¡Le falta la vienesa obligatoria! ❌"
+			label.text = " ¡Le falta la vienesa obligatoria! "
 		elif completo.matches_order(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup):
 			is_correct = true
-			label.text = "😊 ¡Buenísimo completo! ✅"
+			label.text = " ¡Buenísimo completo! "
 		else:
 			is_correct = false
 			var err: String = String(completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup))
-			label.text = "😠 %s ❌" % err
+			label.text = " %s " % err
 	else:
 		is_correct = false
 		if item_node.is_in_group("poop") or (item_node.item_data and item_node.item_data.id == "poop"):
-			label.text = "🤢 ¡¿ME ESTÁS DANDO CACA?! ¡QUÉ ASCO! ❌"
+			label.text = " ¡¿ME ESTÁS DANDO CACA?! ¡QUÉ ASCO! "
 		else:
-			label.text = "😠 ¡Esto no es un completo! ❌"
+			label.text = " ¡Esto no es un completo! "
 
 	if is_correct:
 		if body_mesh:
@@ -382,7 +382,7 @@ func _die_from_poison(item_node: Interactable) -> void:
 
 	# 1. Asfixia y reacción inicial de envenenamiento
 	label.visible = true
-	label.text = "🤢 *Gulp*... ¡¿QUÉ ES ESTO?! ¡TIENE CACA! 🤮"
+	label.text = " *Gulp*... ¡¿QUÉ ES ESTO?! ¡TIENE CACA! "
 	label.modulate = Color(0.4, 0.95, 0.2, 1.0) # Verde tóxico
 
 	# Cambiar color de cuerpo y cabeza a tono tóxico / nauseabundo
@@ -408,7 +408,7 @@ func _die_from_poison(item_node: Interactable) -> void:
 	if not is_instance_valid(self):
 		return
 
-	label.text = "💀 ¡AGHHH...! *Muerto* 💀"
+	label.text = " ¡AGHHH...! *Muerto* "
 	label.modulate = Color(1.0, 0.15, 0.15, 1.0)
 
 	collision_mask = 0

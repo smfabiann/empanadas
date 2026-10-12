@@ -44,6 +44,6 @@ grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
 theme_override_font_sizes/font_size = 18
-text = "👁️ [AWARE: ANOMALÍA EN MONITOR] 👁️"
+text = " [AWARE: ANOMALÍA EN MONITOR] "
 horizontal_alignment = 1
 vertical_alignment = 1

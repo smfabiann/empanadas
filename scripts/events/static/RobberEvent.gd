@@ -26,7 +26,7 @@ func on_arrive(npc: CharacterBody3D) -> void:
 		return
 	var label = npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		label.text = "😈 Dame todo... ¡y una empanada!"
+		label.text = " Dame todo... ¡y una empanada!"
 		label.modulate = Color(1.0, 0.2, 0.2, 1.0)
 
 

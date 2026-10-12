@@ -17,7 +17,7 @@ func get_interaction_prompt(_player: Node) -> Dictionary:
 	if is_open:
 		return {"text": "[E] Cerrar Puerta del Baño", "actionable": true}
 	else:
-		return {"text": "[E] Abrir Baño Químico 🚻", "actionable": true}
+		return {"text": "[E] Abrir Baño Químico ", "actionable": true}
 
 
 func interact(_player: Node) -> void:

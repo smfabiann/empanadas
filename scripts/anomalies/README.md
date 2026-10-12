@@ -1,10 +1,10 @@
-# 👁️ Sistema de Anomalías Modulares (Anomalies)
+#  Sistema de Anomalías Modulares (Anomalies)
 
 Arquitectura modular para crear y gestionar manifestaciones anómalas (ambientales, visuales, shaders y HUD) desacopladas de los clientes. Diseñado para rápida creación por desarrolladores y agentes de IA.
 
 ---
 
-## 📌 Diferencia entre Eventos y Anomalías
+##  Diferencia entre Eventos y Anomalías
 
 | Sistema | Ubicación | Rol y Alcance |
 |---|---|---|
@@ -16,7 +16,7 @@ Arquitectura modular para crear y gestionar manifestaciones anómalas (ambiental
 
 ---
 
-## 🏗️ Arquitectura
+##  Arquitectura
 
 | Archivo / Recurso | Rol |
 |---|---|
@@ -28,7 +28,7 @@ Arquitectura modular para crear y gestionar manifestaciones anómalas (ambiental
 
 ---
 
-## ⏱️ Ciclo de Vida (`AnomalyBase`)
+## ⏱ Ciclo de Vida (`AnomalyBase`)
 
 Toda anomalía implementa los siguientes pasos:
 
@@ -43,10 +43,10 @@ Toda anomalía implementa los siguientes pasos:
 
 ---
 
-## 🚀 Paso a Paso: Crear una Nueva Anomalía
+##  Paso a Paso: Crear una Nueva Anomalía
 
 ### 1. Crear Escena Heredada
-En Godot: Clic derecho sobre `res://scenes/anomalies/AnomalyBase.tscn` → **New Inherited Scene**.
+En Godot: Clic derecho sobre `res://scenes/anomalies/AnomalyBase.tscn`  **New Inherited Scene**.
 - Elementos 2D en pantalla (shaders, sprites, HUD): Colócalos dentro de `$Visuals2D`.
 - Elementos 3D en el mundo (partículas, luces, mallas): Colócalos dentro de `$Visuals3D`.
 - Guarda en `res://scenes/anomalies/MiAnomalia.tscn`.
@@ -98,7 +98,7 @@ Selecciona el nodo `AnomaliesManagement` en `Main.tscn` y agrega el `.tres` al a
 
 ---
 
-## 🎛️ Disparadores Disponibles (`AnomalyData`)
+##  Disparadores Disponibles (`AnomalyData`)
 
 | Parámetro | Tipo | Efecto |
 |---|---|---|
@@ -111,7 +111,7 @@ Selecciona el nodo `AnomaliesManagement` en `Main.tscn` y agrega el `.tres` al a
 
 ---
 
-## 🧪 Depuración desde el Inspector (`AnomaliesManagement`)
+##  Depuración desde el Inspector (`AnomaliesManagement`)
 
 Para depurar en tiempo de ejecución mientras el juego está corriendo:
 1. En la pestaña **Scene** (panel izquierdo del editor de Godot), cambia de **Local** a **Remote**.

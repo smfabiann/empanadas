@@ -41,7 +41,7 @@ material = SubResource("StandardMaterial3D_rim")
 [node name="Label3D" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
 billboard = 1
-text = "🥖 PAN"
+text = " PAN"
 font_size = 28
 outline_size = 4
 outline_color = Color(0.05, 0.02, 0.08, 1)

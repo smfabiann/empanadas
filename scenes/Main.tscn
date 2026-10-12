@@ -324,7 +324,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, -2.5)
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
 visible = false
 modulate = Color(1, 0.85, 0.3, 1)
-text = "🫓 EMPANADAS 🫓"
+text = " EMPANADAS "
 font_size = 80
 outline_size = 6
 

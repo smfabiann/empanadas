@@ -24,11 +24,11 @@ func get_interaction_prompt(player: Node) -> Dictionary:
 	var is_poop: bool = held != null and (held.is_in_group("poop") or (held.get("item_data") and held.item_data.id == "poop"))
 
 	if is_completo:
-		return {"text": "[E] Defecar en el Completo 💩", "actionable": true}
+		return {"text": "[E] Defecar en el Completo ", "actionable": true}
 	elif is_poop:
-		return {"text": "[E] Tirar caca al inodoro 🚽", "actionable": true}
+		return {"text": "[E] Tirar caca al inodoro ", "actionable": true}
 	elif held == null:
-		return {"text": "[E] Usar baño químico (Hacer caca 💩)", "actionable": true}
+		return {"text": "[E] Usar baño químico (Hacer caca )", "actionable": true}
 	else:
 		return {"text": "Manos ocupadas", "actionable": false}
 
@@ -93,7 +93,7 @@ func make_poop(player: Node = null) -> Node:
 	tween.tween_property(poop, "scale", Vector3.ONE, 0.1)
 
 	if toilet_label:
-		_flash_toilet_label("💩 *¡PLOP!* Caca lista")
+		_flash_toilet_label(" *¡PLOP!* Caca lista")
 
 	return poop
 
@@ -106,7 +106,7 @@ func _poop_on_completo(completo: Node, player: Node) -> void:
 
 	var added: bool = completo.add_ingredient("poop")
 	if added and toilet_label:
-		_flash_toilet_label("💩 ¡Caca untada en el completo!")
+		_flash_toilet_label(" ¡Caca untada en el completo!")
 
 
 ## Descarta la caca que sostiene el jugador
@@ -121,7 +121,7 @@ func _flush_held_poop(held: Node, player: Node) -> void:
 	held.queue_free()
 
 	if toilet_label:
-		_flash_toilet_label("🚽 ¡Caca descargada!")
+		_flash_toilet_label(" ¡Caca descargada!")
 
 
 func _flash_toilet_label(text_msg: String) -> void:

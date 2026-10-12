@@ -5,4 +5,4 @@
 [resource]
 script = ExtResource("1_poop")
 id = "poop"
-display_name = "Caca 💩"
+display_name = "Caca "

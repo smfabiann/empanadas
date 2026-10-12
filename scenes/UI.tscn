@@ -72,7 +72,7 @@ offset_right = 250.0
 offset_bottom = 45.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.6, 1)
 theme_override_font_sizes/font_size = 22
-text = "⭐ 0"
+text = " 0"
 
 [node name="LivesLabel" type="Label" parent="HUD" unique_id=278075104]
 layout_mode = 0
@@ -84,7 +84,7 @@ offset_right = -20.0
 offset_bottom = 45.0
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
 theme_override_font_sizes/font_size = 22
-text = "❤️ 3"
+text = " 3"
 horizontal_alignment = 2
 
 [node name="ComboLabel" type="Label" parent="HUD" unique_id=1620478689]
@@ -97,7 +97,7 @@ offset_right = -20.0
 offset_bottom = 78.0
 theme_override_colors/font_color = Color(1, 0.7, 0.1, 1)
 theme_override_font_sizes/font_size = 20
-text = "🔥 x2"
+text = " x2"
 horizontal_alignment = 2
 
 [node name="DifficultyLabel" type="Label" parent="HUD" unique_id=1665432636]
@@ -213,7 +213,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
 theme_override_font_sizes/font_size = 22
-text = "🎮 CONTROLES"
+text = " CONTROLES"
 horizontal_alignment = 1
 
 [node name="TutorialText" type="Label" parent="HUD/TutorialPanel/TutorialVBox" unique_id=904847681]
@@ -281,21 +281,21 @@ horizontal_alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 14
-text = "📦 Entregas: 0/0"
+text = " Entregas: 0/0"
 horizontal_alignment = 1
 
 [node name="ComboStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=1067262235]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 14
-text = "🔥 Mejor Combo: 0"
+text = " Mejor Combo: 0"
 horizontal_alignment = 1
 
 [node name="DifficultyStatLabel" type="Label" parent="HUD/GameOverPanel/VBoxContainer" unique_id=610708961]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.75, 0.72, 0.85, 1)
 theme_override_font_sizes/font_size = 14
-text = "📈 Dificultad: Fácil"
+text = " Dificultad: Fácil"
 horizontal_alignment = 1
 
 [node name="RetryButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer" unique_id=628316910]
@@ -346,7 +346,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.65, 0.6, 0.8, 0.8)
 theme_override_font_sizes/font_size = 11
-text = "🛠 DEBUG (F3)"
+text = " DEBUG (F3)"
 
 [node name="DebugSpawnedLabel" type="Label" parent="HUD/DebugPanel/DebugVBox" unique_id=748291039]
 layout_mode = 2
@@ -497,7 +497,7 @@ alignment = 1
 layout_mode = 2
 theme_override_colors/font_color = Color(0.35, 1.0, 0.5, 1)
 theme_override_font_sizes/font_size = 30
-text = "🏆 ¡HAS GANADO! 🏆"
+text = " ¡HAS GANADO! "
 horizontal_alignment = 1
 
 [node name="VictorySubtitle" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817223]
@@ -522,34 +522,34 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 14
-text = "📅 Días sobrevividos: 3/3"
+text = " Días sobrevividos: 3/3"
 horizontal_alignment = 1
 
 [node name="VictoryStatServed" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817227]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.95, 0.5, 1)
 theme_override_font_sizes/font_size = 14
-text = "✅ Pedidos correctos: 0"
+text = " Pedidos correctos: 0"
 horizontal_alignment = 1
 
 [node name="VictoryStatWrong" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817228]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.6, 0.3, 1)
 theme_override_font_sizes/font_size = 14
-text = "❌ Pedidos equivocados: 0"
+text = " Pedidos equivocados: 0"
 horizontal_alignment = 1
 
 [node name="VictoryStatLost" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817229]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.4, 0.4, 1)
 theme_override_font_sizes/font_size = 14
-text = "🏃 Clientes que se fueron: 0"
+text = " Clientes que se fueron: 0"
 horizontal_alignment = 1
 
 [node name="VictoryRestartButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817230]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-text = "🔄 Reiniciar Partida"
+text = " Reiniciar Partida"
 
 [node name="VictoryMenuButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817231]
 layout_mode = 2
