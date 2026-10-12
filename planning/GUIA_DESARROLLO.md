@@ -13,13 +13,14 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
   - Mapa y entorno: `res://scenes/map/` (`shop.tscn`, `KitchenStations.tscn`, etc.)
   - Jugador y NPCs: `res://scenes/Player.tscn`, `res://scenes/NPC.tscn`, `res://scenes/RobberNPC.tscn`
   - Ítems: `res://scenes/items/` (`Completo.tscn`, `Drink.tscn`, `Empanada.tscn`, `Sopaipilla.tscn`)
-  - Anomalías: `res://scenes/anomalies/` (`AnomalyBase.tscn`, `GlitchSpriteAnomaly.tscn`)
+  - Anomalías: `res://scenes/anomalies/` (`AnomalyBase.tscn`, `GlitchSpriteAnomaly.tscn`, `Aware.tscn`, `CCTVLurker.tscn`, `CCTVIntruder.tscn`, `CCTVPowerFailure.tscn`)
   - UI: `res://scenes/ui/` (`MainMenu.tscn`, `PauseMenu.tscn`, `FloatingText.tscn`)
 - **Scripts (`res://scripts/`):**
   - Autoloads: `GameManager.gd`, `SFXManager.gd`
   - Lógica base: `Player.gd`, `NPC.gd`, `NPCSpawner.gd`, `IngredientStation.gd`, `Interactable.gd`
   - Eventos: `scripts/events/` y `scripts/events/static/`
-  - Anomalías: `scripts/anomalies/`
+  - Anomalías: `scripts/anomalies/` (eventos de CCTV en `scripts/anomalies/cctv/`)
+  - Cámaras de seguridad: `scripts/cctv/` (`CCTVCamera.gd`, `CCTVZone.gd`) y `SecurityMonitor.gd`
   - UI: `scripts/ui/`
 - **Recursos (`res://resources/`):**
   - Ítems: `resources/items/*.tres`
@@ -60,7 +61,14 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 3. Registrar en el nodo `AnomaliesManagement` de `Main.tscn`.
 4. Guía técnica detallada en [`docs/anomalies_workflow.md`](../docs/anomalies_workflow.md).
 
-### C. Agregar una nueva Estación de Cocina
+### C. Crear un nuevo Evento de CCTV (visible solo por el monitor)
+1. Escena heredada de `AnomalyBase.tscn` (`auto_execute_on_ready = false`) con un script que extienda `CCTVEventAnomaly`.
+2. Construir los visuales en `_build_visuals()` y animarlos en `_update_event()`; la base los coloca en una `CCTVZone` y los pasa a la capa 11.
+3. Crear su `AnomalyData` (`.tres`) y registrarlo en `AnomaliesManagement`.
+4. Para una cámara nueva: `Camera3D` con `CCTVCamera.gd` (canal único) y marcadores `CCTVZone.gd` en `Main/CCTVZones` dentro de su encuadre.
+5. Guía detallada en [`scripts/anomalies/README.md`](../scripts/anomalies/README.md#eventos-de-cctv-hu-10). Validar con `tests/test_cctv_events.tscn`.
+
+### D. Agregar una nueva Estación de Cocina
 1. Instanciar `IngredientStation.tscn` dentro de `KitchenStations.tscn`.
 2. Asignar el tipo de ingrediente exportado (`station_type`) y manejar su lógica en `IngredientStation.gd` y `CompletoItem.gd`.
 

@@ -12,6 +12,8 @@
   - Layer 1: `World` (entorno, muros, suelo)
   - Layer 2: `Interactable` (ítems recogibles, estaciones de cocina)
   - Layer 3: `NPC` (clientes, ladrón)
+- **Capas de render 3D:**
+  - Layer 11: `CCTV` (eventos de cámara; solo la ven las cámaras de seguridad, nunca la cámara del jugador)
 
 ## 2. Jerarquía de la Escena de Juego (`Main.tscn`)
 
