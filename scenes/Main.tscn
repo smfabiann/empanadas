@@ -20,7 +20,7 @@
 [ext_resource type="Resource" path="res://resources/anomalies/glitch_sprite_anomaly.tres" id="15_cvmbd"]
 [ext_resource type="Script" uid="uid://djv60iak8lud6" path="res://scripts/Main.gd" id="16_main"]
 [ext_resource type="Resource" path="res://resources/anomalies/aware.tres" id="17_aware"]
-[ext_resource type="PackedScene" path="res://scenes/map/ChemicalToilet.tscn" id="18_toilet"]
+[ext_resource type="PackedScene" uid="uid://10pgshgdr0ub" path="res://scenes/map/ChemicalToilet.tscn" id="18_toilet"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
@@ -318,7 +318,7 @@ size = Vector3(206.5, 1, 10.1)
 material = SubResource("StandardMaterial3D_tem6s")
 
 [node name="Bed" parent="Map" unique_id=570794177 instance=ExtResource("11_bb450")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, -2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.3, -2.5)
 
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
@@ -364,6 +364,5 @@ robber_trigger_served_count = 1
 [node name="AnomaliesManagement" type="Node" parent="." unique_id=1987654321]
 script = ExtResource("9_anomalies_manager")
 random_anomaly_chance = 0.4
-max_concurrent_anomalies = 2
+max_concurrent_anomalies = 3
 registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd"), ExtResource("17_aware")])
-debug_force_anomaly = "aware"

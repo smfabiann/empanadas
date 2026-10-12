@@ -38,21 +38,21 @@ size = Vector3(1.25, 0.08, 1.25)
 material = SubResource("StandardMaterial3D_dark_plastic")
 
 [node name="WallBack" type="CSGBox3D" parent="." unique_id=2098442589]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.585)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.5952999)
 use_collision = true
 size = Vector3(1.25, 2.2, 0.08)
 material = SubResource("StandardMaterial3D_blue_plastic")
 
 [node name="WallLeft" type="CSGBox3D" parent="." unique_id=15046145]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.585, 1.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5915732, 1.1, 0)
 use_collision = true
-size = Vector3(0.08, 2.2, 1.25)
+size = Vector3(0.08, 2.2, 1.2626953)
 material = SubResource("StandardMaterial3D_blue_plastic")
 
 [node name="WallRight" type="CSGBox3D" parent="." unique_id=222648754]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.585, 1.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5887243, 1.1, 0)
 use_collision = true
-size = Vector3(0.08, 2.2, 1.25)
+size = Vector3(0.08, 2.2, 1.2988281)
 material = SubResource("StandardMaterial3D_blue_plastic")
 
 [node name="WallFrontHeader" type="CSGBox3D" parent="." unique_id=1368575191]
@@ -85,7 +85,7 @@ shape = SubResource("BoxShape3D_door")
 
 [node name="DoorMesh" type="CSGBox3D" parent="Door" unique_id=1604253004]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53, 1.03, 0)
-size = Vector3(1.06, 2.02, 0.06)
+size = Vector3(1.1, 2.02, 0.06)
 material = SubResource("StandardMaterial3D_blue_plastic")
 
 [node name="DoorHandle" type="CSGCylinder3D" parent="Door" unique_id=1303293180]
@@ -93,12 +93,6 @@ transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.95, 
 radius = 0.025
 height = 0.12
 material = SubResource("StandardMaterial3D_pipe")
-
-[node name="DoorSign" type="Label3D" parent="Door" unique_id=1719784803]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53, 1.45, -0.04)
-text = " WC QUÍMICO"
-font_size = 22
-outline_size = 3
 
 [node name="Toilet" type="StaticBody3D" parent="." unique_id=488790765]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
@@ -137,22 +131,9 @@ material = SubResource("StandardMaterial3D_roof")
 [node name="SpawnPoint" type="Marker3D" parent="Toilet" unique_id=2074982068]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
 
-[node name="Label3D" type="Label3D" parent="Toilet" unique_id=1837223604]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
-billboard = 1
-text = " Inodoro Químico"
-font_size = 24
-outline_size = 4
-
 [node name="CabinLight" type="OmniLight3D" parent="." unique_id=1833265305]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
 light_color = Color(0.9, 0.95, 0.8, 1)
 light_energy = 0.75
 shadow_enabled = true
 omni_range = 2.6
-
-[node name="HeaderSign" type="Label3D" parent="." unique_id=131006520]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.12, -0.635)
-text = " BAÑO QUÍMICO"
-font_size = 24
-outline_size = 4
