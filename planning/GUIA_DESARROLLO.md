@@ -30,7 +30,7 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 ## 2. Reglas de Oro (Para Evitar Regresiones)
 
 1. **Respetar nombres y tipos de nodos clave:**
-   - En `Main.tscn`: `SpawnPoint`, `WindowPoint`, `ExitPoint`, `Player`, `NPCSpawner`, `NPCEventManager`, `AnomaliesManagement`.
+   - En `Main.tscn`: `SpawnPoint`, `WindowPoint`, `ExitPoint`, `Player`, `NPCSpawner`, `NPCEventManager`, `AnomaliesManagement`, `CCTVZones`.
    - En `NPC.tscn` / `RobberNPC.tscn`: `Label3D`, `PatienceBarPivot`, `CollisionShape3D`, `Gun`.
    - En `Player.tscn`: `Camera3D`, `RayCast3D`, `HandPosition`.
    *Renombrar estos nodos rompe `NodePath` exportados y llamadas `get_node_or_null()`.*
@@ -39,7 +39,9 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
    - Clientes: grupo `"npcs"`.
 3. **Sincronización mediante `GameManager`:**
    - La UI y el Spawner reaccionan a señales de `GameManager` (`day_started`, `day_ended`, `game_won`, `game_over`, `stats_updated`). No acoplar la UI directamente a los NPCs.
-4. **Verificar control del jugador:**
+4. **Capa de render 11 (`CCTV`) reservada:**
+   - Solo la ven las cámaras de seguridad (`CCTVCamera.gd`). No usarla para objetos que el jugador deba ver.
+5. **Verificar control del jugador:**
    - Respetar `GameManager.can_player_act()` en `Player.gd` antes de procesar movimiento o interacción.
 
 ---

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="AnomalyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/anomalies/AnomalyData.gd" id="1_data"]
+[ext_resource type="PackedScene" path="res://scenes/anomalies/CCTVPowerFailure.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_data")
+id = "cctv_power_failure"
+anomaly_name = "Fallo Eléctrico"
+description = "HU-10: una caja eléctrica chisporrotea en una zona vigilada y la señal de ese canal se llena de estática con cortes de SIN SEÑAL. Los demás canales no se ven afectados."
+enabled = true
+tier = 0
+weight = 6.0
+trigger_exact_customer = -1
+trigger_min_served = 0
+min_day = 1
+max_day = 0
+trigger_once = false
+has_triggered = false
+anomaly_scene = ExtResource("2_scene")

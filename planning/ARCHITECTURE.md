@@ -24,6 +24,7 @@
   - `NPCSpawner`: Generador y temporizador de clientes con integración a eventos.
   - `NPCEventManager`: Gestor y catálogo de eventos de NPCs.
   - `AnomaliesManagement`: Gestor central de anomalías modulares (`AnomaliesManager.gd`).
+  - `CCTVZones`: Marcadores (`CCTVZone.gd`) donde aparecen los eventos de CCTV.
 
 ## 3. Módulos Principales
 
@@ -44,6 +45,10 @@
   - Base desacoplada: `AnomalyBase.gd` (soporte 2D/3D).
   - Configuración y disparadores: `AnomalyData.gd` (`.tres`).
   - Ejemplo activo: `GlitchSpriteAnomaly` al 3.er cliente. Ver detalle en [`docs/anomalies_workflow.md`](../docs/anomalies_workflow.md).
+- **Cámaras de Seguridad y Eventos de CCTV (HU-09 / HU-10):**
+  - `SecurityMonitor.gd`: vista a pantalla completa con canales (`[A]/[D]`), HUD de grabación y filtro CCTV.
+  - Canales `CCTVCamera.gd`: CAM 01 `frente` (`Map/Shop/Camara`) y CAM 02 `patio` (`Map/Shop/Camara2`).
+  - Eventos `CCTVEventAnomaly` (silueta acechando, intruso, fallo eléctrico) que aparecen en zonas `Main/CCTVZones` y solo se renderizan en la capa 11 (`CCTV`), invisible para el jugador. Ver [`scripts/anomalies/README.md`](../scripts/anomalies/README.md).
 - **Interfaz (`UI.gd` + `UI.tscn`):**
   - Crosshair, prompts interactivos, panel debug F3, fin de jornada (`DayEndPanel`), victoria (`VictoryPanel`), game over y menú pausa (`PauseMenu.tscn`).
 
