@@ -44,3 +44,6 @@ func _ready() -> void:
 	if GameManager:
 		GameManager.set_max_clients_per_day(max_clients_per_day)
 		GameManager.set_max_days(max_days)
+
+	if DayCycle and DayCycle.has_method("on_main_scene_ready"):
+		DayCycle.on_main_scene_ready()

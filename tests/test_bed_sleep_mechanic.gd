@@ -94,6 +94,13 @@ func _run_tests() -> void:
 	var day_cycle = get_tree().root.get_node_or_null("DayCycle")
 	_assert_test(day_cycle != null, "DayCycle singleton exists")
 	_assert_test(day_cycle._tween != null and day_cycle._tween.is_running(), "DayCycle is transitioning environment toward morning subtly")
+	_assert_test(day_cycle._world_env.environment.fog_enabled == false, "Horrible terrain fog is NOT enabled (fog_enabled == false)")
+
+	# Wait a short duration to verify morning properties are progressing smoothly
+	await get_tree().create_timer(0.6).timeout
+	_assert_test(day_cycle._sun != null and day_cycle._sun.light_energy > 0.05, "Sunlight energy is increasing smoothly for morning (sun rising)")
+	_assert_test(day_cycle._world_env.environment.ambient_light_energy > 0.4, "Ambient light energy is brightening for morning")
+	_assert_test(day_cycle._world_env.environment.background_energy_multiplier > 0.33, "Sky background energy is brightening for morning")
 
 	print("\n--- Test 6: Sleeping Advances To Next Day & Restores Night ---")
 	var current_day_before = GameManager.current_day
@@ -105,6 +112,9 @@ func _run_tests() -> void:
 	_assert_test(GameManager.day_active == true, "New day is active")
 	_assert_test(GameManager.clients_attended_today == 0, "Clients attended today reset to 0")
 	_assert_test(day_cycle._sun != null and day_cycle._sun.light_energy < 0.05, "Environment restored to dark night upon sleeping")
+	_assert_test(is_equal_approx(day_cycle._world_env.environment.ambient_light_energy, 0.4), "Ambient energy restored to previous night value (0.4)")
+	_assert_test(is_equal_approx(day_cycle._world_env.environment.background_energy_multiplier, 0.33), "Sky background energy restored to previous night value (0.33)")
+	_assert_test(day_cycle._world_env.environment.fog_enabled == false, "Fog remains disabled after night restoration")
 	bed._refresh_prompt()
 	_assert_test(bed.get_node_or_null("PromptLayer/Prompt").visible == false, "Prompt hides automatically on new day start")
 
