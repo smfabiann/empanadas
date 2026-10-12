@@ -141,12 +141,12 @@ func _on_npc_served(total_served: int, _is_correct: bool) -> void:
 
 func _update_spawned_count(count: int) -> void:
 	if debug_spawned_label:
-		debug_spawned_label.text = "NPCs aparecidos: %d" % count
+		debug_spawned_label.text = "NPCs spawned: %d" % count
 
 
 func _update_served_count(count: int) -> void:
 	if debug_served_label:
-		debug_served_label.text = "NPCs atendidos: %d" % count
+		debug_served_label.text = "NPCs served: %d" % count
 
 
 func _setup_anomalies_debug() -> void:
@@ -167,11 +167,11 @@ func _update_anomalies_debug() -> void:
 			var active: int = _anomalies_mgr.get("debug_active_count") if "debug_active_count" in _anomalies_mgr else 0
 			var last: String = _anomalies_mgr.get("debug_last_triggered") if "debug_last_triggered" in _anomalies_mgr else ""
 			if last.is_empty():
-				debug_anomalies_label.text = "Anomalías: %d activas" % active
+				debug_anomalies_label.text = "Anomalies: %d active" % active
 			else:
-				debug_anomalies_label.text = "Anomalías: %d (%s)" % [active, last]
+				debug_anomalies_label.text = "Anomalies: %d (%s)" % [active, last]
 		else:
-			debug_anomalies_label.text = "Anomalías: Inactivas"
+			debug_anomalies_label.text = "Anomalies: Inactive"
 
 
 # =========================================================
@@ -180,10 +180,15 @@ func _update_anomalies_debug() -> void:
 
 func _on_day_progress(attended: int, max_clients: int) -> void:
 	if day_label:
-		if GameManager.max_days > 0:
-			day_label.text = "Día %d/%d  ·  Clientes %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
+		if not GameManager.day_active and GameManager.is_day_quota_reached():
+			if GameManager.max_days > 0:
+				day_label.text = "Day %d/%d  ·  Shift Complete - Go to bed" % [GameManager.current_day, GameManager.max_days]
+			else:
+				day_label.text = "Day %d  ·  Shift Complete - Go to bed" % GameManager.current_day
+		elif GameManager.max_days > 0:
+			day_label.text = "Day %d/%d  ·  Customers %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
 		else:
-			day_label.text = "Día %d  ·  Clientes %d/%d" % [GameManager.current_day, attended, max_clients]
+			day_label.text = "Day %d  ·  Customers %d/%d" % [GameManager.current_day, attended, max_clients]
 
 
 func _on_day_started(day: int, max_clients: int) -> void:
@@ -198,59 +203,42 @@ func _on_day_started(day: int, max_clients: int) -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
-## Muestra "DÍA N" en pantalla con fade in / out (solo anima modulate)
+## Muestra "DAY N" en pantalla con fade in / out (solo anima modulate)
 func _show_day_banner(day: int) -> void:
+	_show_banner_text("DAY %d" % day)
+
+
+## Muestra un banner en pantalla con fade in / out
+func _show_banner_text(text: String) -> void:
 	if day_banner == null:
 		return
-	day_banner.text = "DÍA %d" % day
+	day_banner.text = text
 	day_banner.modulate.a = 0.0
 	if _banner_tween and _banner_tween.is_valid():
 		_banner_tween.kill()
 	_banner_tween = create_tween()
 	_banner_tween.tween_property(day_banner, "modulate:a", 1.0, 0.6).set_ease(Tween.EASE_OUT)
-	_banner_tween.tween_interval(1.6)
+	_banner_tween.tween_interval(1.8)
 	_banner_tween.tween_property(day_banner, "modulate:a", 0.0, 0.8).set_ease(Tween.EASE_IN)
 
 
-## Notifica al jugador que la jornada terminó y muestra el resumen del día (Días intermedios)
-func _on_day_ended(day: int) -> void:
-	# Si se ganó la partida (día final), la pantalla mostrada es VictoryPanel via _on_game_won
-	if GameManager.is_game_won or GameManager.is_final_day():
+## Notifica al jugador que la jornada terminó (el avance de día se realiza durmiendo en la cama)
+func _on_day_ended(_day: int) -> void:
+	if GameManager.is_game_won:
 		return
 
-	if crosshair:
-		crosshair.visible = false
-	if prompt_label:
-		prompt_label.visible = false
-	if _banner_tween and _banner_tween.is_valid():
-		_banner_tween.kill()
-	if day_banner:
-		day_banner.modulate.a = 0.0
-
-	var day_end_title = $HUD.get_node_or_null("DayEndPanel/VBoxContainer/DayEndTitle") as Label
-	if day_end_title:
-		day_end_title.text = "FIN DE LA JORNADA"
-	if day_end_subtitle:
-		day_end_subtitle.text = "Día %d completado" % day
-	if next_day_button:
-		next_day_button.text = "▶ Comenzar Día %d" % (day + 1)
-
-	if day_stat_attended:
-		day_stat_attended.text = "Clientes atendidos: %d/%d" % [GameManager.clients_attended_today, GameManager.max_clients_per_day]
-	if day_stat_correct:
-		day_stat_correct.text = "Pedidos correctos: %d" % GameManager.clients_served_correctly_today
-	if day_stat_wrong:
-		day_stat_wrong.text = "Pedidos equivocados: %d" % GameManager.clients_served_wrong_today
-	if day_stat_lost:
-		day_stat_lost.text = "Clientes que se fueron: %d" % GameManager.clients_lost_today
-
+	# Reemplazado por la mecánica de la cama:
+	# El panel emergente de resumen queda oculto y el cursor sigue capturado para ir a la cama.
 	if day_end_panel:
-		day_end_panel.modulate.a = 0.0
-		day_end_panel.visible = true
-		create_tween().tween_property(day_end_panel, "modulate:a", 1.0, 0.4)
+		day_end_panel.visible = false
 
-	# Liberar el cursor para poder hacer clic en los botones
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if day_label:
+		if GameManager.max_days > 0:
+			day_label.text = "Day %d/%d  ·  Shift Complete - Go to bed" % [GameManager.current_day, GameManager.max_days]
+		else:
+			day_label.text = "Day %d  ·  Shift Complete - Go to bed" % GameManager.current_day
+
+	_show_banner_text("SHIFT COMPLETE\nGo to bed to sleep")
 	SFXManager.play_correct()
 
 
@@ -270,20 +258,20 @@ func _on_game_won(stats: Dictionary) -> void:
 	var days_survived: int = int(stats.get("day", 3))
 	var max_d: int = int(stats.get("max_days", 3))
 	if victory_title:
-		victory_title.text = "🏆 ¡HAS GANADO! 🏆"
+		victory_title.text = "🏆 YOU WON! 🏆"
 	if victory_subtitle:
-		victory_subtitle.text = "¡Has sobrevivido los %d días de turno nocturno!" % days_survived
+		victory_subtitle.text = "You survived all %d night shifts!" % days_survived
 	if victory_lore:
-		victory_lore.text = "Lograste resistir a las anomalías y escapar de la ciudad a salvo."
+		victory_lore.text = "You managed to survive the night and safely finish your job."
 
 	if victory_stat_days:
-		victory_stat_days.text = "📅 Días sobrevividos: %d/%d" % [days_survived, max_d]
+		victory_stat_days.text = "📅 Days survived: %d/%d" % [days_survived, max_d]
 	if victory_stat_served:
-		victory_stat_served.text = "✅ Pedidos correctos: %d" % int(stats.get("total_correct", 0))
+		victory_stat_served.text = "✅ Correct orders: %d" % int(stats.get("total_correct", 0))
 	if victory_stat_wrong:
-		victory_stat_wrong.text = "❌ Pedidos equivocados: %d" % int(stats.get("total_wrong", 0))
+		victory_stat_wrong.text = "❌ Wrong orders: %d" % int(stats.get("total_wrong", 0))
 	if victory_stat_lost:
-		victory_stat_lost.text = "🏃 Clientes que se fueron: %d" % int(stats.get("total_lost", 0))
+		victory_stat_lost.text = "🏃 Customers who left: %d" % int(stats.get("total_lost", 0))
 
 	if victory_panel:
 		victory_panel.modulate.a = 0.0

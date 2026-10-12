@@ -15,8 +15,10 @@
 [ext_resource type="PackedScene" uid="uid://mue4ocm7ph4v" path="res://scenes/map/Farol.tscn" id="8_bjd11"]
 [ext_resource type="PackedScene" uid="uid://c1qin7mi73i0q" path="res://scenes/map/Basurero.tscn" id="8_cvmbd"]
 [ext_resource type="Script" uid="uid://dine3e1ujv6i7" path="res://scripts/anomalies/AnomaliesManager.gd" id="9_anomalies_manager"]
+[ext_resource type="PackedScene" uid="uid://b7J8G47eQW0" path="res://scenes/Bed.tscn" id="11_bb450"]
 [ext_resource type="Script" uid="uid://hx502d73tbjj" path="res://scripts/anomalies/AnomalyData.gd" id="14_3p2gp"]
 [ext_resource type="Resource" path="res://resources/anomalies/glitch_sprite_anomaly.tres" id="15_cvmbd"]
+[ext_resource type="Script" uid="uid://djv60iak8lud6" path="res://scripts/Main.gd" id="16_main"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
@@ -88,6 +90,8 @@ albedo_color = Color(0.5014065, 0.50140655, 0.50140643, 1)
 albedo_color = Color(0.24477637, 0.24477643, 0.24477634, 1)
 
 [node name="Main" type="Node3D" unique_id=1661772069]
+script = ExtResource("16_main")
+max_clients_per_day = 5
 
 [node name="Enviroment" type="Node" parent="." unique_id=2009176575]
 
@@ -304,6 +308,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, -0.49934468, -0.25000095)
 size = Vector3(206.5, 1, 10.1)
 material = SubResource("StandardMaterial3D_tem6s")
+
+[node name="Bed" parent="Map" unique_id=570794177 instance=ExtResource("11_bb450")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0, -2.5)
 
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)

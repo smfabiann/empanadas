@@ -13,10 +13,15 @@ signal game_over(reason: String)
 signal day_started(day: int, max_clients: int)
 signal day_progress(attended: int, max_clients: int)
 signal day_ended(day: int)
+## Se emite cuando el jugador avanza al día siguiente (cama o menú de fin de
+## jornada). Es el disparador único de la transición visual noche -> día y del
+## reinicio de los contadores diarios (ver start_next_day).
+signal day_advanced(day: int, max_clients: int)
 signal game_won(stats: Dictionary)
 
 var game_active: bool = true
 var is_game_won: bool = false
+var is_sleeping: bool = false
 var high_score: int = 0
 
 ## Contadores de clientes (totales de la partida)
@@ -27,7 +32,7 @@ var npcs_served_correctly: int = 0
 ## --- Jornada actual ---
 ## Día en curso (empieza en 1)
 var current_day: int = 1
-## Cupo de clientes por jornada. Lo sobrescribe NPCSpawner desde el Inspector.
+## Cupo de clientes por jornada. Lo sobrescribe NPCSpawner o Main desde el Inspector.
 var max_clients_per_day: int = 8
 ## Cantidad máxima de días de la partida para ganar (HU-06: 3 días por defecto; 0 = días infinitos).
 var max_days: int = 3
@@ -116,40 +121,57 @@ func can_spawn_npc() -> bool:
 	return game_active and day_active and not is_game_won and not is_day_quota_reached()
 
 
-## Indica si el jugador puede moverse e interactuar (no durante el resumen del día, tras Game Over ni al ganar)
+## Indica si el jugador puede moverse e interactuar (no tras Game Over, victoria ni durante la transición de dormir)
 func can_player_act() -> bool:
-	return game_active and day_active and not is_game_won
+	return game_active and not is_game_won and not is_sleeping
 
 
-## Cierra la jornada actual y notifica a la UI para mostrar el resumen o la victoria (HU-06)
+## Retorna si el jugador puede ir a dormir a la cama.
+## Solo es posible cuando la partida sigue activa, no se ha ganado, no está durmiendo,
+## y la jornada terminó habiendo alcanzado el cupo máximo de clientes del día.
+func can_sleep() -> bool:
+	return game_active and not is_game_won and not is_sleeping and not day_active and is_day_quota_reached()
+
+
+## Cierra la jornada actual al cumplir el cupo de clientes del día.
 func end_day() -> void:
 	if not day_active or not game_active:
 		return
 	day_active = false
-	if is_final_day():
-		is_game_won = true
-		game_active = false
-		var stats: Dictionary = {
-			"day": current_day,
-			"max_days": max_days,
-			"total_served": npcs_served,
-			"total_correct": npcs_served_correctly,
-			"total_wrong": npcs_served - npcs_served_correctly,
-			"total_lost": maxi(0, npcs_spawned - npcs_served),
-			"clients_attended_today": clients_attended_today,
-			"clients_correct_today": clients_served_correctly_today
-		}
-		game_won.emit(stats)
 	day_ended.emit(current_day)
 
 
-## Avanza al siguiente día y reinicia los contadores diarios
+## Avanza al siguiente día y reinicia los contadores diarios.
+## Si ya era el día final, activa la pantalla de victoria.
 func start_next_day() -> void:
+	if is_final_day():
+		trigger_victory()
+		return
 	current_day += 1
+	# Reinicio de contadores diarios (clientes atendidos/correctos/etc.)
 	_reset_day_counters()
 	day_active = true
 	day_started.emit(current_day, max_clients_per_day)
+	# Transición visual noche -> día + nueva noche. Lo gestiona DayCycle.
+	day_advanced.emit(current_day, max_clients_per_day)
 	day_progress.emit(clients_attended_today, max_clients_per_day)
+
+
+## Activa la pantalla y estado de victoria
+func trigger_victory() -> void:
+	is_game_won = true
+	game_active = false
+	var stats: Dictionary = {
+		"day": current_day,
+		"max_days": max_days,
+		"total_served": npcs_served,
+		"total_correct": npcs_served_correctly,
+		"total_wrong": npcs_served - npcs_served_correctly,
+		"total_lost": maxi(0, npcs_spawned - npcs_served),
+		"clients_attended_today": clients_attended_today,
+		"clients_correct_today": clients_served_correctly_today
+	}
+	game_won.emit(stats)
 
 
 ## Fuerza el avance al siguiente día inmediatamente para depuración
@@ -213,6 +235,7 @@ func restore_environment(tree: SceneTree = null) -> void:
 func reset_game() -> void:
 	game_active = true
 	is_game_won = false
+	is_sleeping = false
 	npcs_spawned = 0
 	npcs_served = 0
 	npcs_served_correctly = 0

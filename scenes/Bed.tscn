@@ -1,0 +1,99 @@
+[gd_scene format=3 uid="uid://b7J8G47eQW0"]
+
+[ext_resource type="Script" path="res://scripts/BedInteraction.gd" id="1_bed"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_frame"]
+albedo_color = Color(0.35, 0.27, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mattress"]
+albedo_color = Color(0.85, 0.88, 0.95, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pillow"]
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_zone"]
+size = Vector3(3.6, 2, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_prompt"]
+bg_color = Color(0, 0, 0, 0.75)
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Bed" type="StaticBody3D" id="1_bedroot"]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_bed")
+
+[node name="Base" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+size = Vector3(1.6, 0.3, 2.4)
+material = SubResource("StandardMaterial3D_frame")
+
+[node name="Mattress" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, -0.05)
+size = Vector3(1.5, 0.2, 2.3)
+material = SubResource("StandardMaterial3D_mattress")
+
+[node name="Pillow" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, -0.9)
+size = Vector3(1, 0.12, 0.5)
+material = SubResource("StandardMaterial3D_pillow")
+
+[node name="Headboard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -1.2)
+size = Vector3(1.6, 1, 0.25)
+material = SubResource("StandardMaterial3D_frame")
+
+[node name="InteractionArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+collision_layer = 4
+collision_mask = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
+shape = SubResource("BoxShape3D_zone")
+
+[node name="PromptLayer" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="FadeOverlay" type="ColorRect" parent="PromptLayer"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+
+[node name="Prompt" type="Panel" parent="PromptLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.9
+anchor_right = 0.5
+anchor_bottom = 0.9
+offset_left = -160.0
+offset_top = -25.0
+offset_right = 160.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_prompt")
+
+[node name="Label" type="Label" parent="PromptLayer/Prompt"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Press E to sleep"
+horizontal_alignment = 1
+vertical_alignment = 1
