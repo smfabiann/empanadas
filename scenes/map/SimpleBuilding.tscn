@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://die77r32dqgvi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.3, 0.3, 0.32, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall"]
+albedo_color = Color(0.41, 0.42, 0.44, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_roof"]
+albedo_color = Color(0.25, 0.25, 0.27, 1)
+
+[node name="SimpleBuilding" type="Node3D" unique_id=300000001]
+
+[node name="Floor" type="CSGBox3D" parent="." unique_id=300000002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
+size = Vector3(8, 0.2, 8.6)
+material = SubResource("StandardMaterial3D_floor")
+
+[node name="WallBack" type="CSGBox3D" parent="." unique_id=300000003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 4.3)
+use_collision = true
+size = Vector3(8, 3, 0.2)
+material = SubResource("StandardMaterial3D_wall")
+
+[node name="WallLeft" type="CSGBox3D" parent="." unique_id=300000004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1.6, 0)
+use_collision = true
+size = Vector3(0.2, 3, 8.6)
+material = SubResource("StandardMaterial3D_wall")
+
+[node name="WallRight" type="CSGBox3D" parent="." unique_id=300000005]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.6, 0)
+use_collision = true
+size = Vector3(0.2, 3, 8.6)
+material = SubResource("StandardMaterial3D_wall")
+
+[node name="WallFront" type="CSGBox3D" parent="." unique_id=300000006]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -4.3)
+use_collision = true
+size = Vector3(8, 3, 0.2)
+material = SubResource("StandardMaterial3D_wall")
+
+[node name="DoorHole" type="CSGBox3D" parent="WallFront" unique_id=300000007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.4000001, 0.09999943)
+operation = 2
+size = Vector3(1.2, 2.4, 0.4)
+
+[node name="Roof" type="CSGBox3D" parent="." unique_id=300000008]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.18, 0)
+use_collision = true
+size = Vector3(8.4, 0.15, 9)
+material = SubResource("StandardMaterial3D_roof")

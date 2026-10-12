@@ -457,11 +457,11 @@ func interact(player: Node) -> void:
 			held.queue_free()
 		return
 
-	if held == null:
+	# Solo recoger si las manos están libres
+	if held == null or held == self:
 		player.set("held_item", self)
 		var ray = player.get_node_or_null("Camera3D/RayCast3D")
 		if ray:
 			ray.add_exception(self)
-
-	super.interact(player)
+		super.interact(player)
 

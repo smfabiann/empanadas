@@ -166,6 +166,8 @@ func _handle_movement(delta: float) -> void:
 
 func pick_up_direct(item: Interactable) -> void:
 	"""Recoge un ítem de forma directa (ej. dispensado por una estación)."""
+	if held_item != null:
+		return
 	held_item = item
 	ray.add_exception(held_item)
 	held_item.interact(self)
@@ -191,6 +193,9 @@ func _update_interaction_prompt() -> void:
 			if col != null and col != held_item and col.has_method("get_interaction_prompt"):
 				var info: Dictionary = col.get_interaction_prompt(self)
 				ui.set_prompt(info.get("text", ""), info.get("actionable", false))
+				return
+			elif col != null and col != held_item and not (col is Interactable) and col.has_method("interact"):
+				ui.set_prompt("[E] Interactuar", true)
 				return
 
 		var target_npc := _get_target_npc()
@@ -300,7 +305,9 @@ func _handle_interact() -> void:
 				ray.add_exception(held_item)
 				held_item.interact(self)
 			elif collider != null and collider.has_method("get_interaction_prompt"):
-				collider.interact(self)
+				var info: Dictionary = collider.get_interaction_prompt(self)
+				if info.get("actionable", true):
+					collider.interact(self)
 			elif collider != null and collider.has_method("interact"):
 				collider.interact(self)
 			_update_interaction_prompt()
@@ -309,10 +316,31 @@ func _handle_interact() -> void:
 	# Prioridad: Sosteniendo ítem -> Usar en estación o interactuable compatible
 	if ray.is_colliding():
 		var collider = ray.get_collider()
-		if collider != null and collider != held_item and collider.has_method("get_interaction_prompt"):
-			collider.interact(self)
-			_update_interaction_prompt()
-			return
+		if collider != null and collider != held_item:
+			# Si es un objeto recogible (Interactable):
+			# Las manos ya están ocupadas (held_item != null), así que NUNCA podemos recoger otro ítem.
+			# Solo se permite interactuar si tiene una interacción contextual especial válida (ej. untar caca en completo).
+			if collider is Interactable:
+				if collider.has_method("get_interaction_prompt"):
+					var info: Dictionary = collider.get_interaction_prompt(self)
+					if info.get("actionable", false):
+						collider.interact(self)
+						_update_interaction_prompt()
+						return
+				# No es actionable, manos ocupadas -> no hacer nada con el ítem en el suelo o mostrador
+				return
+
+			# Para estaciones u otros objetos interactuables del entorno:
+			if collider.has_method("get_interaction_prompt"):
+				var info: Dictionary = collider.get_interaction_prompt(self)
+				if info.get("actionable", true):
+					collider.interact(self)
+					_update_interaction_prompt()
+					return
+			elif collider.has_method("interact"):
+				collider.interact(self)
+				_update_interaction_prompt()
+				return
 
 	# Prioridad: Sosteniendo ítem -> Entregar al NPC
 	var target_npc := _get_target_npc()
@@ -324,14 +352,24 @@ func _handle_interact() -> void:
 
 
 func _drop_held_item() -> void:
-	if held_item == null:
+	if held_item == null and (hold_point == null or hold_point.get_child_count() == 0):
 		return
-	var item_to_drop := held_item
-	held_item = null
-	if ray:
-		ray.remove_exception(item_to_drop)
-	if item_to_drop.has_method("drop"):
-		item_to_drop.drop()
+
+	var items_to_drop: Array = []
+	if held_item != null:
+		items_to_drop.append(held_item)
+		held_item = null
+
+	if hold_point != null:
+		for child in hold_point.get_children():
+			if not items_to_drop.has(child):
+				items_to_drop.append(child)
+
+	for item in items_to_drop:
+		if ray:
+			ray.remove_exception(item)
+		if item.has_method("drop"):
+			item.drop()
 
 
 ## Anima la caída del jugador al ser abatido (cámara al suelo ladeada)

@@ -16,13 +16,35 @@ func _ready() -> void:
 	spawn_position = global_position
 
 
+
+## Retorna el prompt contextual de interacción según si el jugador tiene las manos libres
+func get_interaction_prompt(player: Node) -> Dictionary:
+	var held = player.get("held_item")
+	var display_name: String = item_data.display_name if item_data else "Ítem"
+	if held == null:
+		return {"text": "[E] Recoger " + display_name, "actionable": true}
+	else:
+		return {"text": display_name, "actionable": false}
+
+
 func interact(player: Node3D) -> void:
 	"""Recoge el objeto y lo reparenta al HoldPoint del jugador."""
-	if get_parent() != null:
-		_original_parent = get_parent()
+	# Si el jugador ya tiene las manos ocupadas con otro ítem, no permitir recoger
+	var current_held = player.get("held_item")
+	if current_held != null and current_held != self:
+		return
+
 	var hold_point: Marker3D = player.get_node_or_null("Camera3D/HoldPoint")
 	if hold_point == null:
 		return
+
+	# Si el HoldPoint ya contiene otro ítem, evitar apilar
+	for child in hold_point.get_children():
+		if child != self and child is Interactable:
+			return
+
+	if get_parent() != null:
+		_original_parent = get_parent()
 
 	# Desactivar físicas y colisiones para que no bloquee el RayCast del jugador
 	freeze = true
@@ -41,6 +63,9 @@ func interact(player: Node3D) -> void:
 
 	# Resetear transform local para que quede en el HoldPoint
 	transform = Transform3D.IDENTITY
+
+	if current_held == null and "held_item" in player:
+		player.set("held_item", self)
 
 	SFXManager.play_pickup()
 
