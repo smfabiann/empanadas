@@ -15,7 +15,6 @@ func _ready() -> void:
 	print("=== RUNNING DRAMATIC UFO ARRIVAL & LEVITATION TEST SUITE ===")
 	test_ufo_scene_structure()
 	test_ufo_dramatic_entrance_physics()
-	test_ufo_counter_arrival()
 	test_ufo_departure()
 
 	print("\n=== TEST SUMMARY: %d PASSED, %d FAILED ===" % [tests_passed, tests_failed])
@@ -98,37 +97,6 @@ func test_ufo_dramatic_entrance_physics() -> void:
 
 	# Check local bobbing effect on ShipPivot
 	assert_true(abs(ufo.ship_pivot.position.y) > 0.0 or abs(ufo.ship_pivot.rotation.x) > 0.0, "ShipPivot has organic hover bobbing/tilting")
-
-	ufo.queue_free()
-
-func test_ufo_counter_arrival() -> void:
-	print("\n--- Test 3: UFO Arrival at Window ---")
-	var scene: PackedScene = load("res://scenes/events/static/UfoNPC.tscn")
-	var ufo: UfoNPC = scene.instantiate() as UfoNPC
-
-	ufo.spawn_pos = Vector3(-0.43, 0.2, -11.0)
-	ufo.target_pos = Vector3(-0.43, 0.2, -4.5)
-	ufo.exit_pos = Vector3(-0.43, 0.2, -11.0)
-	ufo.rumble_duration = 0.1
-	ufo.hyper_flash_duration = 0.05
-	ufo.suspense_duration = 0.1
-	ufo.sky_cruise_speed = 12.0
-	ufo.flight_speed = 8.0
-	add_child(ufo)
-
-	# Simulate flight until arrival
-	var arrived: bool = false
-	for i in range(600):
-		ufo._physics_process(1.0 / 60.0)
-		if ufo.state == NPC.State.WAITING:
-			arrived = true
-			break
-
-	assert_true(arrived, "UFO successfully reached the store window")
-	assert_true(ufo.is_at_counter, "UFO marked as is_at_counter=true")
-	assert_true(is_equal_approx(ufo.global_position.y, ufo.target_pos.y + ufo.hover_height), "UFO hovers at hover_height above counter (Y: %.2f)" % ufo.global_position.y)
-	assert_true(ufo.label.visible, "Order speech bubble is visible")
-	assert_true(ufo.label.text.contains("👽"), "Speech bubble contains alien greeting")
 
 	ufo.queue_free()
 

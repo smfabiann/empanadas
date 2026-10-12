@@ -1,10 +1,10 @@
-# 👁️ Guía Técnica y Flujo de Trabajo: Sistema de Anomalías Configurables (`anomaliesManagement`)
+#  Guía Técnica y Flujo de Trabajo: Sistema de Anomalías Configurables (`anomaliesManagement`)
 
 Esta guía describe la arquitectura, el ciclo de vida y el proceso paso a paso para crear, configurar e integrar nuevas anomalías modulares en el juego utilizando **Godot 4**.
 
 ---
 
-## 🏗️ 1. Arquitectura del Sistema
+##  1. Arquitectura del Sistema
 
 El sistema desacopla los eventos narrativos de NPCs de las **anomalías configurables y visuales**:
 
@@ -24,7 +24,7 @@ El sistema desacopla los eventos narrativos de NPCs de las **anomalías configur
 
 ---
 
-## ⏱️ 2. Ciclo de Vida Estándar (`AnomalyBase`)
+## ⏱ 2. Ciclo de Vida Estándar (`AnomalyBase`)
 
 Toda anomalía implementa el ciclo de vida desacoplado:
 
@@ -53,10 +53,10 @@ graph LR
 
 ---
 
-## 🛠️ 3. Paso a Paso: Cómo Crear una Nueva Anomalía
+##  3. Paso a Paso: Cómo Crear una Nueva Anomalía
 
 ### Paso 1: Heredar de `AnomalyBase.tscn` en Godot
-1. En Godot, clic derecho sobre `res://scenes/anomalies/AnomalyBase.tscn` → **Nueva escena heredada (New Inherited Scene)**.
+1. En Godot, clic derecho sobre `res://scenes/anomalies/AnomalyBase.tscn`  **Nueva escena heredada (New Inherited Scene)**.
 2. Nombra la raíz (ej. `SombraAnomalia`).
 3. Agrega nodos visuales:
    - **2D en pantalla/HUD**: `Sprite2D`, `AnimatedSprite2D`, `ColorRect` dentro de `Visuals2D` (CanvasLayer).
@@ -119,7 +119,7 @@ func _restore_environment() -> void:
 ```
 
 ### Paso 3: Crear el Recurso `AnomalyData.tres`
-1. En *FileSystem* → clic derecho en `res://resources/anomalies/` → **Nuevo Recurso** → `AnomalyData`.
+1. En *FileSystem*  clic derecho en `res://resources/anomalies/`  **Nuevo Recurso**  `AnomalyData`.
 2. Guardar como `res://resources/anomalies/sombra_anomalia.tres`.
 3. Configurar en el **Inspector**:
    - **`id`**: `"sombra"` (único)
@@ -133,7 +133,7 @@ func _restore_environment() -> void:
 ### Paso 4: Dar de Alta en `anomaliesManagement`
 En `Main.tscn`:
 1. Selecciona el nodo `AnomaliesManagement`.
-2. En el Inspector → **Catálogo de Anomalías**:
+2. En el Inspector  **Catálogo de Anomalías**:
    - En `registered_anomalies`, añadir y arrastrar tu `.tres`.
    - *Alternativa rápida*: Arrastrar la `.tscn` directamente a `quick_packed_scenes`.
 
@@ -150,16 +150,16 @@ anomalies_manager.get_debug_summary()                    # Resumen completo
 
 ---
 
-## 🎛️ 4. Parámetros Disponibles para Condiciones de Aparición
+##  4. Parámetros Disponibles para Condiciones de Aparición
 
 Cada recurso `AnomalyData` cuenta con los siguientes disparadores configurables:
 
 | Parámetro | Tipo | Descripción | Ejemplo |
 |---|---|---|---|
-| `trigger_exact_customer` | `int` | Disparo garantizado en el N.º exacto de cliente (`-1` = desactivado). | `= 3` → aparece en el 3.er cliente. |
-| `trigger_min_served` | `int` | Umbral relativo: solo tras atender X clientes (`0` = sin umbral). | `= 10` → requiere experiencia previa. |
-| `min_day` | `int` | Día mínimo para que pueda activarse. | `= 2` → NO aparece en Día 1. |
-| `max_day` | `int` | Último día válido (`0` = sin límite). | `= 1` → exclusiva del primer día. |
+| `trigger_exact_customer` | `int` | Disparo garantizado en el N.º exacto de cliente (`-1` = desactivado). | `= 3`  aparece en el 3.er cliente. |
+| `trigger_min_served` | `int` | Umbral relativo: solo tras atender X clientes (`0` = sin umbral). | `= 10`  requiere experiencia previa. |
+| `min_day` | `int` | Día mínimo para que pueda activarse. | `= 2`  NO aparece en Día 1. |
+| `max_day` | `int` | Último día válido (`0` = sin límite). | `= 1`  exclusiva del primer día. |
 | `weight` | `float` | Peso probabilístico relativo. A mayor peso, mayor frecuencia. | `50.0` (frecuente), `2.0` (crítica). |
 | `tier` | `enum` | `COMMON`, `UNCOMMON`, `RARE`, `NIGHTMARE`. | `RARE` |
 | `trigger_once` | `bool` | Si `true`, solo se ejecuta una vez por partida. | `true` |
@@ -176,7 +176,7 @@ Cada recurso `AnomalyData` cuenta con los siguientes disparadores configurables:
 
 ---
 
-## 🧪 5. Depuración y Control en Tiempo de Ejecución
+##  5. Depuración y Control en Tiempo de Ejecución
 
 1. **`debug_force_anomaly` (String)**: Escribe el ID en el Inspector para forzar su aparición en el siguiente spawn.
 2. **`debug_always_trigger` (bool)**: Fuerza 100% de probabilidad en sorteos.
@@ -190,7 +190,7 @@ Cada recurso `AnomalyData` cuenta con los siguientes disparadores configurables:
 
 ---
 
-## 📦 6. Ejemplo Funcional: `GlitchSpriteAnomaly` (Distorsión Espectral)
+##  6. Ejemplo Funcional: `GlitchSpriteAnomaly` (Distorsión Espectral)
 
 **Archivos**:
 - Escena: `res://scenes/anomalies/GlitchSpriteAnomaly.tscn`
@@ -199,12 +199,12 @@ Cada recurso `AnomalyData` cuenta con los siguientes disparadores configurables:
 - Recurso: `res://resources/anomalies/glitch_sprite_anomaly.tres`
 
 **Efectos de la anomalía al activarse:**
-- 🔦 **Luces parpadean erráticamente** — OmniLights y SpotLights de la escena parpadean con intensidad variable.
-- 🌫️ **Niebla atmosférica se espesa** — La densidad de niebla aumenta para mayor densidad espacial, conservando su color natural de noche para no desentonar con el cielo.
-- 🔴 **Filtro rojo a pantalla completa** — Shader post-procesado (`red_anomaly_filter.gdshader`) con viñeta, respiración/pulso tenue y tinte rojo uniforme que cubre tanto la geometría 3D como el cielo exterior.
-- 👻 **Sprite fantasma con glitch** — Un sprite con shader de aberración cromática aparece en el HUD, vibrando y saltando de posición aleatoriamente.
-- ⚠️ **Aviso en pantalla** — Texto parpadeante "ANOMALÍA DETECTADA: DISTORSIÓN ESPECTRAL".
-- 🔊 **Efecto sonoro de tensión** — `SFXManager.play_tense_anger()`.
+-  **Luces parpadean erráticamente** — OmniLights y SpotLights de la escena parpadean con intensidad variable.
+-  **Niebla atmosférica se espesa** — La densidad de niebla aumenta para mayor densidad espacial, conservando su color natural de noche para no desentonar con el cielo.
+-  **Filtro rojo a pantalla completa** — Shader post-procesado (`red_anomaly_filter.gdshader`) con viñeta, respiración/pulso tenue y tinte rojo uniforme que cubre tanto la geometría 3D como el cielo exterior.
+-  **Sprite fantasma con glitch** — Un sprite con shader de aberración cromática aparece en el HUD, vibrando y saltando de posición aleatoriamente.
+-  **Aviso en pantalla** — Texto parpadeante "ANOMALÍA DETECTADA: DISTORSIÓN ESPECTRAL".
+-  **Efecto sonoro de tensión** — `SFXManager.play_tense_anger()`.
 
 **Resolución**: Se resuelve automáticamente a los 8 segundos, o inmediatamente si el jugador cierra la persiana o atiende al cliente. Al resolverse, **restaura todo el ambiente** a su estado original con transiciones suaves.
 

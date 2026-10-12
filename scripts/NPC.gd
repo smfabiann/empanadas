@@ -210,7 +210,7 @@ func _arrive_at_counter() -> void:
 	velocity = Vector3.ZERO
 
 	_generate_completo_order()
-	label.text = "💬 Quiero: %s\n(%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
+	label.text = " Quiero: %s\n(%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
 	label.visible = true
 
 	patience_bar_pivot.visible = true
@@ -305,6 +305,17 @@ func receive_item(item_node: Interactable) -> void:
 	if _is_order_resolved or not can_receive_item() or item_node == null:
 		return
 
+	# Comprobar si el completo contiene caca (letal para el cliente)
+	var has_poop: bool = false
+	if item_node.has_method("get_ingredient_count") and item_node.get_ingredient_count("poop") > 0:
+		has_poop = true
+	elif item_node.get("has_poop") == true or (item_node.get("poop_count") != null and item_node.poop_count > 0):
+		has_poop = true
+
+	if has_poop:
+		_die_from_poison(item_node)
+		return
+
 	_is_order_resolved = true
 	state = State.REACTING
 	is_at_counter = false
@@ -314,17 +325,20 @@ func receive_item(item_node: Interactable) -> void:
 		var completo = item_node
 		if not completo.is_valid_base():
 			is_correct = false
-			label.text = "😠 ¡Le falta la vienesa obligatoria! ❌"
+			label.text = " ¡Le falta la vienesa obligatoria! "
 		elif completo.matches_order(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup):
 			is_correct = true
-			label.text = "😊 ¡Buenísimo completo! ✅"
+			label.text = " ¡Buenísimo completo! "
 		else:
 			is_correct = false
 			var err: String = String(completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup))
-			label.text = "😠 %s ❌" % err
+			label.text = " %s " % err
 	else:
 		is_correct = false
-		label.text = "😠 ¡Esto no es un completo! ❌"
+		if item_node.is_in_group("poop") or (item_node.item_data and item_node.item_data.id == "poop"):
+			label.text = " ¡¿ME ESTÁS DANDO CACA?! ¡QUÉ ASCO! "
+		else:
+			label.text = " ¡Esto no es un completo! "
 
 	if is_correct:
 		if body_mesh:
@@ -352,6 +366,67 @@ func receive_item(item_node: Interactable) -> void:
 	await get_tree().create_timer(1.2).timeout
 	if is_instance_valid(self):
 		_start_leaving()
+
+
+## Secuencia letal cuando el cliente come un completo con caca
+func _die_from_poison(item_node: Interactable) -> void:
+	_is_order_resolved = true
+	state = State.REACTING
+	is_at_counter = false
+	patience_bar_pivot.visible = false
+
+	# Consumir el alimento letal
+	if item_node.get_parent():
+		item_node.get_parent().remove_child(item_node)
+	item_node.queue_free()
+
+	# 1. Asfixia y reacción inicial de envenenamiento
+	label.visible = true
+	label.text = " *Gulp*... ¡¿QUÉ ES ESTO?! ¡TIENE CACA! "
+	label.modulate = Color(0.4, 0.95, 0.2, 1.0) # Verde tóxico
+
+	# Cambiar color de cuerpo y cabeza a tono tóxico / nauseabundo
+	var toxic_mat := StandardMaterial3D.new()
+	toxic_mat.albedo_color = Color(0.22, 0.60, 0.18, 1.0)
+	if body_mesh:
+		body_mesh.material = toxic_mat
+	if head:
+		head.material = toxic_mat
+
+	# Convulsión violenta
+	var orig_pos := global_position
+	var shake_tween := create_tween()
+	for i in 6:
+		var offset := Vector3(randf_range(-0.1, 0.1), 0, randf_range(-0.1, 0.1))
+		shake_tween.tween_property(self, "global_position", orig_pos + offset, 0.05)
+	shake_tween.tween_property(self, "global_position", orig_pos, 0.05)
+
+	SFXManager.play_npc_death()
+
+	# 2. Colapso mortal: el cliente cae tieso al suelo
+	await get_tree().create_timer(0.6).timeout
+	if not is_instance_valid(self):
+		return
+
+	label.text = " ¡AGHHH...! *Muerto* "
+	label.modulate = Color(1.0, 0.15, 0.15, 1.0)
+
+	collision_mask = 0
+	var death_tween := create_tween().set_parallel(true)
+	death_tween.tween_property(self, "rotation_degrees:x", -90.0, 0.35)\
+		.set_trans(Tween.TRANS_QUAD)\
+		.set_ease(Tween.EASE_IN)
+	death_tween.tween_property(self, "position:y", 0.22, 0.35)\
+		.set_trans(Tween.TRANS_QUAD)\
+		.set_ease(Tween.EASE_IN)
+
+	# Registrar en GameManager
+	GameManager.register_npc_served(false)
+
+	# El cadáver permanece en el suelo antes de desvanecerse
+	await get_tree().create_timer(3.5).timeout
+	if is_instance_valid(self):
+		_fade_and_free()
 
 
 func _start_leaving() -> void:

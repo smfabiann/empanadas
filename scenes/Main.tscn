@@ -15,8 +15,12 @@
 [ext_resource type="PackedScene" uid="uid://mue4ocm7ph4v" path="res://scenes/map/Farol.tscn" id="8_bjd11"]
 [ext_resource type="PackedScene" uid="uid://c1qin7mi73i0q" path="res://scenes/map/Basurero.tscn" id="8_cvmbd"]
 [ext_resource type="Script" uid="uid://dine3e1ujv6i7" path="res://scripts/anomalies/AnomaliesManager.gd" id="9_anomalies_manager"]
+[ext_resource type="PackedScene" path="res://scenes/Bed.tscn" id="11_bb450"]
 [ext_resource type="Script" uid="uid://hx502d73tbjj" path="res://scripts/anomalies/AnomalyData.gd" id="14_3p2gp"]
 [ext_resource type="Resource" path="res://resources/anomalies/glitch_sprite_anomaly.tres" id="15_cvmbd"]
+[ext_resource type="Script" uid="uid://djv60iak8lud6" path="res://scripts/Main.gd" id="16_main"]
+[ext_resource type="Resource" path="res://resources/anomalies/aware.tres" id="17_aware"]
+[ext_resource type="PackedScene" uid="uid://10pgshgdr0ub" path="res://scenes/map/ChemicalToilet.tscn" id="18_toilet"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
@@ -88,6 +92,8 @@ albedo_color = Color(0.5014065, 0.50140655, 0.50140643, 1)
 albedo_color = Color(0.24477637, 0.24477643, 0.24477634, 1)
 
 [node name="Main" type="Node3D" unique_id=1661772069]
+script = ExtResource("16_main")
+max_clients_per_day = 5
 
 [node name="Enviroment" type="Node" parent="." unique_id=2009176575]
 
@@ -122,6 +128,12 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.1
 
 [node name="ExteriorBulp" parent="Map/Patio" unique_id=826666554 instance=ExtResource("4_ft6cd")]
 transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, 2.4000003, 2.8000002, -2.5)
+
+[node name="ChemicalToilet" parent="Map/Patio" unique_id=1107601236 instance=ExtResource("18_toilet")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 0.1, 4.6)
+
+[node name="ExteriorBulp2" parent="Map/Patio/ChemicalToilet" unique_id=1676106686 instance=ExtResource("4_ft6cd")]
+transform = Transform3D(-0.1699951, 0.001291341, -5.618109e-05, -5.615318e-05, -0.014760101, -0.16935799, -0.0012913424, -0.1693531, 0.014760099, 0.50000036, 2.1617572, -0.70370007)
 
 [node name="Shop" parent="Map" unique_id=831494344 instance=ExtResource("1_c01mt")]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 3.4703743, 1.7049768, -0.22162199)
@@ -305,11 +317,14 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, -0.49934468, -0.250000
 size = Vector3(206.5, 1, 10.1)
 material = SubResource("StandardMaterial3D_tem6s")
 
+[node name="Bed" parent="Map" unique_id=570794177 instance=ExtResource("11_bb450")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.3, -2.5)
+
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
 visible = false
 modulate = Color(1, 0.85, 0.3, 1)
-text = "🫓 EMPANADAS 🫓"
+text = " EMPANADAS "
 font_size = 80
 outline_size = 6
 
@@ -349,5 +364,5 @@ robber_trigger_served_count = 1
 [node name="AnomaliesManagement" type="Node" parent="." unique_id=1987654321]
 script = ExtResource("9_anomalies_manager")
 random_anomaly_chance = 0.4
-max_concurrent_anomalies = 2
-registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd")])
+max_concurrent_anomalies = 3
+registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd"), ExtResource("17_aware")])

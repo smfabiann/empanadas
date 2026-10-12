@@ -34,8 +34,8 @@ func on_arrive(npc: CharacterBody3D) -> void:
 
 	var label = npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		var order_text: String = label.text.replace("💬 ", "")
-		label.text = "⚡ ¡RÁPIDO! " + order_text
+		var order_text: String = label.text.replace(" ", "")
+		label.text = " ¡RÁPIDO! " + order_text
 
 
 func on_leave(npc: CharacterBody3D) -> void:

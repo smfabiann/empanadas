@@ -41,11 +41,11 @@ func on_arrive(npc: CharacterBody3D) -> void:
 
 	var label := npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		label.text = "👽 ⟒⋔⌿⏃⋏⏃⎅⏃⌇... Saludos terrícola!\nQuiero una empanada cósmica."
+		label.text = " ⟒⋔⌿⏃⋏⏃⎅⏃⌇... Saludos terrícola!\nQuiero una empanada cósmica."
 		label.modulate = Color(0.25, 1.0, 0.45, 1.0)
 
 
 func on_leave(npc: CharacterBody3D) -> void:
 	var label := npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		label.text = "🛸 ⏁⊑⏃⋏⋞ ⊬⍜⎍... (Regresando a las estrellas)"
+		label.text = " ⏁⊑⏃⋏⋞ ⊬⍜⎍... (Regresando a las estrellas)"

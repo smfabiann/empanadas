@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://10pgshgdr0ub"]
+
+[ext_resource type="Script" uid="uid://b025xmaedfygp" path="res://scripts/map/ChemicalToilet.gd" id="1_toilet"]
+[ext_resource type="Script" uid="uid://bixpnle4q21oh" path="res://scripts/map/ToiletDoor.gd" id="2_door"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dark_plastic"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_blue_plastic"]
+albedo_color = Color(0.06, 0.42, 0.72, 1)
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_roof"]
+albedo_color = Color(0.92, 0.92, 0.88, 1)
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_pipe"]
+albedo_color = Color(0.18, 0.18, 0.2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door"]
+size = Vector3(1.06, 2.02, 0.08)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_toilet"]
+size = Vector3(0.65, 0.55, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_toilet_seat"]
+albedo_color = Color(0.88, 0.88, 0.88, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_chem_water"]
+albedo_color = Color(0.04, 0.25, 0.65, 1)
+
+[node name="ChemicalToiletCabin" type="Node3D" unique_id=956148951]
+
+[node name="CabinFloor" type="CSGBox3D" parent="." unique_id=2045035892]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+use_collision = true
+size = Vector3(1.25, 0.08, 1.25)
+material = SubResource("StandardMaterial3D_dark_plastic")
+
+[node name="WallBack" type="CSGBox3D" parent="." unique_id=2098442589]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.5952999)
+use_collision = true
+size = Vector3(1.25, 2.2, 0.08)
+material = SubResource("StandardMaterial3D_blue_plastic")
+
+[node name="WallLeft" type="CSGBox3D" parent="." unique_id=15046145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5915732, 1.1, 0)
+use_collision = true
+size = Vector3(0.08, 2.2, 1.2626953)
+material = SubResource("StandardMaterial3D_blue_plastic")
+
+[node name="WallRight" type="CSGBox3D" parent="." unique_id=222648754]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5887243, 1.1, 0)
+use_collision = true
+size = Vector3(0.08, 2.2, 1.2988281)
+material = SubResource("StandardMaterial3D_blue_plastic")
+
+[node name="WallFrontHeader" type="CSGBox3D" parent="." unique_id=1368575191]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.12, -0.585)
+use_collision = true
+size = Vector3(1.25, 0.16, 0.08)
+material = SubResource("StandardMaterial3D_blue_plastic")
+
+[node name="Roof" type="CSGBox3D" parent="." unique_id=947773756]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26, 0)
+use_collision = true
+size = Vector3(1.32, 0.12, 1.32)
+material = SubResource("StandardMaterial3D_roof")
+
+[node name="VentPipe" type="CSGCylinder3D" parent="." unique_id=110386467]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44, 1.6, 0.44)
+radius = 0.045
+height = 1.9
+material = SubResource("StandardMaterial3D_pipe")
+
+[node name="Door" type="AnimatableBody3D" parent="." unique_id=1820934661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.54, 0, -0.585)
+collision_layer = 3
+collision_mask = 0
+script = ExtResource("2_door")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Door" unique_id=941648242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53, 1.03, 0)
+shape = SubResource("BoxShape3D_door")
+
+[node name="DoorMesh" type="CSGBox3D" parent="Door" unique_id=1604253004]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.53, 1.03, 0)
+size = Vector3(1.1, 2.02, 0.06)
+material = SubResource("StandardMaterial3D_blue_plastic")
+
+[node name="DoorHandle" type="CSGCylinder3D" parent="Door" unique_id=1303293180]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.95, 1, -0.05)
+radius = 0.025
+height = 0.12
+material = SubResource("StandardMaterial3D_pipe")
+
+[node name="Toilet" type="StaticBody3D" parent="." unique_id=488790765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.25)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_toilet")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Toilet" unique_id=1905284854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, 0)
+shape = SubResource("BoxShape3D_toilet")
+
+[node name="Base" type="CSGBox3D" parent="Toilet" unique_id=988253885]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.24, 0)
+use_collision = true
+size = Vector3(0.58, 0.46, 0.62)
+material = SubResource("StandardMaterial3D_toilet_seat")
+
+[node name="SeatRing" type="CSGCylinder3D" parent="Toilet" unique_id=1813095447]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.48, 0)
+radius = 0.2
+height = 0.04
+material = SubResource("StandardMaterial3D_dark_plastic")
+
+[node name="Water" type="CSGCylinder3D" parent="Toilet" unique_id=1778322671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.485, 0)
+radius = 0.14
+height = 0.02
+material = SubResource("StandardMaterial3D_chem_water")
+
+[node name="ToiletPaper" type="CSGCylinder3D" parent="Toilet" unique_id=942648040]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0.48, 0.75, -0.1)
+radius = 0.05
+height = 0.12
+material = SubResource("StandardMaterial3D_roof")
+
+[node name="SpawnPoint" type="Marker3D" parent="Toilet" unique_id=2074982068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, 0)
+
+[node name="CabinLight" type="OmniLight3D" parent="." unique_id=1833265305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.9, 0)
+light_color = Color(0.9, 0.95, 0.8, 1)
+light_energy = 0.75
+shadow_enabled = true
+omni_range = 2.6

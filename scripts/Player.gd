@@ -184,15 +184,15 @@ func _update_interaction_prompt() -> void:
 			ui.set_prompt("[E] Volver a tu vista\n[F] Visión Nocturna", true)
 		return
 
-	# 1. Si miramos directamente a una estación de ingredientes 3D
-	if ray.is_colliding():
-		var col = ray.get_collider()
-		if col != null and col.has_method("get_interaction_prompt"):
-			var info: Dictionary = col.get_interaction_prompt(self)
-			ui.set_prompt(info.get("text", ""), info.get("actionable", false))
-			return
-
+	# Si sostenemos un ítem:
 	if held_item != null:
+		if ray.is_colliding():
+			var col = ray.get_collider()
+			if col != null and col != held_item and col.has_method("get_interaction_prompt"):
+				var info: Dictionary = col.get_interaction_prompt(self)
+				ui.set_prompt(info.get("text", ""), info.get("actionable", false))
+				return
+
 		var target_npc := _get_target_npc()
 		if target_npc != null and target_npc.requested_item != null:
 			var item_desc: String = held_item.item_data.display_name if held_item.item_data else "Ítem"
@@ -200,23 +200,33 @@ func _update_interaction_prompt() -> void:
 		else:
 			var item_desc: String = held_item.item_data.display_name if held_item.item_data else "Ítem"
 			ui.set_prompt("Sosteniendo: " + item_desc + "  |  [Q] Soltar", false)
-	else:
-		if ray.is_colliding():
-			var collider := ray.get_collider()
-			if collider is Interactable and collider.item_data:
-				ui.set_prompt("[E] Recoger " + collider.item_data.display_name, true)
-				return
-			elif collider.has_method("interact"):
-				ui.set_prompt("[E] Interactuar", true)
-				return
+		return
 
-		# Si miramos al cliente con las manos vacías, mostrar lo que pide
-		var target_npc := _get_target_npc()
-		if target_npc != null and target_npc.requested_item != null:
-			ui.set_prompt("👤 Cliente pide: " + target_npc.requested_item.display_name, false)
+	# Si las manos están vacías:
+	if ray.is_colliding():
+		var col = ray.get_collider()
+		if col is Interactable:
+			var prompt_text: String = "[E] Recoger " + (col.item_data.display_name if col.item_data else "Ítem")
+			if col.has_method("get_interaction_prompt"):
+				var info: Dictionary = col.get_interaction_prompt(self)
+				prompt_text = info.get("text", prompt_text)
+			ui.set_prompt(prompt_text, true)
+			return
+		elif col != null and col.has_method("get_interaction_prompt"):
+			var info: Dictionary = col.get_interaction_prompt(self)
+			ui.set_prompt(info.get("text", ""), info.get("actionable", false))
+			return
+		elif col != null and col.has_method("interact"):
+			ui.set_prompt("[E] Interactuar", true)
 			return
 
-		ui.set_prompt("", false)
+	# Si miramos al cliente con las manos vacías, mostrar lo que pide
+	var target_npc := _get_target_npc()
+	if target_npc != null and target_npc.requested_item != null:
+		ui.set_prompt(" Cliente pide: " + target_npc.requested_item.display_name, false)
+		return
+
+	ui.set_prompt("", false)
 
 
 func _get_target_npc() -> Node:
@@ -280,15 +290,8 @@ func _handle_interact() -> void:
 			sec_script.active_monitor.interact(self)
 			_update_interaction_prompt()
 			return
-	# Prioridad 1: Si apuntamos a una estación de ingredientes 3D
-	if ray.is_colliding():
-		var collider = ray.get_collider()
-		if collider != null and collider.has_method("get_interaction_prompt"):
-			collider.interact(self)
-			_update_interaction_prompt()
-			return
 
-	# Prioridad 2: Manos vacías -> recoger ítem o usar botones
+	# Prioridad: Manos vacías -> recoger ítem o usar estaciones / botones
 	if held_item == null:
 		if ray.is_colliding():
 			var collider := ray.get_collider()
@@ -296,11 +299,22 @@ func _handle_interact() -> void:
 				held_item = collider as Interactable
 				ray.add_exception(held_item)
 				held_item.interact(self)
-			elif collider.has_method("interact"):
+			elif collider != null and collider.has_method("get_interaction_prompt"):
 				collider.interact(self)
+			elif collider != null and collider.has_method("interact"):
+				collider.interact(self)
+			_update_interaction_prompt()
 		return
 
-	# Prioridad 3: Sosteniendo ítem -> entregar al NPC
+	# Prioridad: Sosteniendo ítem -> Usar en estación o interactuable compatible
+	if ray.is_colliding():
+		var collider = ray.get_collider()
+		if collider != null and collider != held_item and collider.has_method("get_interaction_prompt"):
+			collider.interact(self)
+			_update_interaction_prompt()
+			return
+
+	# Prioridad: Sosteniendo ítem -> Entregar al NPC
 	var target_npc := _get_target_npc()
 	if target_npc != null:
 		var item_to_deliver := held_item
@@ -314,8 +328,10 @@ func _drop_held_item() -> void:
 		return
 	var item_to_drop := held_item
 	held_item = null
-	ray.remove_exception(item_to_drop)
-	item_to_drop.drop()
+	if ray:
+		ray.remove_exception(item_to_drop)
+	if item_to_drop.has_method("drop"):
+		item_to_drop.drop()
 
 
 ## Anima la caída del jugador al ser abatido (cámara al suelo ladeada)

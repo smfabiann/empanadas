@@ -162,6 +162,46 @@ func play_drop() -> void:
 	_play_tone(330.0, 0.06)
 
 
+## Sonido procedural de pedo / defecación para el baño químico
+func play_fart() -> void:
+	var player := _get_available_player()
+	if player == null:
+		return
+
+	var duration := 0.48
+	var stream := AudioStreamGenerator.new()
+	stream.mix_rate = 22050.0
+	stream.buffer_length = duration + 0.05
+
+	player.stream = stream
+	player.volume_db = 1.0
+	player.play()
+
+	var playback: AudioStreamGeneratorPlayback = player.get_stream_playback()
+	var sample_count := int(22050.0 * duration)
+	var phase := 0.0
+
+	for i in sample_count:
+		var t := float(i) / float(sample_count)
+		var flutter := sin(t * 28.0 * TAU) * 18.0
+		var freq := maxf(40.0, 95.0 - (t * 48.0) + flutter)
+		var increment := freq / 22050.0
+		var noise := randf_range(-0.2, 0.2)
+		var buzz := (phase * 2.0 - 1.0) * 0.45
+		var env := sin(t * PI)
+		var sample := (buzz + noise * 0.25) * env * 0.7
+
+		playback.push_frame(Vector2(sample, sample))
+		phase += increment
+		if phase >= 1.0:
+			phase -= 1.0
+
+
+## Sonido de asfixia y colapso letal del NPC al comer caca
+func play_npc_death() -> void:
+	_play_sequence([240.0, 180.0, 110.0, 55.0], 0.14)
+
+
 func _play_tone(frequency: float, duration: float) -> void:
 	var player := _get_available_player()
 	if player == null:

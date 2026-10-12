@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="AnomalyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/anomalies/AnomalyData.gd" id="1_data"]
+[ext_resource type="PackedScene" path="res://scenes/anomalies/Aware.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_data")
+id = "aware"
+anomaly_name = "El Consciente"
+description = "Reacciona al monitor de seguridad: un ojo aparece en el centro de la pantalla SOLO cuando el jugador mira a través del monitor y desaparece en cuanto deja de hacerlo. No actúa en ninguna otra situación."
+enabled = true
+tier = 2
+weight = 10.0
+trigger_exact_customer = 0
+trigger_min_served = 0
+min_day = 1
+max_day = 0
+trigger_once = false
+has_triggered = false
+anomaly_scene = ExtResource("2_scene")

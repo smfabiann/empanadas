@@ -434,7 +434,7 @@ func _look_at_counter(delta: float) -> void:
 func _arrive_at_counter() -> void:
 	super._arrive_at_counter()
 	if label:
-		label.text = "👽 ⟒⋔⌿⏃⋏⏃⎅⏃⌇... Saludos terrícola!\nQuiero: %s\n(%s)" % [
+		label.text = " ⟒⋔⌿⏃⋏⏃⎅⏃⌇... Saludos terrícola!\nQuiero: %s\n(%s)" % [
 			order_recipe.get("name", "Completo"),
 			order_recipe.get("desc", "")
 		]

@@ -68,7 +68,7 @@ func _init_anomaly(context: Dictionary = {}) -> void:
 		glitch_sprite.visible = true
 
 	if warning_label:
-		warning_label.text = "⚠️ [ANOMALÍA DETECTADA: DISTORSIÓN ESPECTRAL] ⚠️"
+		warning_label.text = " [ANOMALÍA DETECTADA: DISTORSIÓN ESPECTRAL] "
 		warning_label.modulate.a = 0.0
 
 

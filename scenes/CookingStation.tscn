@@ -111,7 +111,7 @@ material = SubResource("StandardMaterial3D_ketchup")
 [node name="BoardLabel3D" type="Label3D" parent="BoardSlot" unique_id=1176743120]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.32, 0)
 billboard = 1
-text = "🥖 Tabla de Armado"
+text = " Tabla de Armado"
 font_size = 22
 outline_size = 4
 
@@ -137,7 +137,7 @@ material = SubResource("StandardMaterial3D_bun")
 [node name="Label3D" type="Label3D" parent="PanSlot" unique_id=1759168282]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
 billboard = 1
-text = "🥖 Pan"
+text = " Pan"
 font_size = 20
 outline_size = 3
 
@@ -163,7 +163,7 @@ material = SubResource("StandardMaterial3D_sausage")
 [node name="Label3D" type="Label3D" parent="SausageSlot" unique_id=1226669170]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
 billboard = 1
-text = "🌭 Vienesa"
+text = " Vienesa"
 font_size = 20
 outline_size = 3
 
@@ -191,7 +191,7 @@ material = SubResource("StandardMaterial3D_palta")
 [node name="Label3D" type="Label3D" parent="PaltaSlot" unique_id=1985411509]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
 billboard = 1
-text = "🥑 Palta"
+text = " Palta"
 font_size = 20
 outline_size = 3
 
@@ -219,7 +219,7 @@ material = SubResource("StandardMaterial3D_bun")
 [node name="Label3D" type="Label3D" parent="MayoSlot" unique_id=1404757860]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
 billboard = 1
-text = "🍶 Mayo"
+text = " Mayo"
 font_size = 20
 outline_size = 3
 
@@ -247,7 +247,7 @@ material = SubResource("StandardMaterial3D_sausage")
 [node name="Label3D" type="Label3D" parent="KetchupSlot" unique_id=1179386536]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
 billboard = 1
-text = "🍅 Kétchup"
+text = " Kétchup"
 font_size = 20
 outline_size = 3
 
@@ -268,7 +268,7 @@ material = SubResource("StandardMaterial3D_table")
 [node name="Label3D" type="Label3D" parent="TrashSlot" unique_id=720140446]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
 billboard = 1
-text = "🗑️ Limpiar Mesón"
+text = " Limpiar Mesón"
 font_size = 8
 outline_size = 3
 
@@ -287,9 +287,9 @@ material = SubResource("StandardMaterial3D_paper")
 [node name="TicketText" type="Label3D" parent="OrderTicket3D" unique_id=406618103]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.022)
 pixel_size = 0.002
-text = "📋 ORDEN ACTUAL:
+text = " ORDEN ACTUAL:
 (Sin cliente)
 
-🌭 Listo para armar"
+ Listo para armar"
 font_size = 20
 outline_size = 2

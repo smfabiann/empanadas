@@ -18,8 +18,11 @@ func _ready() -> void:
 
 func interact(player: Node3D) -> void:
 	"""Recoge el objeto y lo reparenta al HoldPoint del jugador."""
-	_original_parent = get_parent()
-	var hold_point: Marker3D = player.get_node("Camera3D/HoldPoint")
+	if get_parent() != null:
+		_original_parent = get_parent()
+	var hold_point: Marker3D = player.get_node_or_null("Camera3D/HoldPoint")
+	if hold_point == null:
+		return
 
 	# Desactivar físicas y colisiones para que no bloquee el RayCast del jugador
 	freeze = true
@@ -32,7 +35,8 @@ func interact(player: Node3D) -> void:
 		lbl.visible = false
 
 	# Reparentar al HoldPoint
-	get_parent().remove_child(self)
+	if get_parent() != null:
+		get_parent().remove_child(self)
 	hold_point.add_child(self)
 
 	# Resetear transform local para que quede en el HoldPoint
@@ -50,12 +54,21 @@ func drop() -> void:
 	if lbl:
 		lbl.visible = true
 
+	# Asegurar que _original_parent exista
+	if _original_parent == null or not is_instance_valid(_original_parent):
+		_original_parent = get_tree().current_scene if (is_inside_tree() and get_tree()) else null
+		if _original_parent == null and is_inside_tree() and get_tree():
+			_original_parent = get_tree().root
+
 	# Reparentar de vuelta a la escena principal
-	get_parent().remove_child(self)
-	_original_parent.add_child(self)
+	if get_parent() != null:
+		get_parent().remove_child(self)
+	if _original_parent != null:
+		_original_parent.add_child(self)
 
 	# Restaurar posición global, colisiones y físicas
-	global_transform = global_xform
+	if is_inside_tree():
+		global_transform = global_xform
 	collision_layer = 2
 	collision_mask = 1
 	freeze = false
