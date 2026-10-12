@@ -39,8 +39,18 @@ signal anomaly_registered(data: AnomalyData)
 ## Registro en tiempo de ejecución: ID de la última anomalía disparada
 @export var debug_last_triggered: String = ""
 
-## Tecla rápida para forzar el disparo inmediato de la anomalía en tiempo de ejecución (por defecto F4)
-@export var debug_trigger_key: Key = KEY_F4
+## Dispara inmediatamente en tiempo de ejecución la anomalía configurada en 'debug_force_anomaly' (o la primera del catálogo)
+@export var debug_trigger_now: bool = false:
+	set(val):
+		if val:
+			var target_id := _normalize_anomaly_id(debug_force_anomaly)
+			if target_id.is_empty() and not anomalies_by_id.is_empty():
+				target_id = anomalies_by_id.keys().front()
+			if not target_id.is_empty():
+				print("[AnomaliesManager] Forzando anomalía desde el Inspector: ", target_id)
+				force_trigger_anomaly(target_id)
+			debug_trigger_now = false
+			notify_property_list_changed()
 
 ## Cantidad actual de anomalías activas simultáneamente en el juego
 @export var debug_active_count: int = 0
@@ -61,17 +71,38 @@ var _last_evaluated_spawn: int = -1
 func _ready() -> void:
 	_setup_catalogue()
 	_connect_game_signals()
+	# Si se configuró una anomalía en 'debug_force_anomaly', dispararla inmediatamente al iniciar
+	if not debug_force_anomaly.strip_edges().is_empty():
+		call_deferred("_trigger_debug_force_on_start")
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if debug_trigger_key != KEY_NONE and event is InputEventKey and event.pressed and not event.is_echo():
-		if event.keycode == debug_trigger_key:
-			var target_id: String = debug_force_anomaly.strip_edges()
-			if target_id.is_empty() and not anomalies_by_id.is_empty():
-				target_id = anomalies_by_id.keys().front()
-			if not target_id.is_empty():
-				print("[AnomaliesManager] Forzando anomalía por tecla de depuración F4: ", target_id)
-				force_trigger_anomaly(target_id)
+func _trigger_debug_force_on_start() -> void:
+	var target_id := _normalize_anomaly_id(debug_force_anomaly)
+	if not target_id.is_empty() and anomalies_by_id.has(target_id):
+		print("[AnomaliesManager] 🚀 Auto-disparando anomalía de debug al iniciar: '", target_id, "'")
+		force_trigger_anomaly(target_id)
+
+
+## Normaliza el ID para tolerar espacios, mayúsculas/minúsculas o nombres legibles ("Aware" -> "aware", "El Consciente" -> "aware")
+func _normalize_anomaly_id(id_string: String) -> String:
+	var clean := id_string.strip_edges()
+	if clean.is_empty():
+		return ""
+	if anomalies_by_id.has(clean):
+		return clean
+	var clean_lower := clean.to_lower()
+	for k in anomalies_by_id.keys():
+		if str(k).to_lower() == clean_lower:
+			return str(k)
+	# Buscar por anomaly_name legible o nombre de archivo de escena
+	for k in anomalies_by_id.keys():
+		var data: AnomalyData = anomalies_by_id[k]
+		if data != null:
+			if data.anomaly_name.to_lower() == clean_lower:
+				return str(k)
+			if data.anomaly_scene and data.anomaly_scene.resource_path.get_file().get_basename().to_lower() == clean_lower:
+				return str(k)
+	return clean
 
 
 func _setup_catalogue() -> void:
@@ -132,7 +163,8 @@ func _register_from_packed_scene(packed: PackedScene) -> void:
 
 
 func get_anomaly_data(anomaly_id: String) -> AnomalyData:
-	return anomalies_by_id.get(anomaly_id, null)
+	var target_id := _normalize_anomaly_id(anomaly_id)
+	return anomalies_by_id.get(target_id, null)
 
 
 # =========================================================
@@ -180,7 +212,7 @@ func evaluate_and_trigger(
 	var last_spawned: AnomalyBase = null
 
 	# 1. Modo Debug: Forzar anomalía específica
-	var forced_id: String = debug_force_anomaly.strip_edges()
+	var forced_id: String = _normalize_anomaly_id(debug_force_anomaly)
 	if not forced_id.is_empty():
 		if anomalies_by_id.has(forced_id):
 			return spawn_anomaly(anomalies_by_id[forced_id], context)
@@ -320,7 +352,7 @@ func force_trigger_anomaly(anomaly_id: String, context: Dictionary = {}) -> Anom
 	var data: AnomalyData = get_anomaly_data(anomaly_id)
 	if data:
 		return spawn_anomaly(data, context)
-	push_warning("AnomaliesManager.force_trigger_anomaly: ID '%s' no encontrado." % anomaly_id)
+	push_warning("AnomaliesManager.force_trigger_anomaly: ID '%s' no encontrado. IDs disponibles: %s" % [anomaly_id, str(get_registered_ids())])
 	return null
 
 

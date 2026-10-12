@@ -172,6 +172,20 @@ func receive_item(item_node: Interactable) -> void:
 	if not can_receive_item() or item_node == null:
 		return
 
+	# Comprobar si el completo contiene caca (letal)
+	var has_poop: bool = false
+	if item_node.has_method("get_ingredient_count") and item_node.get_ingredient_count("poop") > 0:
+		has_poop = true
+	elif item_node.get("has_poop") == true or (item_node.get("poop_count") != null and item_node.poop_count > 0):
+		has_poop = true
+
+	if has_poop:
+		_shot_cancelled = true
+		if gun:
+			gun.visible = false
+		_die_from_poison(item_node)
+		return
+
 	var is_correct: bool = false
 	if item_node != null and item_node.has_method("is_valid_base"):
 		var comp = item_node

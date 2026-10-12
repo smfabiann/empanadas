@@ -8,6 +8,7 @@ extends Interactable
 @export var palta_count: int = 0
 @export var mayo_count: int = 0
 @export var ketchup_count: int = 0
+@export var poop_count: int = 0
 
 ## Secuencia cronológica de capas añadidas
 var layers: Array[String] = []
@@ -61,6 +62,18 @@ var has_ketchup: bool:
 			_rebuild_visuals()
 			_update_labels()
 
+var has_poop: bool:
+	get:
+		return poop_count > 0
+	set(value):
+		if value and poop_count == 0:
+			add_ingredient("poop")
+		elif not value and poop_count > 0:
+			poop_count = 0
+			layers = layers.filter(func(l): return l != "poop")
+			_rebuild_visuals()
+			_update_labels()
+
 @onready var bun_mesh: CSGBox3D = get_node_or_null("Bun")
 @onready var sausage_mesh: CSGBox3D = get_node_or_null("Sausage")
 @onready var palta_mesh: CSGBox3D = get_node_or_null("Palta")
@@ -92,6 +105,11 @@ const LAYER_CONFIG: Dictionary = {
 		"thickness": 0.022,
 		"size": Vector3(0.25, 0.022, 0.036),
 		"color": Color(0.88, 0.15, 0.12, 1)
+	},
+	"poop": {
+		"thickness": 0.038,
+		"size": Vector3(0.27, 0.038, 0.075),
+		"color": Color(0.35, 0.20, 0.08, 1)
 	}
 }
 
@@ -124,6 +142,8 @@ func _ready() -> void:
 			layers.append("mayo")
 		for i in range(ketchup_count):
 			layers.append("ketchup")
+		for i in range(poop_count):
+			layers.append("poop")
 
 	_update_visuals()
 	_update_labels()
@@ -152,6 +172,11 @@ func _get_material_for(type: String) -> Material:
 		"ketchup":
 			if ketchup_mesh and ketchup_mesh.material:
 				return ketchup_mesh.material
+		"poop":
+			var poop_mat := StandardMaterial3D.new()
+			poop_mat.albedo_color = LAYER_CONFIG["poop"]["color"]
+			poop_mat.roughness = 0.35
+			return poop_mat
 
 	var mat := StandardMaterial3D.new()
 	if LAYER_CONFIG.has(type):
@@ -181,6 +206,10 @@ func _calculate_z_offset(type: String, count_of_type: int) -> float:
 			if count_of_type == 1:
 				return 0.012
 			return -0.012 if (count_of_type % 2 == 0) else 0.012
+		"poop":
+			if count_of_type == 1:
+				return 0.0
+			return 0.010 if (count_of_type % 2 == 0) else -0.010
 	return 0.0
 
 
@@ -223,7 +252,7 @@ func _rebuild_visuals() -> void:
 		child.queue_free()
 
 	current_stack_height = BASE_Y
-	var counts := {"sausage": 0, "palta": 0, "mayo": 0, "ketchup": 0}
+	var counts := {"sausage": 0, "palta": 0, "mayo": 0, "ketchup": 0, "poop": 0}
 
 	for i in range(layers.size()):
 		var type := layers[i]
@@ -254,6 +283,8 @@ func add_ingredient(type: String) -> bool:
 			mayo_count += 1
 		"ketchup":
 			ketchup_count += 1
+		"poop":
+			poop_count += 1
 
 	layers.append(type)
 	var count_of_type: int = get_ingredient_count(type)
@@ -278,6 +309,8 @@ func get_ingredient_count(type: String) -> int:
 			return mayo_count
 		"ketchup":
 			return ketchup_count
+		"poop":
+			return poop_count
 	return 0
 
 
@@ -301,9 +334,9 @@ func _animate_ingredient_pop(mesh_node: Node3D) -> void:
 			.set_ease(Tween.EASE_OUT)
 
 
-## Verifica si el completo cuenta con la base obligatoria (Pan + Salchicha)
+## Verifica si el completo cuenta con la base obligatoria (Pan + Salchicha o Pan + Caca)
 func is_valid_base() -> bool:
-	return has_bun and sausage_count >= 1
+	return has_bun and (sausage_count >= 1 or poop_count >= 1)
 
 
 ## Retorna el nombre representativo del completo según su composición
@@ -311,9 +344,14 @@ func get_completo_name() -> String:
 	var base_name: String = ""
 	if sausage_count == 0:
 		if palta_count == 0 and mayo_count == 0 and ketchup_count == 0:
-			base_name = "Pan de Completo (Solo)"
+			if poop_count > 0:
+				base_name = "Pan con Caca 💩"
+			else:
+				base_name = "Pan de Completo (Solo)"
 		else:
 			base_name = "Pan con agregados (Sin vienesa)"
+			if poop_count > 0:
+				base_name = "%s con Caca 💩" % base_name
 	else:
 		# Con salchicha:
 		if palta_count > 0 and mayo_count > 0 and ketchup_count > 0:
@@ -333,6 +371,9 @@ func get_completo_name() -> String:
 		else:
 			base_name = "Completo Simple (Solo vienesa)"
 
+		if poop_count > 0:
+			base_name = "%s con Caca 💩" % base_name
+
 	var extras: Array[String] = []
 	if sausage_count > 1:
 		extras.append("%dx Vienesa" % sausage_count)
@@ -342,6 +383,8 @@ func get_completo_name() -> String:
 		extras.append("%dx Mayo" % mayo_count)
 	if ketchup_count > 1:
 		extras.append("%dx Kétchup" % ketchup_count)
+	if poop_count > 1:
+		extras.append("%dx Caca" % poop_count)
 
 	if not extras.is_empty():
 		return "%s [%s]" % [base_name, ", ".join(extras)]
@@ -387,4 +430,38 @@ func get_match_error(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ket
 	if not req_ketchup and has_ketchup:
 		return "¡No pedí con kétchup!"
 	return "¡La combinación no coincide!"
+
+
+## Prompt de interacción contextual (soporta untar caca si el jugador la sostiene)
+func get_interaction_prompt(player: Node) -> Dictionary:
+	var held = player.get("held_item")
+	if held != null and (held.is_in_group("poop") or (held.get("item_data") and held.item_data.id == "poop")):
+		return {"text": "[E] Untar caca en el Completo 💩", "actionable": true}
+	elif held == null:
+		return {"text": "[E] Recoger " + get_completo_name(), "actionable": true}
+	return {"text": get_completo_name(), "actionable": false}
+
+
+func interact(player: Node) -> void:
+	var held = player.get("held_item")
+	if held != null and held != self and (held.is_in_group("poop") or (held.get("item_data") and held.item_data.id == "poop")):
+		var added: bool = add_ingredient("poop")
+		if added:
+			SFXManager.play_pickup()
+			player.set("held_item", null)
+			var ray = player.get_node_or_null("Camera3D/RayCast3D")
+			if ray:
+				ray.remove_exception(held)
+			if held.get_parent():
+				held.get_parent().remove_child(held)
+			held.queue_free()
+		return
+
+	if held == null:
+		player.set("held_item", self)
+		var ray = player.get_node_or_null("Camera3D/RayCast3D")
+		if ray:
+			ray.add_exception(self)
+
+	super.interact(player)
 

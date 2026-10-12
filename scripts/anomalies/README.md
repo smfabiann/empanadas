@@ -24,6 +24,7 @@ Arquitectura modular para crear y gestionar manifestaciones anómalas (ambiental
 | [`AnomalyData.gd`](./AnomalyData.gd) | Recurso (`.tres`) exportable con disparadores (turno exacto, umbral de atendidos, días, peso/rareza) y referencia a la escena. |
 | [`AnomaliesManager.gd`](./AnomaliesManager.gd) | Nodo central en `Main.tscn` (`AnomaliesManagement`). Gestiona catálogo, sorteo probabilístico, concurrencia y depuración. |
 | [`GlitchSpriteAnomaly.tscn`](../../scenes/anomalies/GlitchSpriteAnomaly.tscn) | Ejemplo funcional: distorsión espectral con shader de aberración cromática, parpadeo de luces, niebla y filtro rojo. |
+| [`Aware.tscn`](../../scenes/anomalies/Aware.tscn) / [`Aware.gd`](./Aware.gd) | Ejemplo reactivo: reacciona al monitor de seguridad (`SecurityMonitor.gd`), manifestando un ojo vigilante y señal visual solo cuando el jugador mira a través del monitor. |
 
 ---
 
@@ -110,9 +111,20 @@ Selecciona el nodo `AnomaliesManagement` en `Main.tscn` y agrega el `.tres` al a
 
 ---
 
-## 🧪 Depuración en Tiempo de Ejecución
+## 🧪 Depuración desde el Inspector (`AnomaliesManagement`)
 
-- **Tecla `F4`**: Fuerza la activación inmediata de la anomalía configurada en `debug_force_anomaly` (o la primera del catálogo).
-- **Tecla `F3`**: Muestra el panel con contadores de depuración y estado de anomalías activas.
-- **`debug_force_anomaly`**: Escribe el ID (ej. `"glitch_sprite"`) en el Inspector para forzarla.
-- **`debug_always_trigger`**: Toggle para forzar 100% de probabilidad en todos los sorteos.
+Para depurar en tiempo de ejecución mientras el juego está corriendo:
+1. En la pestaña **Scene** (panel izquierdo del editor de Godot), cambia de **Local** a **Remote**.
+2. Selecciona el nodo `root/Main/AnomaliesManagement`.
+3. En el **Inspector**:
+   - **`debug_force_anomaly`**: Escribe el ID (ej. `"aware"` o `"glitch_sprite"`). También tolera el nombre de la anomalía (ej. `"El Consciente"`).
+   - **`debug_trigger_now`**: Marca esta casilla (checkbox) para disparar la anomalía **inmediatamente**. Se desmarcará sola tras dispararla.
+   - Si no marcas `debug_trigger_now`, la anomalía seleccionada en `debug_force_anomaly` se disparará con la llegada del **siguiente cliente**.
+   - **`debug_always_trigger`**: Toggle para forzar 100% de probabilidad en todos los sorteos normales.
+
+> [!NOTE]
+> **Comportamiento especial de "El Consciente" (`Aware`)**:
+> Esta anomalía está diseñada para acechar en silencio: **no muestra nada en el mostrador ni en la ventana**.
+> Solo se manifiesta visiblemente (el ojo rojo y alerta) cuando el jugador se acerca al monitor de seguridad en la pared izquierda e interactúa con **`[E]`** para ver las cámaras.
+> Si deseas ver el ojo directamente sin mirar el monitor para pruebas rápidas, selecciona el nodo instanciado `root/Main/AnomaliesManagement/Aware` en el árbol **Remote** y marca la casilla **`Debug Always Visible`**.
+

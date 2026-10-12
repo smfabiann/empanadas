@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=3 uid="uid://c_aware_eye_01"]
+
+[ext_resource type="PackedScene" uid="uid://c_anomaly_base" path="res://scenes/anomalies/AnomalyBase.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/anomalies/Aware.gd" id="2_script"]
+
+[node name="Aware" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+anomaly_id = "aware"
+auto_execute_on_ready = false
+auto_resolve_duration = 0.0
+
+[node name="Visuals2D" parent="." index="0"]
+
+[node name="AwareEye" parent="Visuals2D" type="Node2D" index="0"]
+
+[node name="EyeOutline" parent="Visuals2D/AwareEye" type="Polygon2D" index="0"]
+polygon = PackedFloat32Array(-170, 0, -55, -92, 55, -92, 170, 0, 55, 92, -55, 92)
+color = Color(0.06, 0.04, 0.08, 0.95)
+
+[node name="EyeShape" parent="Visuals2D/AwareEye" type="Polygon2D" index="1"]
+polygon = PackedFloat32Array(-150, 0, -50, -80, 50, -80, 150, 0, 50, 80, -50, 80)
+color = Color(0.92, 0.94, 0.98, 1)
+
+[node name="Pupil" parent="Visuals2D/AwareEye" type="Polygon2D" index="2"]
+polygon = PackedFloat32Array(48, 0, 41.569, -24, 24, -41.569, 0, -48, -24, -41.569, -41.569, -24, -48, 0, -41.569, 24, -24, 41.569, 0, 48, 24, 41.569, 41.569, 24)
+color = Color(0.86, 0.12, 0.16, 1)
+
+[node name="InnerPupil" parent="Visuals2D/AwareEye/Pupil" type="Polygon2D" index="0"]
+polygon = PackedFloat32Array(16, 0, 0, -32, -16, 0, 0, 32)
+color = Color(0.15, 0.02, 0.03, 1)
+
+[node name="SignalLabel" parent="Visuals2D/AwareEye" type="Label" index="3"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = 105.0
+offset_right = 250.0
+offset_bottom = 145.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0.2, 0.2, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.95)
+theme_override_font_sizes/font_size = 18
+text = "👁️ [AWARE: ANOMALÍA EN MONITOR] 👁️"
+horizontal_alignment = 1
+vertical_alignment = 1

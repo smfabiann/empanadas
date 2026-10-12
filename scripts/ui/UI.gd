@@ -8,8 +8,6 @@ extends CanvasLayer
 	set(value):
 		show_debug_counters = value
 		_update_debug_visibility()
-## Tecla rápida para alternar la visibilidad de los contadores en tiempo de ejecución (por defecto F3)
-@export var toggle_debug_key: Key = KEY_F3
 
 @onready var crosshair: ColorRect = $HUD/Crosshair
 @onready var prompt_label: Label = $HUD/PromptLabel
@@ -118,12 +116,6 @@ func _ready() -> void:
 
 	_setup_anomalies_debug()
 	_update_debug_visibility()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if toggle_debug_key != KEY_NONE and event is InputEventKey and event.pressed and not event.is_echo():
-		if event.keycode == toggle_debug_key:
-			show_debug_counters = not show_debug_counters
 
 
 func _update_debug_visibility() -> void:

@@ -14,8 +14,13 @@ extends Node
 @export var debug_force_event: String = ""
 ## Si está activo, siempre lanza un evento (100% de probabilidad en sorteos)
 @export var debug_always_trigger_event: bool = false
-## Tecla rápida para avanzar de día inmediatamente en tiempo de ejecución (por defecto: F6)
-@export var debug_advance_day_key: Key = KEY_F6
+## Dispara el avance de día inmediatamente en tiempo de ejecución
+@export var debug_advance_day_now: bool = false:
+	set(val):
+		if val:
+			var gm = get_node_or_null("/root/GameManager")
+			if gm and gm.has_method("debug_advance_to_next_day"):
+				gm.debug_advance_to_next_day()
 
 @export_group("Eventos Estáticos")
 ## Clientes atendidos para que aparezca el Ladrón (ajustar a 1 o 2 para debug rápido)
@@ -48,14 +53,6 @@ func _ready() -> void:
 	set_static_event_trigger("robber", robber_trigger_served_count)
 	set_static_event_day_range("robber", 1, robber_max_day)
 	set_static_event_day_trigger("ufo", ufo_trigger_day, ufo_trigger_served_in_day)
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if debug_advance_day_key != KEY_NONE and event is InputEventKey and event.pressed and not event.is_echo():
-		if event.keycode == debug_advance_day_key:
-			var gm = get_node_or_null("/root/GameManager")
-			if gm and gm.has_method("debug_advance_to_next_day"):
-				gm.debug_advance_to_next_day()
 
 
 ## REGISTRO DE EVENTOS DISPONIBLES
