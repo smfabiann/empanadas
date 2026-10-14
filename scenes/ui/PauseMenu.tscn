@@ -9,10 +9,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.6, 0.4, 0.9, 0.8)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
 content_margin_left = 40.0
 content_margin_top = 30.0
 content_margin_right = 40.0
@@ -77,3 +73,13 @@ text = " Reiniciar"
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "◀ Menú Principal"
+
+[node name="HSeparator" type="HSeparator" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="FooterLabel" type="Label" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 0.7)
+theme_override_font_sizes/font_size = 10
+text = "Completos  ·  Nicolaz Perez, Nicolas Vargas, Fabian San Martin"
+horizontal_alignment = 1

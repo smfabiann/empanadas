@@ -26,7 +26,9 @@ var _anomalies_mgr: Node = null
 @onready var damage_flash: ColorRect = $HUD.get_node_or_null("DamageFlash")
 
 # --- Bucle de días ---
-@onready var day_label: Label = $HUD.get_node_or_null("DayLabel")
+@onready var day_panel: PanelContainer = $HUD.get_node_or_null("DayPanel")
+@onready var day_label: Label = $HUD.get_node_or_null("DayPanel/VBoxContainer/DayLabel") if $HUD.has_node("DayPanel/VBoxContainer/DayLabel") else $HUD.get_node_or_null("DayLabel")
+@onready var day_progress_bar: ProgressBar = $HUD.get_node_or_null("DayPanel/VBoxContainer/DayProgressBar") if $HUD.has_node("DayPanel/VBoxContainer/DayProgressBar") else $HUD.get_node_or_null("DayProgressBar")
 @onready var day_banner: Label = $HUD.get_node_or_null("DayBanner")
 @onready var day_end_panel: PanelContainer = $HUD.get_node_or_null("DayEndPanel")
 @onready var day_end_subtitle: Label = $HUD.get_node_or_null("DayEndPanel/VBoxContainer/DayEndSubtitle")
@@ -171,16 +173,29 @@ func _update_anomalies_debug() -> void:
 # =========================================================
 
 func _on_day_progress(attended: int, max_clients: int) -> void:
+	if day_progress_bar:
+		day_progress_bar.max_value = max(1, max_clients)
+		var tween := create_tween()
+		tween.tween_property(day_progress_bar, "value", float(attended), 0.25).set_ease(Tween.EASE_OUT)
+
+	if day_panel and attended > 0:
+		var punch := create_tween()
+		punch.tween_property(day_panel, "scale", Vector2(1.03, 1.03), 0.08).set_ease(Tween.EASE_OUT)
+		punch.tween_property(day_panel, "scale", Vector2(1.0, 1.0), 0.12).set_ease(Tween.EASE_IN)
+
 	if day_label:
 		if not GameManager.day_active and GameManager.is_day_quota_reached():
 			if GameManager.max_days > 0:
-				day_label.text = "Day %d/%d  ·  Shift Complete - Go to bed" % [GameManager.current_day, GameManager.max_days]
+				day_label.text = "Día %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
 			else:
-				day_label.text = "Day %d  ·  Shift Complete - Go to bed" % GameManager.current_day
+				day_label.text = "Día %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
+			day_label.modulate = Color(0.4, 1.0, 0.5, 1.0)
 		elif GameManager.max_days > 0:
-			day_label.text = "Day %d/%d  ·  Customers %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
+			day_label.text = "Día %d/%d  ·  Clientes %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
+			day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		else:
-			day_label.text = "Day %d  ·  Customers %d/%d" % [GameManager.current_day, attended, max_clients]
+			day_label.text = "Día %d  ·  Clientes %d/%d" % [GameManager.current_day, attended, max_clients]
+			day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 
 func _on_day_started(day: int, max_clients: int) -> void:
@@ -190,6 +205,8 @@ func _on_day_started(day: int, max_clients: int) -> void:
 		crosshair.visible = true
 	if prompt_label:
 		prompt_label.visible = true
+	if day_label:
+		day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 	_on_day_progress(0, max_clients)
 	_show_day_banner(day)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -224,11 +241,15 @@ func _on_day_ended(_day: int) -> void:
 	if day_end_panel:
 		day_end_panel.visible = false
 
+	if day_progress_bar:
+		day_progress_bar.value = day_progress_bar.max_value
+
 	if day_label:
 		if GameManager.max_days > 0:
-			day_label.text = "Day %d/%d  ·  Shift Complete - Go to bed" % [GameManager.current_day, GameManager.max_days]
+			day_label.text = "Día %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
 		else:
-			day_label.text = "Day %d  ·  Shift Complete - Go to bed" % GameManager.current_day
+			day_label.text = "Día %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
+		day_label.modulate = Color(0.4, 1.0, 0.5, 1.0)
 
 	_show_banner_text("SHIFT COMPLETE\nGo to bed to sleep")
 	SFXManager.play_correct()
