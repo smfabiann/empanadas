@@ -9,16 +9,10 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.9, 0.72, 0.25, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
 content_margin_left = 45.0
 content_margin_top = 35.0
 content_margin_right = 45.0
 content_margin_bottom = 35.0
-shadow_color = Color(0, 0, 0, 0.5)
-shadow_size = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
 bg_color = Color(0.22, 0.15, 0.38, 1)
@@ -27,10 +21,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.75, 0.58, 0.98, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 content_margin_left = 25.0
 content_margin_top = 12.0
 content_margin_right = 25.0
@@ -43,10 +33,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.95, 0.85, 1, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 content_margin_left = 25.0
 content_margin_top = 12.0
 content_margin_right = 25.0
@@ -59,10 +45,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.5, 0.35, 0.7, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
 content_margin_left = 25.0
 content_margin_top = 12.0
 content_margin_right = 25.0
@@ -75,10 +57,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.4, 0.32, 0.55, 0.4)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
 content_margin_left = 16.0
 content_margin_top = 12.0
 content_margin_right = 16.0
@@ -122,7 +100,7 @@ alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
-text = "EMPANADAS"
+text = "COMPLETOS"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 46
 theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
@@ -156,6 +134,14 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_font_sizes/font_size = 22
 text = "▶  JUGAR"
+
+[node name="CreditsButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonsVBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_font_sizes/font_size = 18
+text = "ℹ  CRÉDITOS"
 
 [node name="QuitButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonsVBox"]
 layout_mode = 2
@@ -201,13 +187,81 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = -35.0
-offset_right = 150.0
-offset_bottom = -15.0
+offset_left = -320.0
+offset_top = -45.0
+offset_right = 320.0
+offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.4, 0.35, 0.5, 0.6)
+theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 0.8)
 theme_override_font_sizes/font_size = 11
-text = "Taller de Juegos — 2026"
+text = "Completos  ·  Nicolaz Perez, Nicolas Vargas, Fabian San Martin
+Taller de Juegos — 2026"
 horizontal_alignment = 1
+
+[node name="CreditsModal" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.05, 0.88)
+
+[node name="CenterContainer" type="CenterContainer" parent="CreditsModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreditsPanel" type="PanelContainer" parent="CreditsModal/CenterContainer"]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CreditsModal/CenterContainer/CreditsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CreditsTitle" type="Label" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
+theme_override_font_sizes/font_size = 24
+text = "IDENTIFICACIÓN Y CRÉDITOS"
+horizontal_alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="GameInfoLabel" type="RichTextLabel" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=#f5c638][b]Juego:[/b][/color] Completos [color=#888888](Placeholder / Rúbrica)[/color]
+[color=#f5c638][b]Creadores:[/b][/color]
+  • Nicolaz Perez
+  • Nicolas Vargas
+  • Fabian San Martin
+
+[color=#f5c638][b]Asignatura:[/b][/color] Taller de Juegos — 2026
+
+[color=#f5c638][b]Créditos y Contenido Base:[/b][/color]
+  • [b]Motor:[/b] Godot Engine 4.7 (Forward+ / Jolt Physics)
+  • [b]Modelos 3D:[/b] Primitivas CSG y materiales nativos (sin assets 3D externos).
+  • [b]Audio / SFX:[/b] Audio procedural sintetizado en tiempo real (SFXManager / AudioStreamGenerator).
+  • [b]Shaders:[/b] Shaders GLSL desarrollados a medida para el proyecto.
+  • [b]Texturas:[/b] Textura propia (nachito.jpg) e ícono de Godot Engine."
+fit_content = true
+
+[node name="HSeparator2" type="HSeparator" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="CloseCreditsButton" type="Button" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_font_sizes/font_size = 18
+text = "CERRAR"

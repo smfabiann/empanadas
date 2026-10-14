@@ -14,10 +14,6 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.6, 0.4, 0.9, 0.8)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_debug"]
 content_margin_left = 10.0
@@ -30,10 +26,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(0.4, 0.35, 0.6, 0.6)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victory"]
 content_margin_left = 30.0
@@ -46,10 +38,33 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.3, 0.88, 0.45, 0.9)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_day_panel"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.04, 0.03, 0.08, 0.85)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.45, 0.95, 0.75)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_bg"]
+content_margin_left = 2.0
+content_margin_top = 2.0
+content_margin_right = 2.0
+content_margin_bottom = 2.0
+bg_color = Color(0.08, 0.06, 0.14, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.4, 0.3, 0.6, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_fill"]
+bg_color = Color(0.3, 0.85, 0.45, 1)
 
 
 [node name="UI" type="CanvasLayer" unique_id=1164930736]
@@ -366,18 +381,39 @@ theme_override_colors/font_color = Color(0.9, 0.45, 0.9, 1)
 theme_override_font_sizes/font_size = 13
 text = "Anomalías: 0 activas"
 
-[node name="DayLabel" type="Label" parent="HUD" unique_id=1934817201]
+[node name="DayPanel" type="PanelContainer" parent="HUD" unique_id=1934817201]
 layout_mode = 0
 offset_left = 20.0
-offset_top = 12.0
-offset_right = 320.0
-offset_bottom = 38.0
+offset_top = 14.0
+offset_right = 420.0
+offset_bottom = 100.0
 mouse_filter = 2
-theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 0.75)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
-theme_override_constants/outline_size = 3
-theme_override_font_sizes/font_size = 15
-text = "Día 1  ·  Clientes 0/8"
+theme_override_styles/panel = SubResource("StyleBoxFlat_day_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/DayPanel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+
+[node name="DayLabel" type="Label" parent="HUD/DayPanel/VBoxContainer" unique_id=1934817220]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.98, 0.86, 0.35, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.08, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/font_size = 24
+text = "Day 1/3  ·  Customers 0/8"
+
+[node name="DayProgressBar" type="ProgressBar" parent="HUD/DayPanel/VBoxContainer" unique_id=1934817221]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_progress_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_progress_fill")
+theme_override_font_sizes/font_size = 12
+max_value = 8.0
+step = 1.0
+value = 0.0
 
 [node name="DayBanner" type="Label" parent="HUD" unique_id=1934817202]
 modulate = Color(1, 1, 1, 0)
