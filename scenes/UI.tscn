@@ -402,7 +402,7 @@ theme_override_colors/font_color = Color(0.98, 0.86, 0.35, 1)
 theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.08, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 24
-text = "Day 1/3  ·  Customers 0/8"
+text = "Día 1/3  ·  Clientes 0/8"
 
 [node name="DayProgressBar" type="ProgressBar" parent="HUD/DayPanel/VBoxContainer" unique_id=1934817221]
 custom_minimum_size = Vector2(0, 16)

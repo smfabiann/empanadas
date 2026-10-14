@@ -186,15 +186,15 @@ func _on_day_progress(attended: int, max_clients: int) -> void:
 	if day_label:
 		if not GameManager.day_active and GameManager.is_day_quota_reached():
 			if GameManager.max_days > 0:
-				day_label.text = "Day %d/%d  ·  Shift Complete - Go to bed" % [GameManager.current_day, GameManager.max_days]
+				day_label.text = "Día %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
 			else:
-				day_label.text = "Day %d  ·  Shift Complete - Go to bed" % GameManager.current_day
+				day_label.text = "Día %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
 			day_label.modulate = Color(0.4, 1.0, 0.5, 1.0)
 		elif GameManager.max_days > 0:
-			day_label.text = "Day %d/%d  ·  Customers %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
+			day_label.text = "Día %d/%d  ·  Clientes %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
 			day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		else:
-			day_label.text = "Day %d  ·  Customers %d/%d" % [GameManager.current_day, attended, max_clients]
+			day_label.text = "Día %d  ·  Clientes %d/%d" % [GameManager.current_day, attended, max_clients]
 			day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 
@@ -246,9 +246,9 @@ func _on_day_ended(_day: int) -> void:
 
 	if day_label:
 		if GameManager.max_days > 0:
-			day_label.text = "Day %d/%d  ·  Shift Complete - Go to bed" % [GameManager.current_day, GameManager.max_days]
+			day_label.text = "Día %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
 		else:
-			day_label.text = "Day %d  ·  Shift Complete - Go to bed" % GameManager.current_day
+			day_label.text = "Día %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
 		day_label.modulate = Color(0.4, 1.0, 0.5, 1.0)
 
 	_show_banner_text("SHIFT COMPLETE\nGo to bed to sleep")

@@ -43,14 +43,15 @@ func _ready() -> void:
 	GameManager.max_days = 3
 	GameManager.day_active = true
 	ui._on_day_progress(3, 8)
-	_assert(day_label.text.contains("Customers 3/8") or day_label.text.contains("3/8"), "DayLabel displays client progression (current: '%s')" % day_label.text)
+	_assert(day_label.text.contains("Clientes 3/8") or day_label.text.contains("3/8"), "DayLabel displays client progression in Spanish (current: '%s')" % day_label.text)
+	_assert(day_label.text.contains("Día 1/3") or day_label.text.contains("Día"), "DayLabel displays Día in Spanish")
 	_assert(progress_bar.max_value == 8.0, "DayProgressBar max_value is 8.0")
 
 	# Test 4: Quota reached
 	GameManager.day_active = false
 	GameManager.clients_attended_today = 8
 	ui._on_day_ended(1)
-	_assert(day_label.text.contains("Shift Complete"), "DayLabel indicates Shift Complete when day ends")
+	_assert(day_label.text.contains("Turno terminado") or day_label.text.contains("Ve a la cama"), "DayLabel indicates Shift Complete in Spanish when day ends")
 	_assert(progress_bar.value == progress_bar.max_value, "DayProgressBar is filled at shift completion")
 
 	print("=== TEST SUMMARY: %d PASSED, %d FAILED ===" % [_passed, _failed])
