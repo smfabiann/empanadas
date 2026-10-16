@@ -10,7 +10,7 @@ extends Node
 @export_range(0.0, 1.0, 0.05) var random_event_chance: float = 0.35
 
 @export_group("Depuración (Debug)")
-## Forzar un evento específico por ID (ej. "big_head", "fast_npc", "robber", "ufo"). Dejar vacío para modo normal.
+## Forzar un evento específico por ID (ej. "big_head", "fast_npc", "robber", "ufo", "talquino", "estafador_chip", "rappi"). Dejar vacío para modo normal.
 @export var debug_force_event: String = ""
 ## Si está activo, siempre lanza un evento (100% de probabilidad en sorteos)
 @export var debug_always_trigger_event: bool = false
@@ -64,6 +64,9 @@ func _register_default_events() -> void:
 	# Eventos estáticos / narrativos (heredan de StaticNPCEvent, weight = 0)
 	register_event(RobberEvent.new())
 	register_event(UfoEvent.new())
+	register_event(TalquinoEvent.new())
+	register_event(ScammerEvent.new())
+	register_event(RappiEvent.new())
 
 
 func register_event(event: NPCEvent) -> void:

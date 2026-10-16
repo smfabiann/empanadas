@@ -9,6 +9,8 @@ extends Interactable
 @export var mayo_count: int = 0
 @export var ketchup_count: int = 0
 @export var poop_count: int = 0
+## Pan mojado en la olla de caldo de vienesas (completo mojado estilo Talca)
+@export var is_mojado: bool = false
 
 ## Secuencia cronológica de capas añadidas
 var layers: Array[String] = []
@@ -147,6 +149,35 @@ func _ready() -> void:
 
 	_update_visuals()
 	_update_labels()
+	if is_mojado:
+		_apply_mojado_visual()
+
+
+## Moja el pan en la olla (solo una vez). Retorna true si se mojó.
+func mojar() -> bool:
+	if is_mojado:
+		return false
+	is_mojado = true
+	_apply_mojado_visual()
+	_update_labels()
+	if is_inside_tree() and bun_mesh:
+		var tween := create_tween()
+		tween.tween_property(bun_mesh, "scale", Vector3(1.08, 0.85, 1.08), 0.1)
+		tween.tween_property(bun_mesh, "scale", Vector3.ONE, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	return true
+
+
+## El pan mojado se ve más oscuro, brillante y empapado de caldo
+func _apply_mojado_visual() -> void:
+	if bun_mesh == null:
+		return
+	var wet := StandardMaterial3D.new()
+	wet.albedo_color = Color(0.62, 0.42, 0.2, 1)
+	wet.roughness = 0.15
+	wet.metallic_specular = 0.9
+	wet.clearcoat_enabled = true
+	wet.clearcoat = 1.0
+	bun_mesh.material = wet
 
 
 func _get_layers_container() -> Node3D:
@@ -386,6 +417,12 @@ func get_completo_name() -> String:
 	if poop_count > 1:
 		extras.append("%dx Caca" % poop_count)
 
+	if is_mojado:
+		if base_name.begins_with("Completo"):
+			base_name = base_name.replace("Completo", "Completo Mojado")
+		else:
+			base_name = "%s (mojado)" % base_name
+
 	if not extras.is_empty():
 		return "%s [%s]" % [base_name, ", ".join(extras)]
 	return base_name
@@ -402,17 +439,18 @@ func _update_labels() -> void:
 
 
 ## Compara la composición actual con los requisitos de una orden
-func matches_order(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ketchup: bool) -> bool:
+func matches_order(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ketchup: bool, req_mojado: bool = false) -> bool:
 	return (
 		has_sausage == req_sausage
 		and has_palta == req_palta
 		and has_mayo == req_mayo
 		and has_ketchup == req_ketchup
+		and is_mojado == req_mojado
 	)
 
 
 ## Retorna el motivo de desacuerdo si no coincide
-func get_match_error(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ketchup: bool) -> String:
+func get_match_error(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ketchup: bool, req_mojado: bool = false) -> String:
 	if not has_sausage and req_sausage:
 		return "¡Le falta la vienesa obligatoria!"
 	if has_sausage and not req_sausage:
@@ -429,6 +467,10 @@ func get_match_error(req_sausage: bool, req_palta: bool, req_mayo: bool, req_ket
 		return "¡Le falta el kétchup!"
 	if not req_ketchup and has_ketchup:
 		return "¡No pedí con kétchup!"
+	if req_mojado and not is_mojado:
+		return "¡Lo pedí MOJADO! Hay que mojar el pan en la olla"
+	if not req_mojado and is_mojado:
+		return "¡¿Por qué está mojado?! No lo pedí así"
 	return "¡La combinación no coincide!"
 
 

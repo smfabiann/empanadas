@@ -92,6 +92,10 @@ var order_req_sausage: bool = true
 var order_req_palta: bool = false
 var order_req_mayo: bool = false
 var order_req_ketchup: bool = false
+## Completo mojado en la olla (estilo Talca). Solo aparece cuando GameManager.mojados_unlocked.
+var order_req_mojado: bool = false
+## Probabilidad de que un cliente normal lo pida mojado una vez desbloqueada la olla
+const MOJADO_ORDER_CHANCE := 0.3
 
 const NPC_COLORS: Array[Color] = [
 	Color(0.6, 0.2, 0.5, 1), Color(0.2, 0.5, 0.6, 1), Color(0.7, 0.3, 0.2, 1),
@@ -239,10 +243,35 @@ func _generate_completo_order() -> void:
 	order_req_palta = order_recipe.get("palta", false)
 	order_req_mayo = order_recipe.get("mayo", false)
 	order_req_ketchup = order_recipe.get("ketchup", false)
+	order_req_mojado = GameManager.mojados_unlocked and randf() < MOJADO_ORDER_CHANCE
+	if order_req_mojado:
+		order_recipe = order_recipe.duplicate()
+		order_recipe["name"] = String(order_recipe.get("name", "Completo")) + " MOJADO"
+		order_recipe["desc"] = String(order_recipe.get("desc", "")) + " + pan mojado en la olla"
 
 	requested_item = ItemData.new()
 	requested_item.id = "completo"
 	requested_item.display_name = "%s (%s)" % [order_recipe.get("name", "Completo"), order_recipe.get("desc", "")]
+
+
+## Fija un pedido concreto (lo usan los eventos para pedir algo específico, ej. el Talquino)
+func set_completo_order(recipe_name: String, desc: String, palta: bool, mayo: bool, ketchup: bool, mojado: bool = false) -> void:
+	order_recipe = {"name": recipe_name, "desc": desc, "palta": palta, "mayo": mayo, "ketchup": ketchup}
+	order_req_sausage = true
+	order_req_palta = palta
+	order_req_mayo = mayo
+	order_req_ketchup = ketchup
+	order_req_mojado = mojado
+	requested_item = ItemData.new()
+	requested_item.id = "completo"
+	requested_item.display_name = "%s (%s)" % [recipe_name, desc]
+
+
+## Paciencia restante normalizada (0..1), usada para calcular la propina
+func get_patience_ratio() -> float:
+	if patience_time <= 0.0:
+		return 0.0
+	return clampf(patience_remaining / patience_time, 0.0, 1.0)
 
 
 func _update_patience(delta: float) -> void:
@@ -270,6 +299,8 @@ func _update_patience(delta: float) -> void:
 func _timeout() -> void:
 	if _is_order_resolved or state != State.WAITING:
 		return
+	if active_event and active_event.on_timeout(self):
+		return
 
 	_is_order_resolved = true
 	state = State.REACTING
@@ -294,6 +325,8 @@ func can_react_to_persiana() -> bool:
 func on_persiana_closed() -> void:
 	if not can_react_to_persiana():
 		return
+	if active_event and active_event.on_persiana_closed(self):
+		return
 	_timeout()
 
 
@@ -316,6 +349,11 @@ func receive_item(item_node: Interactable) -> void:
 		_die_from_poison(item_node)
 		return
 
+	# Los eventos pueden tomar el control de la entrega (estafador, Rappi, etc.)
+	if active_event and active_event.on_item_received(self, item_node):
+		return
+
+	var patience_ratio: float = get_patience_ratio()
 	_is_order_resolved = true
 	state = State.REACTING
 	is_at_counter = false
@@ -326,12 +364,12 @@ func receive_item(item_node: Interactable) -> void:
 		if not completo.is_valid_base():
 			is_correct = false
 			label.text = " ¡Le falta la vienesa obligatoria! "
-		elif completo.matches_order(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup):
+		elif completo.matches_order(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup, order_req_mojado):
 			is_correct = true
 			label.text = " ¡Buenísimo completo! "
 		else:
 			is_correct = false
-			var err: String = String(completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup))
+			var err: String = String(completo.get_match_error(order_req_sausage, order_req_palta, order_req_mayo, order_req_ketchup, order_req_mojado))
 			label.text = " %s " % err
 	else:
 		is_correct = false
@@ -362,6 +400,11 @@ func receive_item(item_node: Interactable) -> void:
 	item_node.queue_free()
 
 	GameManager.register_npc_served(is_correct)
+	if is_correct:
+		var payment: int = GameManager.calculate_completo_payment(patience_ratio, order_req_mojado)
+		GameManager.earn_money(payment, "Completo vendido")
+		SFXManager.play_cash()
+		label.text += "\n+$%s" % GameManager.format_money(payment)
 
 	await get_tree().create_timer(1.2).timeout
 	if is_instance_valid(self):
@@ -427,6 +470,40 @@ func _die_from_poison(item_node: Interactable) -> void:
 	await get_tree().create_timer(3.5).timeout
 	if is_instance_valid(self):
 		_fade_and_free()
+
+
+## Cierra la visita del cliente con un mensaje final (lo usan los eventos con lógica propia).
+## result: "correct" (atendido bien), "wrong" (atendido mal) o "left" (se fue sin ser atendido).
+func finish_visit(text: String, result: String = "correct", color: Color = Color(1, 0.94, 0.25, 1), delay: float = 1.6) -> void:
+	if _is_order_resolved:
+		return
+	_is_order_resolved = true
+	state = State.REACTING
+	is_at_counter = false
+	velocity = Vector3.ZERO
+	patience_bar_pivot.visible = false
+	label.visible = true
+	label.text = text
+	label.modulate = color
+
+	match result:
+		"correct":
+			GameManager.register_npc_served(true)
+		"wrong":
+			GameManager.register_npc_served(false)
+		_:
+			GameManager.register_npc_left()
+
+	if not is_inside_tree():
+		return
+	await get_tree().create_timer(delay).timeout
+	if is_instance_valid(self):
+		_start_leaving()
+
+
+## true si la visita ya terminó (pedido resuelto o cliente retirándose)
+func is_order_resolved() -> bool:
+	return _is_order_resolved
 
 
 func _start_leaving() -> void:

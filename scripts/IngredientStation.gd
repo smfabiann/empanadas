@@ -4,9 +4,10 @@ extends StaticBody3D
 ## Permite al jugador interactuar directamente en el mundo 3D sin menús ni interfaces 2D:
 ## - Toma el pan base
 ## - Aplica salchicha, palta, mayo o kétchup al completo que lleva en la mano
+## - Moja el pan del completo en la olla de caldo (completos mojados de Talca)
 ## - Descarta ítems equivocados en el basurero
 
-@export_enum("bread", "sausage", "palta", "mayo", "ketchup", "trash") var station_type: String = "bread"
+@export_enum("bread", "sausage", "palta", "mayo", "ketchup", "trash", "olla") var station_type: String = "bread"
 @export var station_name: String = "Pan"
 @export var completo_scene: PackedScene = preload("res://scenes/items/Completo.tscn")
 
@@ -80,6 +81,16 @@ func get_interaction_prompt(player: Node) -> Dictionary:
 			else:
 				return {"text": "Ítem no compatible con kétchup", "actionable": false}
 
+		"olla":
+			if is_completo:
+				if held.get("is_mojado") == true:
+					return {"text": "Este completo ya está mojado", "actionable": false}
+				return {"text": "[E] Mojar el pan en la olla (Completo Mojado)", "actionable": true}
+			elif held == null:
+				return {"text": "Olla de caldo: toma un completo para mojarlo", "actionable": false}
+			else:
+				return {"text": "Solo se mojan completos", "actionable": false}
+
 		"trash":
 			if held != null:
 				return {"text": "[E] Tirar a la basura", "actionable": true}
@@ -103,6 +114,12 @@ func interact(player: Node) -> void:
 				var added: bool = held.add_ingredient(station_type)
 				if added:
 					SFXManager.play_pickup()
+					_animate_station_bounce()
+
+		"olla":
+			if held != null and held.has_method("mojar"):
+				if held.mojar():
+					SFXManager.play_splash()
 					_animate_station_bounce()
 
 		"trash":
