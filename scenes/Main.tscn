@@ -26,6 +26,8 @@
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_lurker.tres" id="21_cctv_lurker"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_intruder.tres" id="22_cctv_intruder"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_power_failure.tres" id="23_cctv_power"]
+[ext_resource type="Resource" path="res://resources/anomalies/cctv_night_entity.tres" id="26_cctv_night_entity"]
+[ext_resource type="Resource" path="res://resources/anomalies/cctv_patio_thief.tres" id="27_cctv_patio_thief"]
 [ext_resource type="PackedScene" path="res://scenes/map/Neighborhood.tscn" id="24_neighborhood"]
 [ext_resource type="PackedScene" path="res://scenes/map/ShopDecor.tscn" id="25_shop_decor"]
 
@@ -407,7 +409,7 @@ robber_trigger_served_count = 1
 script = ExtResource("9_anomalies_manager")
 random_anomaly_chance = 0.4
 max_concurrent_anomalies = 3
-registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd"), ExtResource("17_aware"), ExtResource("21_cctv_lurker"), ExtResource("22_cctv_intruder"), ExtResource("23_cctv_power")])
+registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd"), ExtResource("17_aware"), ExtResource("21_cctv_lurker"), ExtResource("22_cctv_intruder"), ExtResource("23_cctv_power"), ExtResource("26_cctv_night_entity"), ExtResource("27_cctv_patio_thief")])
 
 [node name="CCTVZones" type="Node3D" parent="."]
 

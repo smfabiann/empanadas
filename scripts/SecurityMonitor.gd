@@ -268,6 +268,18 @@ func toggle_anomaly_vision() -> void:
 		if vp_cam:
 			vp_cam.environment = null
 
+	# Las cosas que solo existen en la visión nocturna viven en su propia capa de render
+	_set_night_vision_layer(is_anomaly_vision)
+
+
+## Enciende o apaga la capa de visión nocturna en todos los canales (y en la pantalla)
+func _set_night_vision_layer(enabled: bool) -> void:
+	for cam in channels:
+		if cam:
+			cam.set_cull_mask_value(CCTVCamera.NIGHT_VISION_RENDER_LAYER, enabled)
+	if security_camera and not channels.has(security_camera):
+		security_camera.set_cull_mask_value(CCTVCamera.NIGHT_VISION_RENDER_LAYER, enabled)
+
 
 func get_interaction_prompt(_player: Node3D) -> Dictionary:
 	if is_viewing:
@@ -348,10 +360,13 @@ func _update_overlay(delta: float) -> void:
 	var interference := get_channel_interference(get_current_channel_id())
 	var switch_noise := 1.0 if _switch_static > 0.0 else 0.0
 	_feed_material.set_shader_parameter("interference", maxf(interference, switch_noise))
+	_feed_material.set_shader_parameter("night_vision", 1.0 if is_anomaly_vision else 0.0)
 
 	# Etiqueta "● REC CAM 01 · FRENTE" con el punto de grabación parpadeando
 	var rec := "●" if int(_feed_clock * 2.0) % 2 == 0 else "  "
 	_channel_label.text = "%s REC   CAM %02d · %s" % [rec, current_channel + 1, get_current_channel_name()]
+	if is_anomaly_vision:
+		_channel_label.text += "\n◐ VISIÓN NOCTURNA"
 
 	# Reloj nocturno ficticio que avanza desde las 23:00
 	var day := 1

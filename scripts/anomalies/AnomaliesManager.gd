@@ -69,6 +69,8 @@ var _last_evaluated_spawn: int = -1
 
 
 func _ready() -> void:
+	# La persiana del mostrador avisa a este grupo al bajarse (ver `on_persiana_closed`)
+	add_to_group("anomalies_managers")
 	_setup_catalogue()
 	_connect_game_signals()
 	# Si se configuró una anomalía en 'debug_force_anomaly', dispararla inmediatamente al iniciar

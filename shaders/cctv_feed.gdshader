@@ -6,6 +6,8 @@ uniform float scanline_strength : hint_range(0.0, 1.0) = 0.18;
 uniform float grain_strength : hint_range(0.0, 1.0) = 0.06;
 uniform float vignette_strength : hint_range(0.0, 1.0) = 0.55;
 uniform float interference : hint_range(0.0, 1.0) = 0.0;
+// 1.0 mientras la visión nocturna [F] está activa: tiñe la imagen de verde fósforo
+uniform float night_vision : hint_range(0.0, 1.0) = 0.0;
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
@@ -28,6 +30,14 @@ void fragment() {
 	// Viñeta oscura en los bordes
 	float d = distance(uv, vec2(0.5));
 	alpha = max(alpha, smoothstep(0.45, 0.85, d) * vignette_strength);
+
+	// Visión nocturna: velo verde fósforo con algo más de grano
+	if (night_vision > 0.0) {
+		float vig = smoothstep(0.45, 0.85, d);
+		vec3 phosphor = vec3(0.15, 1.0, 0.3) * (0.75 + 0.25 * g) * (1.0 - vig);
+		col = mix(col, phosphor, night_vision * 0.85);
+		alpha = max(alpha, night_vision * 0.22);
+	}
 
 	// Interferencia: estática gruesa y bandas que saltan
 	if (interference > 0.0) {

@@ -151,8 +151,19 @@ Eventos que ocurren en zonas cubiertas por las cámaras de seguridad. **Solo se 
 | `cctv_lurker` | Silueta Acechando | Figura inmóvil; cada vez que vuelves a sintonizar su canal está más cerca de la cámara. | Día 1 |
 | `cctv_intruder` | Intruso en el Perímetro | Merodea de un lado a otro; si lo observas ~2 s, se detiene y mira a la cámara. | Día 2 |
 | `cctv_power_failure` | Fallo Eléctrico | Caja eléctrica chisporroteando; la señal de ese canal se llena de estática con cortes de "SIN SEÑAL". Los demás canales siguen normales. | Día 1 |
+| `cctv_night_entity` | Presencia en la Vereda | Figura pálida que se acerca a la ventana por la CAM 01. **Solo se ve con la visión nocturna `[F]`**; sin ella deja una leve interferencia. Bajar la persiana la ahuyenta; si llega a la ventana con la persiana arriba se pierden $4.000. | Día 1 |
+| `cctv_patio_thief` | Ladrón del Patio | Cruza el patio por la CAM 02, fuerza la puerta trasera y espera antes de entrar. **Cerrar la puerta trasera** mientras sigue afuera lo hace arrancar; si entra, roba $5.000. También es visible en el mundo. | Día 2 |
 
 Canales actuales: `frente` (CAM 01, cámara `Map/Shop/Camara`) y `patio` (CAM 02, cámara `Map/Shop/Camara2`).
+
+### Visión nocturna
+
+La capa de render 12 (`NightVision`) solo la ven las cámaras de CCTV mientras el jugador tiene la visión nocturna `[F]` activa en el monitor. Para que algo exista solo en la visión nocturna, llamar `CCTVCamera.make_night_vision_only(visuals_3d)` después de `super._init_anomaly()` (ver `CCTVNightEntityAnomaly`). `CCTVCamera.is_channel_viewed_with_night_vision(tree, channel_id)` dice si el jugador la está mirando así.
+
+### Persiana y puerta trasera
+
+- La persiana del mostrador está en el grupo `persiana` (`is_open`) y al bajarse llama `on_persiana_closed()` en todas las anomalías activas.
+- La puerta trasera (`scripts/map/BackDoor.gd`) está en el grupo `back_door`: `is_open`, `open()`, `close()`, `jiggle()` y la señal `door_toggled(is_open)`.
 
 ### Crear un evento de CCTV nuevo
 

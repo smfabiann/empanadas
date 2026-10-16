@@ -60,11 +60,12 @@ jump={
 
 [layer_names]
 
+3d_render/layer_11="CCTV"
+3d_render/layer_12="NightVision"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Interactable"
 3d_physics/layer_3="NPC"
 3d_physics/layer_4="Interaction"
-3d_render/layer_11="CCTV"
 
 [physics]
 
