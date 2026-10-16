@@ -26,6 +26,8 @@
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_lurker.tres" id="21_cctv_lurker"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_intruder.tres" id="22_cctv_intruder"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_power_failure.tres" id="23_cctv_power"]
+[ext_resource type="PackedScene" path="res://scenes/map/Neighborhood.tscn" id="24_neighborhood"]
+[ext_resource type="PackedScene" path="res://scenes/map/ShopDecor.tscn" id="25_shop_decor"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
@@ -248,11 +250,12 @@ material = SubResource("StandardMaterial3D_menu")
 [node name="MenuText" type="Label3D" parent="Map/Shop/MenuBoard2" unique_id=2033375694]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -0.06)
 modulate = Color(1, 0.95, 0.8, 1)
-text = "MENÚ COMPLETOS
+text = "MENÚ COMPLETOS  $3.000
 • Italiano (Palta+Mayo)
 • Con Todo (P+M+K)
 • Palta / Mayo / Kétchup
 • Mayo-Kétchup
+• MOJADO (olla) +$500
 (¡Base Vienesa obligatoria!)"
 font_size = 28
 outline_size = 4
@@ -354,6 +357,10 @@ material = SubResource("StandardMaterial3D_tem6s")
 
 [node name="Bed" parent="Map" unique_id=570794177 instance=ExtResource("11_bb450")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.3, -2.5)
+
+[node name="Neighborhood" parent="Map" instance=ExtResource("24_neighborhood")]
+
+[node name="ShopDecor" parent="Map" instance=ExtResource("25_shop_decor")]
 
 [node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
