@@ -30,6 +30,8 @@ Juego 3D retro con atmósfera de terror psicológico y anomalías. El jugador at
 - Evento estático del Ladrón (`RobberNPC`) con mecánica defensiva de persiana.
 - Gestor central de anomalías modulares (`AnomaliesManager` / `AnomalyBase` / `AnomalyData`, HU-ANOM-13).
 - Ejemplo práctico implementado: `GlitchSpriteAnomaly` al 3.er cliente.
+- Monitor de seguridad con canales CAM 01 (frente) y CAM 02 (patio trasero), HUD de grabación y filtro CCTV (HU-09).
+- Eventos visibles solo por CCTV: silueta acechando, intruso en el perímetro y fallo eléctrico (HU-10, Issue #13).
 - *Pendiente:* Nuevas anomalías visuales y auditivas (TASK-005, eventos de luces TASK-008).
 
 ### Fase 3: Audio y Atmósfera (⏳ Planificada)

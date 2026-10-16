@@ -64,6 +64,7 @@ jump={
 3d_physics/layer_2="Interactable"
 3d_physics/layer_3="NPC"
 3d_physics/layer_4="Interaction"
+3d_render/layer_11="CCTV"
 
 [physics]
 

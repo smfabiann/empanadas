@@ -39,6 +39,8 @@ func _ready() -> void:
 	floor_snap_length = 0.25
 	floor_constant_speed = true
 	camera.current = true
+	# Los eventos de cámara (HU-10) solo se ven a través del monitor de seguridad
+	CCTVCamera.hide_cctv_layer(camera)
 
 
 func _physics_process(delta: float) -> void:
@@ -285,6 +287,19 @@ func _input(event: InputEvent) -> void:
 				var collider = ray.get_collider()
 				if collider.has_method("toggle_anomaly_vision"):
 					collider.toggle_anomaly_vision()
+
+	# Cambiar de canal de CCTV mientras se mira el monitor ([A]/[D] o flechas)
+	if is_viewing_monitor and event is InputEventKey and event.pressed and not event.echo:
+		var step := 0
+		if event.physical_keycode == KEY_A or event.keycode == KEY_LEFT:
+			step = -1
+		elif event.physical_keycode == KEY_D or event.keycode == KEY_RIGHT:
+			step = 1
+		if step != 0:
+			var sec_script = load("res://scripts/SecurityMonitor.gd")
+			if sec_script and sec_script.active_monitor:
+				sec_script.active_monitor.switch_channel(step)
+				get_viewport().set_input_as_handled()
 
 
 func _handle_interact() -> void:

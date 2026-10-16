@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="AnomalyData" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/anomalies/AnomalyData.gd" id="1_data"]
+[ext_resource type="PackedScene" path="res://scenes/anomalies/CCTVLurker.tscn" id="2_scene"]
+
+[resource]
+script = ExtResource("1_data")
+id = "cctv_lurker"
+anomaly_name = "Silueta Acechando"
+description = "HU-10: una silueta inmóvil aparece en una zona cubierta por una cámara. Solo se ve por el monitor de seguridad y cada vez que el jugador vuelve a sintonizar ese canal está más cerca de la cámara."
+enabled = true
+tier = 1
+weight = 8.0
+trigger_exact_customer = -1
+trigger_min_served = 0
+min_day = 1
+max_day = 0
+trigger_once = false
+has_triggered = false
+anomaly_scene = ExtResource("2_scene")

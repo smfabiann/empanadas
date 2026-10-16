@@ -25,6 +25,7 @@ Arquitectura modular para crear y gestionar manifestaciones anómalas (ambiental
 | [`AnomaliesManager.gd`](./AnomaliesManager.gd) | Nodo central en `Main.tscn` (`AnomaliesManagement`). Gestiona catálogo, sorteo probabilístico, concurrencia y depuración. |
 | [`GlitchSpriteAnomaly.tscn`](../../scenes/anomalies/GlitchSpriteAnomaly.tscn) | Ejemplo funcional: distorsión espectral con shader de aberración cromática, parpadeo de luces, niebla y filtro rojo. |
 | [`Aware.tscn`](../../scenes/anomalies/Aware.tscn) / [`Aware.gd`](./Aware.gd) | Ejemplo reactivo: reacciona al monitor de seguridad (`SecurityMonitor.gd`), manifestando un ojo vigilante y señal visual solo cuando el jugador mira a través del monitor. |
+| [`cctv/CCTVEventAnomaly.gd`](./cctv/CCTVEventAnomaly.gd) | Base de los eventos visibles en CCTV (HU-10): se colocan en una `CCTVZone` y solo se ven a través del monitor de seguridad. Ver sección **Eventos de CCTV**. |
 
 ---
 
@@ -128,3 +129,41 @@ Para depurar en tiempo de ejecución mientras el juego está corriendo:
 > Solo se manifiesta visiblemente (el ojo rojo y alerta) cuando el jugador se acerca al monitor de seguridad en la pared izquierda e interactúa con **`[E]`** para ver las cámaras.
 > Si deseas ver el ojo directamente sin mirar el monitor para pruebas rápidas, selecciona el nodo instanciado `root/Main/AnomaliesManagement/Aware` en el árbol **Remote** y marca la casilla **`Debug Always Visible`**.
 
+---
+
+##  Eventos de CCTV (HU-10)
+
+Eventos que ocurren en zonas cubiertas por las cámaras de seguridad. **Solo se ven a través del monitor** (pantalla completa con `[E]`, o en la pantalla del monitor en la pared); la cámara del jugador no los renderiza. Obligan al jugador a revisar las cámaras periódicamente.
+
+### Piezas
+
+| Archivo | Rol |
+|---|---|
+| [`scripts/cctv/CCTVCamera.gd`](../cctv/CCTVCamera.gd) | Script de cada cámara de seguridad (un canal). Define `channel_id`, `channel_name` y `channel_index`. Ve la capa de render 11 (`CCTV`). |
+| [`scripts/cctv/CCTVZone.gd`](../cctv/CCTVZone.gd) | `Marker3D` bajo `Main/CCTVZones` que marca dónde puede aparecer un evento y qué canal lo cubre (`channel_id`). |
+| [`cctv/CCTVEventAnomaly.gd`](./cctv/CCTVEventAnomaly.gd) | Base: elige zona, se coloca en ella, mueve sus visuales a la capa de CCTV sin sombras y detecta cuándo el jugador sintoniza su canal. |
+| [`SecurityMonitor.gd`](../SecurityMonitor.gd) | Recorre los canales (`[A]/[D]` o flechas mientras se mira), muestra el HUD (`REC CAM 01 · FRENTE`, hora, filtro con líneas de escaneo) y aplica interferencia por canal. |
+
+### Eventos incluidos
+
+| ID | Nombre | Comportamiento | Desde |
+|---|---|---|---|
+| `cctv_lurker` | Silueta Acechando | Figura inmóvil; cada vez que vuelves a sintonizar su canal está más cerca de la cámara. | Día 1 |
+| `cctv_intruder` | Intruso en el Perímetro | Merodea de un lado a otro; si lo observas ~2 s, se detiene y mira a la cámara. | Día 2 |
+| `cctv_power_failure` | Fallo Eléctrico | Caja eléctrica chisporroteando; la señal de ese canal se llena de estática con cortes de "SIN SEÑAL". Los demás canales siguen normales. | Día 1 |
+
+Canales actuales: `frente` (CAM 01, cámara `Map/Shop/Camara`) y `patio` (CAM 02, cámara `Map/Shop/Camara2`).
+
+### Crear un evento de CCTV nuevo
+
+1. Escena heredada de `AnomalyBase.tscn` con `auto_execute_on_ready = false` y un script que extienda `CCTVEventAnomaly`.
+2. Construir los visuales dentro de `visuals_3d` en `_build_visuals()` (la base los pasa a la capa de CCTV). `CCTVEventAnomaly.build_silhouette()` crea una silueta lista para usar.
+3. Animar en `_update_event(delta)`; reaccionar con `_on_view_started()` / `_on_view_ended()`. `is_viewed_now`, `was_seen` y la señal `seen_on_cctv` dicen si el jugador lo está viendo.
+4. Para alterar la señal del canal, agregar el nodo al grupo `cctv_feed_modifiers` e implementar `get_feed_interference(channel_id) -> float` (0..1).
+5. Opcional: `allowed_channels` limita en qué canales puede aparecer. Para forzar una zona concreta, pasar `{"cctv_zone": nodo}` en el contexto de `force_trigger_anomaly()`.
+6. Crear su `AnomalyData` (`.tres`) y registrarlo en `AnomaliesManagement`.
+
+Para agregar una cámara nueva: crear un `Camera3D` con el script `CCTVCamera.gd` (canal e índice únicos) y agregar `Marker3D` con `CCTVZone.gd` dentro de su encuadre en `Main/CCTVZones`. El test `tests/test_cctv_events.tscn` verifica que cada zona esté dentro del encuadre de su cámara.
+
+> [!IMPORTANT]
+> La capa de render 11 (`CCTV`) está reservada: la cámara del jugador la oculta en `Player.gd`. Los visuales de un evento de CCTV no deben proyectar sombras (la base las desactiva), o se verían desde la vista del jugador.

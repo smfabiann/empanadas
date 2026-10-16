@@ -1,4 +1,16 @@
 # Lista de cambios
+- **Eventos Visibles en CCTV y Canales de Cámaras de Seguridad (HU-10, Issue #13)**:
+  - **Canales de CCTV (`scripts/cctv/CCTVCamera.gd` y `SecurityMonitor.gd`)**:
+    - El monitor de seguridad ahora recorre varias cámaras: CAM 01 `FRENTE` (cámara existente) y la nueva CAM 02 `PATIO TRASERO` (`Map/Shop/Camara2`), montada en la pared trasera exterior.
+    - Mientras se mira el monitor, `[A]/[D]` o las flechas cambian de canal con una ráfaga de estática; la visión nocturna `[F]` se mantiene al cambiar.
+    - HUD de grabación a pantalla completa: `● REC CAM 0X · NOMBRE`, reloj nocturno con el día en curso y filtro CCTV (`shaders/cctv_feed.gdshader`: líneas de escaneo, grano, viñeta e interferencia).
+  - **Eventos de cámara (`scripts/anomalies/cctv/`)**:
+    - Base `CCTVEventAnomaly` (extiende `AnomalyBase`): el evento se coloca en una zona `CCTVZone` (`Main/CCTVZones`, 3 en el frente y 3 en el patio) y sus visuales se renderizan solo en la capa 11 (`CCTV`), invisible para la cámara del jugador y sin sombras. Al resolverse se libera por completo, sin artefactos residuales.
+    - `cctv_lurker` (Silueta Acechando): se acerca a la cámara cada vez que se vuelve a sintonizar su canal.
+    - `cctv_intruder` (Intruso en el Perímetro, desde el Día 2): merodea y, si se le observa, se detiene y mira a la cámara.
+    - `cctv_power_failure` (Fallo Eléctrico): caja eléctrica con chispas; la señal de ese canal se llena de estática con cortes de "SIN SEÑAL" sin afectar al resto.
+    - Registrados en `AnomaliesManagement` con sus `.tres` en `resources/anomalies/`.
+  - **Suite de pruebas** [`tests/test_cctv_events.tscn`](tests/test_cctv_events.tscn): 44 pruebas (canales, capas de render, zonas dentro del encuadre de su cámara, comportamiento de cada evento y limpieza al resolverse).
 - **Evento Estático: El Visitante Espacial / OVNI (Día 2) y Entrada Cinemática Dramática**:
   - **Llegada Cinemática en 6 Fases (`UfoNPC.gd` y `scenes/events/static/UfoNPC.tscn`)**:
     - `PRE_RUMBLE`: Temblor de cámara *in crescendo* y zumbido cósmico procedural (nave aún oculta).
