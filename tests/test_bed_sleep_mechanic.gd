@@ -36,7 +36,7 @@ func _run_tests() -> void:
 	_assert_test(bed is BedInteraction, "Bed script is BedInteraction")
 	_assert_test(bed.get_node_or_null("PromptLayer/Prompt") != null, "Bed has PromptLayer/Prompt panel")
 	_assert_test(bed.get_node_or_null("PromptLayer/Prompt").visible == false, "Prompt panel is hidden initially")
-	_assert_test(bed.get_node_or_null("PromptLayer/Prompt/Label").text == "Press E to sleep", "Prompt label is in English ('Press E to sleep')")
+	_assert_test(bed.get_node_or_null("PromptLayer/Prompt/Label").text == "[E] Dormir hasta la próxima noche", "Prompt label is in Spanish ('[E] Dormir hasta la próxima noche')")
 	_assert_test(main_scene is MainScene, "Root scene node has MainScene script")
 	_assert_test("max_clients_per_day" in main_scene, "Main scene exposes max_clients_per_day in Inspector")
 	
@@ -88,7 +88,7 @@ func _run_tests() -> void:
 	var day_end_panel: Control = ui.get_node_or_null("HUD/DayEndPanel") as Control
 	_assert_test(day_end_panel != null, "DayEndPanel node exists in HUD")
 	_assert_test(day_end_panel.visible == false, "DayEndPanel popup menu is NOT shown (replaced by bed navigation)")
-	_assert_test(ui.day_banner != null and ui.day_banner.text.contains("SHIFT COMPLETE"), "Shift completed banner is displayed in English")
+	_assert_test(ui.day_banner != null and ui.day_banner.text.contains("TURNO TERMINADO"), "Shift completed banner is displayed in Spanish")
 
 	# Check subtle morning transition
 	var day_cycle = get_tree().root.get_node_or_null("DayCycle")
@@ -118,8 +118,9 @@ func _run_tests() -> void:
 	bed._refresh_prompt()
 	_assert_test(bed.get_node_or_null("PromptLayer/Prompt").visible == false, "Prompt hides automatically on new day start")
 
-	print("\n--- Test 7: Final Day Sleeping Triggers Victory ---")
+	print("\n--- Test 7: Final Day Sleeping Triggers Victory (con la plata del pasaje) ---")
 	GameManager.current_day = GameManager.max_days # Day 3
+	GameManager.savings = GameManager.escape_goal
 	GameManager.clients_attended_today = GameManager.max_clients_per_day
 	GameManager.end_day()
 	_assert_test(GameManager.is_final_day(), "GameManager reports is_final_day() == true")
@@ -132,7 +133,7 @@ func _run_tests() -> void:
 	var victory_panel: Control = ui.get_node_or_null("HUD/VictoryPanel") as Control
 	_assert_test(victory_panel != null and victory_panel.visible == true, "VictoryPanel is displayed")
 	var victory_title: Label = ui.get_node_or_null("HUD/VictoryPanel/VBoxContainer/VictoryTitle") as Label
-	_assert_test(victory_title != null and victory_title.text.contains("YOU WON"), "Victory title is in English: '%s'" % victory_title.text)
+	_assert_test(victory_title != null and victory_title.text.contains("ESCAPASTE"), "Victory title tells the escape ending: '%s'" % victory_title.text)
 
 	print("\n=== TEST SUMMARY: %d PASSED, %d FAILED ===" % [_passed_tests, _failed_tests])
 

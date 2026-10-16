@@ -67,6 +67,33 @@ border_color = Color(0.4, 0.3, 0.6, 0.5)
 bg_color = Color(0.3, 0.85, 0.45, 1)
 
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_savings_fill"]
+bg_color = Color(0.98, 0.78, 0.25, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hint"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08, 0.05, 0.02, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.98, 0.78, 0.25, 0.85)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_intro"]
+content_margin_left = 40.0
+content_margin_top = 22.0
+content_margin_right = 40.0
+content_margin_bottom = 22.0
+bg_color = Color(0.03, 0.02, 0.06, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.98, 0.78, 0.25, 0.85)
+
 [node name="UI" type="CanvasLayer" unique_id=1164930736]
 script = ExtResource("1_ui")
 
@@ -402,7 +429,7 @@ theme_override_colors/font_color = Color(0.98, 0.86, 0.35, 1)
 theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.08, 1)
 theme_override_constants/outline_size = 5
 theme_override_font_sizes/font_size = 24
-text = "Día 1/3  ·  Clientes 0/8"
+text = "Noche 1/3  ·  Clientes 0/8"
 
 [node name="DayProgressBar" type="ProgressBar" parent="HUD/DayPanel/VBoxContainer" unique_id=1934817221]
 custom_minimum_size = Vector2(0, 16)
@@ -414,6 +441,61 @@ theme_override_font_sizes/font_size = 12
 max_value = 8.0
 step = 1.0
 value = 0.0
+
+[node name="SavingsLabel" type="Label" parent="HUD/DayPanel/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
+theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.08, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 17
+text = "Pasaje: $20.000 / $50.000  ·  Faltan $30.000"
+
+[node name="SavingsBar" type="ProgressBar" parent="HUD/DayPanel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("StyleBoxFlat_progress_bg")
+theme_override_styles/fill = SubResource("StyleBoxFlat_savings_fill")
+max_value = 50000.0
+value = 20000.0
+show_percentage = false
+
+[node name="MoneyPopup" type="Label" parent="HUD"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 0
+offset_left = 30.0
+offset_top = 150.0
+offset_right = 520.0
+offset_bottom = 186.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.45, 1, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.04, 0.02, 1)
+theme_override_constants/outline_size = 6
+theme_override_font_sizes/font_size = 24
+text = "+$3.000"
+
+[node name="HintPanel" type="PanelContainer" parent="HUD"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -330.0
+offset_top = 160.0
+offset_right = 330.0
+offset_bottom = 220.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_hint")
+
+[node name="HintLabel" type="Label" parent="HUD/HintPanel"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.92, 0.7, 1)
+theme_override_font_sizes/font_size = 17
+text = "Pista"
+horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="DayBanner" type="Label" parent="HUD" unique_id=1934817202]
 modulate = Color(1, 1, 1, 0)
@@ -582,6 +664,13 @@ theme_override_font_sizes/font_size = 14
 text = " Clientes que se fueron: 0"
 horizontal_alignment = 1
 
+[node name="VictoryStatMoney" type="Label" parent="HUD/VictoryPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
+theme_override_font_sizes/font_size = 15
+text = " Plata juntada: $50.000 / $50.000"
+horizontal_alignment = 1
+
 [node name="VictoryRestartButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817230]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
@@ -591,5 +680,67 @@ text = " Reiniciar Partida"
 layout_mode = 2
 theme_override_font_sizes/font_size = 14
 text = "◀ Menú Principal"
+
+[node name="IntroPanel" type="ColorRect" parent="HUD"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.82)
+
+[node name="CenterContainer" type="CenterContainer" parent="HUD/IntroPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="IntroBox" type="PanelContainer" parent="HUD/IntroPanel/CenterContainer"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_intro")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/IntroPanel/CenterContainer/IntroBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="IntroTitle" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
+theme_override_font_sizes/font_size = 30
+text = "3 NOCHES PARA ESCAPAR"
+horizontal_alignment = 1
+
+[node name="IntroStory" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.88, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Historia"
+autowrap_mode = 3
+
+[node name="IntroSeparator" type="HSeparator" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+layout_mode = 2
+
+[node name="IntroHowToTitle" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
+theme_override_font_sizes/font_size = 18
+text = "CÓMO JUGAR"
+
+[node name="IntroHowTo" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_font_sizes/font_size = 14
+text = "Controles"
+autowrap_mode = 3
+
+[node name="IntroStartButton" type="Button" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Abrir el local (Noche 1)"
 
 [node name="PauseMenu" parent="." unique_id=578554817 instance=ExtResource("2_pause")]

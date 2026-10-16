@@ -43,6 +43,7 @@ func _update_high_score() -> void:
 
 func _on_play() -> void:
 	GameManager.reset_game()
+	GameManager.show_intro = true
 	get_tree().change_scene_to_file("res://scenes/Main.tscn")
 
 

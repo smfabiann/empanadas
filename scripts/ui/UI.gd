@@ -51,7 +51,28 @@ var _anomalies_mgr: Node = null
 @onready var victory_restart_button: Button = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryRestartButton")
 @onready var victory_menu_button: Button = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryMenuButton")
 
+@onready var victory_stat_money: Label = $HUD.get_node_or_null("VictoryPanel/VBoxContainer/VictoryStatMoney")
+
+# --- Narrativa y economía del escape ---
+@onready var savings_label: Label = $HUD.get_node_or_null("DayPanel/VBoxContainer/SavingsLabel")
+@onready var savings_bar: ProgressBar = $HUD.get_node_or_null("DayPanel/VBoxContainer/SavingsBar")
+@onready var money_popup: Label = $HUD.get_node_or_null("MoneyPopup")
+@onready var hint_panel: PanelContainer = $HUD.get_node_or_null("HintPanel")
+@onready var hint_label: Label = $HUD.get_node_or_null("HintPanel/HintLabel")
+@onready var intro_panel: Control = $HUD.get_node_or_null("IntroPanel")
+@onready var intro_story: Label = $HUD.get_node_or_null("IntroPanel/CenterContainer/IntroBox/VBoxContainer/IntroStory")
+@onready var intro_howto: Label = $HUD.get_node_or_null("IntroPanel/CenterContainer/IntroBox/VBoxContainer/IntroHowTo")
+@onready var intro_start_button: Button = $HUD.get_node_or_null("IntroPanel/CenterContainer/IntroBox/VBoxContainer/IntroStartButton")
+@onready var game_over_title: Label = $HUD.get_node_or_null("GameOverPanel/VBoxContainer/GameOverLabel")
+
+## Segundos que se muestra una pista en pantalla
+@export var hint_duration: float = 6.5
+
 var _banner_tween: Tween = null
+var _money_tween: Tween = null
+var _hint_tween: Tween = null
+
+const HOW_TO_PLAY_TEXT := "• Lee el pedido del cliente en la ventana y arma el completo en la cocina: PAN, luego VIENESA y los agregados (palta, mayo, kétchup).\n• Entrega mirando al cliente con [E]. Si lo pide MOJADO, moja el pan en la OLLA antes de entregarlo.\n• El botón del mostrador baja la PERSIANA: úsala contra ladrones y estafadores.\n• El MONITOR del escritorio muestra las cámaras: [A]/[D] cambia de cámara y [F] activa la visión nocturna.\n• Cuando atiendas a todos los clientes de la noche, ve a la CAMA a dormir.\n\nWASD mover · Ratón mirar · Shift correr · Espacio saltar · E usar / entregar · Q soltar · ESC pausa"
 
 
 func _ready() -> void:
@@ -109,12 +130,23 @@ func _ready() -> void:
 			GameManager.day_ended.connect(_on_day_ended)
 		if not GameManager.game_won.is_connected(_on_game_won):
 			GameManager.game_won.connect(_on_game_won)
+		if not GameManager.money_changed.is_connected(_on_money_changed):
+			GameManager.money_changed.connect(_on_money_changed)
+		if not GameManager.hint_requested.is_connected(show_hint):
+			GameManager.hint_requested.connect(show_hint)
 
 		GameManager.restore_environment(get_tree())
 		_update_spawned_count(GameManager.npcs_spawned)
 		_update_served_count(GameManager.npcs_served)
 		_on_day_progress(GameManager.clients_attended_today, GameManager.max_clients_per_day)
-		_show_day_banner(GameManager.current_day)
+		_update_savings()
+		if GameManager.show_intro:
+			_show_intro.call_deferred()
+		else:
+			_show_day_banner(GameManager.current_day)
+
+	if intro_start_button:
+		intro_start_button.pressed.connect(_on_intro_start_pressed)
 
 	_setup_anomalies_debug()
 	_update_debug_visibility()
@@ -186,15 +218,15 @@ func _on_day_progress(attended: int, max_clients: int) -> void:
 	if day_label:
 		if not GameManager.day_active and GameManager.is_day_quota_reached():
 			if GameManager.max_days > 0:
-				day_label.text = "Día %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
+				day_label.text = "Noche %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
 			else:
-				day_label.text = "Día %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
+				day_label.text = "Noche %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
 			day_label.modulate = Color(0.4, 1.0, 0.5, 1.0)
 		elif GameManager.max_days > 0:
-			day_label.text = "Día %d/%d  ·  Clientes %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
+			day_label.text = "Noche %d/%d  ·  Clientes %d/%d" % [GameManager.current_day, GameManager.max_days, attended, max_clients]
 			day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		else:
-			day_label.text = "Día %d  ·  Clientes %d/%d" % [GameManager.current_day, attended, max_clients]
+			day_label.text = "Noche %d  ·  Clientes %d/%d" % [GameManager.current_day, attended, max_clients]
 			day_label.modulate = Color(1.0, 1.0, 1.0, 1.0)
 
 
@@ -212,9 +244,16 @@ func _on_day_started(day: int, max_clients: int) -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
-## Muestra "DAY N" en pantalla con fade in / out (solo anima modulate)
+## Muestra "NOCHE N/M" y la plata que falta con fade in / out (solo anima modulate)
 func _show_day_banner(day: int) -> void:
-	_show_banner_text("DAY %d" % day)
+	var title := "NOCHE %d" % day
+	if GameManager.max_days > 0:
+		title = "NOCHE %d/%d" % [day, GameManager.max_days]
+	var missing: int = GameManager.get_money_missing()
+	if missing > 0:
+		_show_banner_text("%s\nFaltan $%s para el pasaje" % [title, GameManager.format_money(missing)])
+	else:
+		_show_banner_text("%s\n¡Ya tienes la plata del pasaje!" % title)
 
 
 ## Muestra un banner en pantalla con fade in / out
@@ -246,12 +285,17 @@ func _on_day_ended(_day: int) -> void:
 
 	if day_label:
 		if GameManager.max_days > 0:
-			day_label.text = "Día %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
+			day_label.text = "Noche %d/%d  ·  Turno terminado - Ve a la cama" % [GameManager.current_day, GameManager.max_days]
 		else:
-			day_label.text = "Día %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
+			day_label.text = "Noche %d  ·  Turno terminado - Ve a la cama" % GameManager.current_day
 		day_label.modulate = Color(0.4, 1.0, 0.5, 1.0)
 
-	_show_banner_text("SHIFT COMPLETE\nGo to bed to sleep")
+	var earned: int = GameManager.earned_today
+	var earned_text := "Ganaste $%s esta noche" % GameManager.format_money(earned) if earned >= 0 else "Perdiste $%s esta noche" % GameManager.format_money(-earned)
+	if GameManager.is_final_day():
+		_show_banner_text("TURNO TERMINADO\n%s · Ve a la cama: el bus sale al amanecer" % earned_text)
+	else:
+		_show_banner_text("TURNO TERMINADO\n%s · Ve a la cama a dormir" % earned_text)
 	SFXManager.play_correct()
 
 
@@ -271,20 +315,22 @@ func _on_game_won(stats: Dictionary) -> void:
 	var days_survived: int = int(stats.get("day", 3))
 	var max_d: int = int(stats.get("max_days", 3))
 	if victory_title:
-		victory_title.text = " YOU WON! "
+		victory_title.text = " ¡ESCAPASTE! "
 	if victory_subtitle:
-		victory_subtitle.text = "You survived all %d night shifts!" % days_survived
+		victory_subtitle.text = "Sobreviviste las %d noches y juntaste la plata del pasaje." % days_survived
 	if victory_lore:
-		victory_lore.text = "You managed to survive the night and safely finish your job."
+		victory_lore.text = "Al amanecer cierras el local, le dejas las llaves al tío y te subes al primer bus. Por la ventana, la ciudad se queda atrás... y algo en el cielo te sigue mirando."
 
 	if victory_stat_days:
-		victory_stat_days.text = " Days survived: %d/%d" % [days_survived, max_d]
+		victory_stat_days.text = " Noches trabajadas: %d/%d" % [days_survived, max_d]
 	if victory_stat_served:
-		victory_stat_served.text = " Correct orders: %d" % int(stats.get("total_correct", 0))
+		victory_stat_served.text = " Pedidos correctos: %d" % int(stats.get("total_correct", 0))
 	if victory_stat_wrong:
-		victory_stat_wrong.text = " Wrong orders: %d" % int(stats.get("total_wrong", 0))
+		victory_stat_wrong.text = " Pedidos equivocados: %d" % int(stats.get("total_wrong", 0))
 	if victory_stat_lost:
-		victory_stat_lost.text = " Customers who left: %d" % int(stats.get("total_lost", 0))
+		victory_stat_lost.text = " Clientes que se fueron: %d" % int(stats.get("total_lost", 0))
+	if victory_stat_money:
+		victory_stat_money.text = " Plata juntada: $%s / $%s" % [GameManager.format_money(int(stats.get("savings", 0))), GameManager.format_money(int(stats.get("escape_goal", 0)))]
 
 	if victory_panel:
 		victory_panel.modulate.a = 0.0
@@ -345,9 +391,13 @@ func _on_game_over(reason: String) -> void:
 
 	if final_score_label:
 		final_score_label.text = reason if reason != "" else "Has sido eliminado."
+		final_score_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+
+	if game_over_title:
+		game_over_title.text = "TE QUEDASTE EN LA CIUDAD" if reason.begins_with("No juntaste") else "FIN DEL JUEGO"
 
 	if delivery_stat_label:
-		delivery_stat_label.text = " Clientes atendidos: %d  ·  Día %d" % [GameManager.npcs_served, GameManager.current_day]
+		delivery_stat_label.text = " Clientes atendidos: %d  ·  Noche %d  ·  Ahorros $%s / $%s" % [GameManager.npcs_served, GameManager.current_day, GameManager.format_money(GameManager.savings), GameManager.format_money(GameManager.escape_goal)]
 
 	if day_end_panel:
 		day_end_panel.visible = false
@@ -377,3 +427,93 @@ func _on_menu_pressed() -> void:
 		GameManager.restore_environment(get_tree())
 		GameManager.reset_game()
 	get_tree().change_scene_to_file("res://scenes/ui/MainMenu.tscn")
+
+
+# =========================================================
+#  NARRATIVA: INTRO, AHORROS Y PISTAS
+# =========================================================
+
+## Texto de la historia de la intro (usa la meta configurada en GameManager)
+func get_intro_story() -> String:
+	return "La ciudad se está poniendo rara: luces en el cielo, gente que no parece gente y cosas que solo se ven por las cámaras. Ya decidiste irte. El bus sale al amanecer del cuarto día y entre el pasaje y lo justo para empezar de nuevo necesitas $%s. Tienes ahorrados $%s.\n\nTu tío te dejó a cargo de su local de completos por %d noches. Cada completo bien hecho son $%s, más propina si atiendes rápido. Junta los $%s que faltan... y que nadie te quite la plata." % [
+		GameManager.format_money(GameManager.escape_goal),
+		GameManager.format_money(GameManager.savings),
+		maxi(GameManager.max_days, 1),
+		GameManager.format_money(GameManager.COMPLETO_PRICE),
+		GameManager.format_money(GameManager.get_money_missing())
+	]
+
+
+func _show_intro() -> void:
+	if intro_panel == null:
+		GameManager.show_intro = false
+		_show_day_banner(GameManager.current_day)
+		return
+	GameManager.intro_active = true
+	if intro_story:
+		intro_story.text = get_intro_story()
+	if intro_howto:
+		intro_howto.text = HOW_TO_PLAY_TEXT
+	intro_panel.visible = true
+	if crosshair:
+		crosshair.visible = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+
+func _on_intro_start_pressed() -> void:
+	if intro_panel:
+		intro_panel.visible = false
+	if crosshair:
+		crosshair.visible = true
+	GameManager.finish_intro()
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	_show_day_banner(GameManager.current_day)
+	SFXManager.play_correct()
+
+
+func _update_savings() -> void:
+	var goal: int = GameManager.escape_goal
+	var current: int = GameManager.savings
+	var missing: int = GameManager.get_money_missing()
+	if savings_label:
+		if missing > 0:
+			savings_label.text = "Pasaje: $%s / $%s  ·  Faltan $%s" % [GameManager.format_money(current), GameManager.format_money(goal), GameManager.format_money(missing)]
+			savings_label.modulate = Color(1, 1, 1, 1)
+		else:
+			savings_label.text = "Pasaje: $%s / $%s  ·  ¡Listo para escapar!" % [GameManager.format_money(current), GameManager.format_money(goal)]
+			savings_label.modulate = Color(0.6, 1.0, 0.6, 1)
+	if savings_bar:
+		savings_bar.max_value = maxi(goal, 1)
+		var tween := create_tween()
+		tween.tween_property(savings_bar, "value", float(mini(current, goal)), 0.35).set_ease(Tween.EASE_OUT)
+
+
+func _on_money_changed(_savings: int, delta: int, reason: String) -> void:
+	_update_savings()
+	if delta == 0 or money_popup == null:
+		return
+	var sign_text := "+" if delta > 0 else "-"
+	money_popup.text = "%s$%s  %s" % [sign_text, GameManager.format_money(absi(delta)), reason]
+	money_popup.add_theme_color_override("font_color", Color(0.45, 1.0, 0.5, 1) if delta > 0 else Color(1.0, 0.35, 0.3, 1))
+	if _money_tween and _money_tween.is_valid():
+		_money_tween.kill()
+	money_popup.modulate.a = 1.0
+	_money_tween = create_tween()
+	_money_tween.tween_interval(1.6)
+	_money_tween.tween_property(money_popup, "modulate:a", 0.0, 0.8)
+
+
+## Muestra una pista temporal en pantalla (eventos, tutoriales)
+func show_hint(text: String) -> void:
+	if hint_panel == null or hint_label == null:
+		return
+	hint_label.text = text
+	hint_panel.visible = true
+	hint_panel.modulate.a = 0.0
+	if _hint_tween and _hint_tween.is_valid():
+		_hint_tween.kill()
+	_hint_tween = create_tween()
+	_hint_tween.tween_property(hint_panel, "modulate:a", 1.0, 0.3)
+	_hint_tween.tween_interval(hint_duration)
+	_hint_tween.tween_property(hint_panel, "modulate:a", 0.0, 0.6)
+	_hint_tween.tween_callback(func(): hint_panel.visible = false)

@@ -27,7 +27,21 @@ extends Node3D
 			spawner.max_days = max_days
 
 
+@export_group("Narrativa: plata para escapar")
+## Ahorros con los que parte el jugador
+@export var starting_savings: int = 20000
+## Plata total necesaria para el pasaje (meta para ganar al final de la última noche)
+@export var escape_goal: int = 50000
+## Ambiente sonoro nocturno procedural (zumbido, ciudad lejana, grillos)
+@export var play_ambience: bool = true
+
+
 func _ready() -> void:
+	if GameManager:
+		GameManager.set_economy(starting_savings, escape_goal)
+	if play_ambience and SFXManager and SFXManager.has_method("start_ambience"):
+		SFXManager.start_ambience()
+
 	var spawner = get_node_or_null("NPCSpawner")
 	if spawner:
 		# If user customized NPCSpawner in the Inspector, respect it

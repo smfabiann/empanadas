@@ -91,9 +91,18 @@ func _ready() -> void:
 		GameManager.day_started.connect(_on_day_started)
 	if not GameManager.game_won.is_connected(_on_game_won):
 		GameManager.game_won.connect(_on_game_won)
+	if not GameManager.intro_finished.is_connected(_on_intro_finished):
+		GameManager.intro_finished.connect(_on_intro_finished)
 
 	# Spawnear el primer NPC tras un breve delay
 	timer.start(first_client_delay)
+
+
+## La Noche 1 parte cuando el jugador cierra la intro narrativa
+func _on_intro_finished() -> void:
+	if timer and is_inside_tree():
+		timer.stop()
+		timer.start(first_client_delay)
 
 
 func _on_game_won(_stats: Dictionary) -> void:

@@ -107,7 +107,7 @@ theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
 
 [node name="SubtitleLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
-text = "Atiende el local  ·  Sirve rápido  ·  Sobrevive"
+text = "3 noches  ·  Junta la plata del pasaje  ·  Escapa de la ciudad"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 15
 theme_override_colors/font_color = Color(0.78, 0.72, 0.88, 1)
@@ -157,7 +157,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_controls")
 
 [node name="ControlsLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/ControlsPanel"]
 layout_mode = 2
-text = "WASD: Mover  |  Shift: Correr  |  E: Recoger / Entregar\nQ: Soltar Objeto  |  ESC: Pausa"
+text = "WASD: Mover  |  Shift: Correr  |  Espacio: Saltar  |  E: Usar / Entregar\nQ: Soltar  |  Monitor: A/D cambia cámara, F visión nocturna  |  ESC: Pausa"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 1)
