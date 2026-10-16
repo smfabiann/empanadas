@@ -1,4 +1,25 @@
 # Lista de cambios
+- **Juego completo: narrativa de 3 noches para escapar, olla de completos mojados, nuevos eventos y barrio (HU-05, HU-08, HU-14, HU-15, HU-16)**:
+  - **Narrativa y meta (HU-05)**:
+    - Intro al empezar desde el menú (`HUD/IntroPanel`): la ciudad se está poniendo rara, el bus sale al amanecer del cuarto día y el pasaje cuesta $50.000; partes con $20.000 y trabajas 3 noches en el local de completos del tío. Incluye "Cómo jugar" con la mecánica principal y todos los controles. Mientras está abierta, el jugador no se mueve y no llegan clientes (`GameManager.intro_active`, señal `intro_finished`).
+    - Economía en `GameManager`: `savings`, `escape_goal`, `earn_money()`, `lose_money()`, `calculate_completo_payment()` (completo $3.000 + hasta $1.000 de propina por rapidez, +$500 si es mojado) y señal `money_changed`. Meta y ahorros iniciales configurables en el Inspector de `Main.tscn`.
+    - Final según la plata: al dormir la última noche, si juntaste el pasaje escapas (`VictoryPanel` con la plata juntada); si no, termina en derrota "Te quedaste en la ciudad".
+    - El ladrón ahora se lleva $5.000 de la caja si le entregas todo; bajarle la persiana protege la plata.
+    - HUD: "Noche N/3", ahorros del pasaje con barra, aviso "+$3.000 / -$5.000" y pistas contextuales (`GameManager.request_hint`). Banners y pantalla de victoria pasan a español ("NOCHE 1/3 · Faltan $X", "TURNO TERMINADO", "¡ESCAPASTE!"), y la cama dice "[E] Dormir hasta la próxima noche".
+  - **Olla y completos mojados estilo Talca (HU-14)**:
+    - Nueva estación `olla` (`IngredientStation.gd`, `Station_Olla` en `KitchenStations.tscn`): cocinilla con olla de caldo, vienesas, vapor y llama. Con un completo en la mano, `[E]` moja el pan (`CompletoItem.mojar()`, pan oscuro y brillante, nombre "Completo Mojado ...").
+    - `matches_order()` / `get_match_error()` aceptan `req_mojado` (opcional, retrocompatible).
+    - Evento **El Talquino** (Noche 2): pide un Italiano MOJADO y desbloquea que otros clientes pidan mojados (30%).
+  - **Evento El Estafador del chip de perro (HU-15)**, Noche 3: un falso inspector dice que las vienesas tienen chip de perro y exige $5.000. Bajar la persiana lo echa sin perder nada; entregarle algo o dejar que se le acabe la paciencia cuesta $5.000.
+  - **Evento Repartidor de Rappi (HU-16)**, Noche 3: llega en moto con mochila térmica y retira un pedido de 2 completos que se entregan en orden contra el reloj de la app; un completo equivocado descuenta 8 s. Paga cada completo más $1.500 de propina.
+  - **Ganchos nuevos de eventos** (`NPCEvent.gd`): `on_item_received`, `on_persiana_closed` y `on_timeout`; ayudas `NPC.set_completo_order()` y `NPC.finish_visit()`.
+  - **Escenario (HU-08)**:
+    - `scenes/map/Neighborhood.tscn`: cuadra de enfrente y edificios a los costados generados por `CityBlock.gd` (`@tool`, determinista por semilla) con ventanas encendidas, cortinas metálicas, letreros de locales (botillería, farmacia, fuente de soda...) iluminados; letrero de neón "COMPLETOS" que parpadea (`NeonSign.gd`), paradero con afiche de la Terminal de buses (06:00 AM), auto estacionado, árboles y postes con cables.
+    - `scenes/map/ShopDecor.tscn` (`EscapeProgressProp.gd`): alcancía en el mostrador que se llena con los ahorros y calendario en la pared con la noche actual.
+    - Menú del local con precios y la opción MOJADO.
+  - **Audio**: ambiente nocturno procedural en loop (zumbido eléctrico, ciudad lejana y grillos; `SFXManager.start_ambience()`), caja registradora, chapoteo de la olla, bocina de moto y sonido de plata perdida.
+  - **Menú principal**: subtítulo con la meta ("3 noches · Junta la plata del pasaje · Escapa de la ciudad") y controles completos.
+  - **Pruebas**: nueva suite [`tests/test_escape_events.tscn`](tests/test_escape_events.tscn) con 66 pruebas (formato de plata, pagos, finales con y sin plata, intro, completo mojado, olla, calendario de eventos, Talquino, Estafador y Rappi). `test_bed_sleep_mechanic` y `test_day_counter` actualizados a los textos en español.
 - **Eventos Visibles en CCTV y Canales de Cámaras de Seguridad (HU-10, Issue #13)**:
   - **Canales de CCTV (`scripts/cctv/CCTVCamera.gd` y `SecurityMonitor.gd`)**:
     - El monitor de seguridad ahora recorre varias cámaras: CAM 01 `FRENTE` (cámara existente) y la nueva CAM 02 `PATIO TRASERO` (`Map/Shop/Camara2`), montada en la pared trasera exterior.
