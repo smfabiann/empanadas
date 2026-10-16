@@ -8,69 +8,69 @@
   - **Pruebas**: nueva suite [`tests/test_night_vision_and_patio_thief.tscn`](tests/test_night_vision_and_patio_thief.tscn) con 44 pruebas (capas de visión nocturna, presencia ahuyentada y con ataque, ladrón ahuyentado y con robo, encuadres de la CAM 01 y CAM 02).
 - **Juego completo: narrativa de 3 noches para escapar, olla de completos mojados, nuevos eventos y barrio (HU-05, HU-08, HU-14, HU-15, HU-16)**:
   - **Narrativa y meta (HU-05)**:
-    - Intro al empezar desde el menú (`HUD/IntroPanel`): la ciudad se está poniendo rara, el bus sale al amanecer del cuarto día y el pasaje cuesta $50.000; partes con $20.000 y trabajas 3 noches en el local de completos del tío. Incluye "Cómo jugar" con la mecánica principal y todos los controles. Mientras está abierta, el jugador no se mueve y no llegan clientes (`GameManager.intro_active`, señal `intro_finished`).
-    - Economía en `GameManager`: `savings`, `escape_goal`, `earn_money()`, `lose_money()`, `calculate_completo_payment()` (completo $3.000 + hasta $1.000 de propina por rapidez, +$500 si es mojado) y señal `money_changed`. Meta y ahorros iniciales configurables en el Inspector de `Main.tscn`.
-    - Final según la plata: al dormir la última noche, si juntaste el pasaje escapas (`VictoryPanel` con la plata juntada); si no, termina en derrota "Te quedaste en la ciudad".
-    - El ladrón ahora se lleva $5.000 de la caja si le entregas todo; bajarle la persiana protege la plata.
-    - HUD: "Noche N/3", ahorros del pasaje con barra, aviso "+$3.000 / -$5.000" y pistas contextuales (`GameManager.request_hint`). Banners y pantalla de victoria pasan a español ("NOCHE 1/3 · Faltan $X", "TURNO TERMINADO", "¡ESCAPASTE!"), y la cama dice "[E] Dormir hasta la próxima noche".
+	- Intro al empezar desde el menú (`HUD/IntroPanel`): la ciudad se está poniendo rara, el bus sale al amanecer del cuarto día y el pasaje cuesta $50.000; partes con $20.000 y trabajas 3 noches en el local de completos del tío. Incluye "Cómo jugar" con la mecánica principal y todos los controles. Mientras está abierta, el jugador no se mueve y no llegan clientes (`GameManager.intro_active`, señal `intro_finished`).
+	- Economía en `GameManager`: `savings`, `escape_goal`, `earn_money()`, `lose_money()`, `calculate_completo_payment()` (completo $3.000 + hasta $1.000 de propina por rapidez, +$500 si es mojado) y señal `money_changed`. Meta y ahorros iniciales configurables en el Inspector de `Main.tscn`.
+	- Final según la plata: al dormir la última noche, si juntaste el pasaje escapas (`VictoryPanel` con la plata juntada); si no, termina en derrota "Te quedaste en la ciudad".
+	- El ladrón ahora se lleva $5.000 de la caja si le entregas todo; bajarle la persiana protege la plata.
+	- HUD: "Noche N/3", ahorros del pasaje con barra, aviso "+$3.000 / -$5.000" y pistas contextuales (`GameManager.request_hint`). Banners y pantalla de victoria pasan a español ("NOCHE 1/3 · Faltan $X", "TURNO TERMINADO", "¡ESCAPASTE!"), y la cama dice "[E] Dormir hasta la próxima noche".
   - **Olla y completos mojados estilo Talca (HU-14)**:
-    - Nueva estación `olla` (`IngredientStation.gd`, `Station_Olla` en `KitchenStations.tscn`): cocinilla con olla de caldo, vienesas, vapor y llama. Con un completo en la mano, `[E]` moja el pan (`CompletoItem.mojar()`, pan oscuro y brillante, nombre "Completo Mojado ...").
-    - `matches_order()` / `get_match_error()` aceptan `req_mojado` (opcional, retrocompatible).
-    - Evento **El Talquino** (Noche 2): pide un Italiano MOJADO y desbloquea que otros clientes pidan mojados (30%).
+	- Nueva estación `olla` (`IngredientStation.gd`, `Station_Olla` en `KitchenStations.tscn`): cocinilla con olla de caldo, vienesas, vapor y llama. Con un completo en la mano, `[E]` moja el pan (`CompletoItem.mojar()`, pan oscuro y brillante, nombre "Completo Mojado ...").
+	- `matches_order()` / `get_match_error()` aceptan `req_mojado` (opcional, retrocompatible).
+	- Evento **El Talquino** (Noche 2): pide un Italiano MOJADO y desbloquea que otros clientes pidan mojados (30%).
   - **Evento El Estafador del chip de perro (HU-15)**, Noche 3: un falso inspector dice que las vienesas tienen chip de perro y exige $5.000. Bajar la persiana lo echa sin perder nada; entregarle algo o dejar que se le acabe la paciencia cuesta $5.000.
   - **Evento Repartidor de Rappi (HU-16)**, Noche 3: llega en moto con mochila térmica y retira un pedido de 2 completos que se entregan en orden contra el reloj de la app; un completo equivocado descuenta 8 s. Paga cada completo más $1.500 de propina.
   - **Ganchos nuevos de eventos** (`NPCEvent.gd`): `on_item_received`, `on_persiana_closed` y `on_timeout`; ayudas `NPC.set_completo_order()` y `NPC.finish_visit()`.
   - **Escenario (HU-08)**:
-    - `scenes/map/Neighborhood.tscn`: cuadra de enfrente y edificios a los costados generados por `CityBlock.gd` (`@tool`, determinista por semilla) con ventanas encendidas, cortinas metálicas, letreros de locales (botillería, farmacia, fuente de soda...) iluminados; letrero de neón "COMPLETOS" que parpadea (`NeonSign.gd`), paradero con afiche de la Terminal de buses (06:00 AM), auto estacionado, árboles y postes con cables.
-    - `scenes/map/ShopDecor.tscn` (`EscapeProgressProp.gd`): alcancía en el mostrador que se llena con los ahorros y calendario en la pared con la noche actual.
-    - Menú del local con precios y la opción MOJADO.
+	- `scenes/map/Neighborhood.tscn`: cuadra de enfrente y edificios a los costados generados por `CityBlock.gd` (`@tool`, determinista por semilla) con ventanas encendidas, cortinas metálicas, letreros de locales (botillería, farmacia, fuente de soda...) iluminados; letrero de neón "COMPLETOS" que parpadea (`NeonSign.gd`), paradero con afiche de la Terminal de buses (06:00 AM), auto estacionado, árboles y postes con cables.
+	- `scenes/map/ShopDecor.tscn` (`EscapeProgressProp.gd`): alcancía en el mostrador que se llena con los ahorros y calendario en la pared con la noche actual.
+	- Menú del local con precios y la opción MOJADO.
   - **Audio**: ambiente nocturno procedural en loop (zumbido eléctrico, ciudad lejana y grillos; `SFXManager.start_ambience()`), caja registradora, chapoteo de la olla, bocina de moto y sonido de plata perdida.
   - **Menú principal**: subtítulo con la meta ("3 noches · Junta la plata del pasaje · Escapa de la ciudad") y controles completos.
   - **Pruebas**: nueva suite [`tests/test_escape_events.tscn`](tests/test_escape_events.tscn) con 66 pruebas (formato de plata, pagos, finales con y sin plata, intro, completo mojado, olla, calendario de eventos, Talquino, Estafador y Rappi). `test_bed_sleep_mechanic` y `test_day_counter` actualizados a los textos en español.
 - **Eventos Visibles en CCTV y Canales de Cámaras de Seguridad (HU-10, Issue #13)**:
   - **Canales de CCTV (`scripts/cctv/CCTVCamera.gd` y `SecurityMonitor.gd`)**:
-    - El monitor de seguridad ahora recorre varias cámaras: CAM 01 `FRENTE` (cámara existente) y la nueva CAM 02 `PATIO TRASERO` (`Map/Shop/Camara2`), montada en la pared trasera exterior.
-    - Mientras se mira el monitor, `[A]/[D]` o las flechas cambian de canal con una ráfaga de estática; la visión nocturna `[F]` se mantiene al cambiar.
-    - HUD de grabación a pantalla completa: `● REC CAM 0X · NOMBRE`, reloj nocturno con el día en curso y filtro CCTV (`shaders/cctv_feed.gdshader`: líneas de escaneo, grano, viñeta e interferencia).
+	- El monitor de seguridad ahora recorre varias cámaras: CAM 01 `FRENTE` (cámara existente) y la nueva CAM 02 `PATIO TRASERO` (`Map/Shop/Camara2`), montada en la pared trasera exterior.
+	- Mientras se mira el monitor, `[A]/[D]` o las flechas cambian de canal con una ráfaga de estática; la visión nocturna `[F]` se mantiene al cambiar.
+	- HUD de grabación a pantalla completa: `● REC CAM 0X · NOMBRE`, reloj nocturno con el día en curso y filtro CCTV (`shaders/cctv_feed.gdshader`: líneas de escaneo, grano, viñeta e interferencia).
   - **Eventos de cámara (`scripts/anomalies/cctv/`)**:
-    - Base `CCTVEventAnomaly` (extiende `AnomalyBase`): el evento se coloca en una zona `CCTVZone` (`Main/CCTVZones`, 3 en el frente y 3 en el patio) y sus visuales se renderizan solo en la capa 11 (`CCTV`), invisible para la cámara del jugador y sin sombras. Al resolverse se libera por completo, sin artefactos residuales.
-    - `cctv_lurker` (Silueta Acechando): se acerca a la cámara cada vez que se vuelve a sintonizar su canal.
-    - `cctv_intruder` (Intruso en el Perímetro, desde el Día 2): merodea y, si se le observa, se detiene y mira a la cámara.
-    - `cctv_power_failure` (Fallo Eléctrico): caja eléctrica con chispas; la señal de ese canal se llena de estática con cortes de "SIN SEÑAL" sin afectar al resto.
-    - Registrados en `AnomaliesManagement` con sus `.tres` en `resources/anomalies/`.
+	- Base `CCTVEventAnomaly` (extiende `AnomalyBase`): el evento se coloca en una zona `CCTVZone` (`Main/CCTVZones`, 3 en el frente y 3 en el patio) y sus visuales se renderizan solo en la capa 11 (`CCTV`), invisible para la cámara del jugador y sin sombras. Al resolverse se libera por completo, sin artefactos residuales.
+	- `cctv_lurker` (Silueta Acechando): se acerca a la cámara cada vez que se vuelve a sintonizar su canal.
+	- `cctv_intruder` (Intruso en el Perímetro, desde el Día 2): merodea y, si se le observa, se detiene y mira a la cámara.
+	- `cctv_power_failure` (Fallo Eléctrico): caja eléctrica con chispas; la señal de ese canal se llena de estática con cortes de "SIN SEÑAL" sin afectar al resto.
+	- Registrados en `AnomaliesManagement` con sus `.tres` en `resources/anomalies/`.
   - **Suite de pruebas** [`tests/test_cctv_events.tscn`](tests/test_cctv_events.tscn): 44 pruebas (canales, capas de render, zonas dentro del encuadre de su cámara, comportamiento de cada evento y limpieza al resolverse).
 - **Evento Estático: El Visitante Espacial / OVNI (Día 2) y Entrada Cinemática Dramática**:
   - **Llegada Cinemática en 6 Fases (`UfoNPC.gd` y `scenes/events/static/UfoNPC.tscn`)**:
-    - `PRE_RUMBLE`: Temblor de cámara *in crescendo* y zumbido cósmico procedural (nave aún oculta).
-    - `HYPER_FLASH`: Destello blanco/cian a pantalla completa, estruendo supersónico (`play_sonic_boom`) y sacudida de cámara (nave oculta).
-    - `SUSPENSE_PAUSE`: Pausa en penumbra con vibrato alienígena oscilante (`play_alien_suspense`) para aumentar la tensión antes de la aparición.
-    - `FAR_EMERGENCE`: Destello puntual en el cielo lejano y frenado abrupto en seco estilo *Star Wars* con inclinación e inercia angular.
-    - `SKY_CRUISE`: Desplazamiento lento y majestuoso (`sky_cruise_speed = 3.2 m/s`) cruzando el firmamento hacia la tienda.
-    - `DESCENT`: Descenso flotante suave hasta la altura del mostrador de atención para ordenar.
+	- `PRE_RUMBLE`: Temblor de cámara *in crescendo* y zumbido cósmico procedural (nave aún oculta).
+	- `HYPER_FLASH`: Destello blanco/cian a pantalla completa, estruendo supersónico (`play_sonic_boom`) y sacudida de cámara (nave oculta).
+	- `SUSPENSE_PAUSE`: Pausa en penumbra con vibrato alienígena oscilante (`play_alien_suspense`) para aumentar la tensión antes de la aparición.
+	- `FAR_EMERGENCE`: Destello puntual en el cielo lejano y frenado abrupto en seco estilo *Star Wars* con inclinación e inercia angular.
+	- `SKY_CRUISE`: Desplazamiento lento y majestuoso (`sky_cruise_speed = 3.2 m/s`) cruzando el firmamento hacia la tienda.
+	- `DESCENT`: Descenso flotante suave hasta la altura del mostrador de atención para ordenar.
   - **Calibración de la Línea de Visión desde la Ventana de la Tienda**:
-    - Se recalibraron las alturas y distancias de aproximación (`far_sky_height = 3.2`, `far_sky_distance = 26.0`, `sky_descent_height = 2.2`).
-    - Al estar el jugador detrás del mostrador (`Y ≈ 2.2, Z = -2.3`) mirando a través de la abertura de la ventana (`Z = -3.72`, `Y ∈ [0.90, 2.30]`), el platillo volador se mantiene dentro del campo visual (`Y ≈ 2.26`) permitiendo verlo aproximarse de frente por la calle desde el primer segundo.
+	- Se recalibraron las alturas y distancias de aproximación (`far_sky_height = 3.2`, `far_sky_distance = 26.0`, `sky_descent_height = 2.2`).
+	- Al estar el jugador detrás del mostrador (`Y ≈ 2.2, Z = -2.3`) mirando a través de la abertura de la ventana (`Z = -3.72`, `Y ∈ [0.90, 2.30]`), el platillo volador se mantiene dentro del campo visual (`Y ≈ 2.26`) permitiendo verlo aproximarse de frente por la calle desde el primer segundo.
   - **Retirada Cósmica hacia el Espacio**:
-    - Al completarse la orden o agotarse la paciencia, la nave despega suavemente en ascenso vertical acelerado hacia las estrellas desvaneciéndose en la distancia.
+	- Al completarse la orden o agotarse la paciencia, la nave despega suavemente en ascenso vertical acelerado hacia las estrellas desvaneciéndose en la distancia.
   - **Condiciones Temporales en Eventos Estáticos (`StaticNPCEvent.gd`)**:
-    - Se extendió la plantilla base de eventos estáticos con soporte para umbrales por jornada: `trigger_day` (día mínimo del evento) y `trigger_day_served_count` (clientes atendidos requeridos en el día en curso), manteniendo compatibilidad total con los umbrales globales.
+	- Se extendió la plantilla base de eventos estáticos con soporte para umbrales por jornada: `trigger_day` (día mínimo del evento) y `trigger_day_served_count` (clientes atendidos requeridos en el día en curso), manteniendo compatibilidad total con los umbrales globales.
   - **Arquitectura Dedicada en `scripts/events/static/ufo/`**:
-    - [`UfoEvent.gd`](scripts/events/static/ufo/UfoEvent.gd): Definición del evento estático (`id = "ufo"`), configurado para dispararse en el Día 2 tras atender a 1 cliente (`trigger_day = 2`, `trigger_day_served_count = 1`, `trigger_once = true`).
-    - [`UfoNPC.gd`](scripts/events/static/ufo/UfoNPC.gd): Controlador específico con iluminación fosforescente, rotación constante del anillo exterior (`SaucerRim`), vaivén de flotación orgánico y haz de luz tractor.
-    - [`scenes/events/static/UfoNPC.tscn`](scenes/events/static/UfoNPC.tscn): Escena física del platillo volador con domo, núcleo de propulsión, foco tractor y animaciones pulsantes.
+	- [`UfoEvent.gd`](scripts/events/static/ufo/UfoEvent.gd): Definición del evento estático (`id = "ufo"`), configurado para dispararse en el Día 2 tras atender a 1 cliente (`trigger_day = 2`, `trigger_day_served_count = 1`, `trigger_once = true`).
+	- [`UfoNPC.gd`](scripts/events/static/ufo/UfoNPC.gd): Controlador específico con iluminación fosforescente, rotación constante del anillo exterior (`SaucerRim`), vaivén de flotación orgánico y haz de luz tractor.
+	- [`scenes/events/static/UfoNPC.tscn`](scenes/events/static/UfoNPC.tscn): Escena física del platillo volador con domo, núcleo de propulsión, foco tractor y animaciones pulsantes.
   - **Integración y Herramientas de Depuración (`NPCEventManager.gd` y `NPCSpawner.gd`)**:
-    - Parámetros configurables en el Inspector: `ufo_trigger_day`, `ufo_trigger_served_in_day` y `debug_force_ufo` para forzar su aparición de inmediato.
-    - Avance rápido de jornada en tiempo de ejecución: tecla de depuración `debug_advance_day_key = KEY_F6` para saltar directamente al siguiente día y probar el flujo de días sin esperas.
+	- Parámetros configurables en el Inspector: `ufo_trigger_day`, `ufo_trigger_served_in_day` y `debug_force_ufo` para forzar su aparición de inmediato.
+	- Avance rápido de jornada en tiempo de ejecución: tecla de depuración `debug_advance_day_key = KEY_F6` para saltar directamente al siguiente día y probar el flujo de días sin esperas.
   - **Restricción del Ladrón al Día 1 (`RobberEvent.gd`)**:
-    - Se configuró `trigger_day = 1` y `trigger_max_day = 1` en el evento estático del ladrón, garantizando que su aparición ocurra exclusivamente durante la primera jornada de trabajo y no interfiera con los eventos del Día 2 en adelante.
+	- Se configuró `trigger_day = 1` y `trigger_max_day = 1` en el evento estático del ladrón, garantizando que su aparición ocurra exclusivamente durante la primera jornada de trabajo y no interfiera con los eventos del Día 2 en adelante.
 - **Desacoplamiento Total de Eventos de NPCs y Anomalías Espectrales**:
   - **Corrección de Falso Positivo Espectral en Eventos**:
-    - Se solucionó el problema por el cual el OVNI disparaba simultáneamente la alerta en HUD y el filtro rojo de "Distorsión Espectral detectada".
-    - `NPCSpawner.gd` y `AnomaliesManager.gd` ahora garantizan que cualquier cliente con evento asignado (`has_event` o `npc.active_event`) no active anomalías.
-    - Los eventos estáticos resuelven y limpian anomalías activas residuales al tomar control del turno.
+	- Se solucionó el problema por el cual el OVNI disparaba simultáneamente la alerta en HUD y el filtro rojo de "Distorsión Espectral detectada".
+	- `NPCSpawner.gd` y `AnomaliesManager.gd` ahora garantizan que cualquier cliente con evento asignado (`has_event` o `npc.active_event`) no active anomalías.
+	- Los eventos estáticos resuelven y limpian anomalías activas residuales al tomar control del turno.
   - **Documentación Técnica Modular**:
-    - [`scripts/anomalies/README.md`](scripts/anomalies/README.md): Guía paso a paso para la creación modular de nuevas anomalías independientes (estructura, disparadores, ciclo de vida y shaders).
-    - [`scripts/events/README.md`](scripts/events/README.md): Documentación actualizada distinguiendo modularmente entre Eventos de NPCs (variaciones o clientes estáticos con interacción) y Anomalías Espectrales/Ambientales (fenómenos paranormales no ligados al flujo de cocina).
+	- [`scripts/anomalies/README.md`](scripts/anomalies/README.md): Guía paso a paso para la creación modular de nuevas anomalías independientes (estructura, disparadores, ciclo de vida y shaders).
+	- [`scripts/events/README.md`](scripts/events/README.md): Documentación actualizada distinguiendo modularmente entre Eventos de NPCs (variaciones o clientes estáticos con interacción) y Anomalías Espectrales/Ambientales (fenómenos paranormales no ligados al flujo de cocina).
 - **Sistema de Temblor de Cámara (Camera Shake en `Player.gd`)**:
   - Métodos `shake_camera()`, `shake_camera_crescendo()` y `stop_camera_shake()` con amortiguación gradual basada en Tweens para impactos, explosiones y acumulación de tensión dramática.
 - **Síntesis Procedural de Audio Espacial (`SFXManager.gd`)**:

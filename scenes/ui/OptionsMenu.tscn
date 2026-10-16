@@ -1,0 +1,250 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/OptionsMenu.gd" id="1_opt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.07, 0.05, 0.12, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.9, 0.72, 0.25, 0.9)
+content_margin_left = 40.0
+content_margin_top = 28.0
+content_margin_right = 40.0
+content_margin_bottom = 28.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+bg_color = Color(0.22, 0.15, 0.38, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.75, 0.58, 0.98, 1)
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+bg_color = Color(0.34, 0.23, 0.58, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 1, 1)
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+bg_color = Color(0.14, 0.09, 0.24, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.35, 0.7, 1)
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+
+[node name="OptionsMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_opt")
+
+[node name="DimBackground" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.01, 0.05, 0.88)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="OptionsPanel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(580, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/OptionsPanel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
+theme_override_font_sizes/font_size = 26
+text = "⚙ CONFIGURACIÓN DE PANTALLA"
+horizontal_alignment = 1
+
+[node name="HSeparator1" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/h_separation = 24
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="WindowModeLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Modo de pantalla:"
+
+[node name="WindowModeOption" type="OptionButton" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResolutionLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Resolución:"
+
+[node name="ResolutionOption" type="OptionButton" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="EmbeddedHintLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.75, 0.3, 0.9)
+theme_override_font_sizes/font_size = 11
+text = "ℹ El juego se ejecuta incrustado en el editor. Para cambiar el tamaño de la ventana de forma libre, desmarca 'Incrustar juego' en Godot."
+autowrap_mode = 2
+
+[node name="HSeparator2" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ScaleSection" type="VBoxContainer" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ScaleHeader" type="HBoxContainer" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection"]
+layout_mode = 2
+
+[node name="ScaleTitle" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/ScaleHeader"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Escala de Renderizado 3D (Nitidez):"
+
+[node name="ScaleValueLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
+theme_override_font_sizes/font_size = 14
+text = "100% — Nativo — Máxima nitidez"
+
+[node name="SliderContainer" type="HBoxContainer" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MinLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/SliderContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "50%"
+
+[node name="RenderScaleSlider" type="HSlider" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/SliderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.5
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="MaxLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/SliderContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "100%"
+
+[node name="PresetsContainer" type="HBoxContainer" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Btn50" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/PresetsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "50% (Rendimiento)"
+
+[node name="Btn75" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/PresetsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "75% (Equilibrado)"
+
+[node name="Btn100" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/PresetsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "100% (Nativo)"
+
+[node name="HSeparator3" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="VSyncContainer" type="HBoxContainer" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="VSyncLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/VSyncContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_font_sizes/font_size = 15
+text = "Sincronización Vertical (VSync):"
+
+[node name="VSyncCheck" type="CheckButton" parent="CenterContainer/OptionsPanel/VBoxContainer/VSyncContainer"]
+layout_mode = 2
+button_pressed = true
+
+[node name="HSeparator4" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonsVBox" type="HBoxContainer" parent="CenterContainer/OptionsPanel/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ResetButton" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ButtonsVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_font_sizes/font_size = 14
+text = "↺ Restablecer"
+
+[node name="ApplyButton" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ButtonsVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_font_sizes/font_size = 14
+text = "✔ Aplicar"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ButtonsVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_font_sizes/font_size = 14
+text = "✕ Volver"
