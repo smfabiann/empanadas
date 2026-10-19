@@ -361,11 +361,16 @@ func force_trigger_anomaly(anomaly_id: String, context: Dictionary = {}) -> Anom
 ## Resuelve todas las anomalías que estén activas
 func resolve_all_anomalies() -> void:
 	var list: Array[AnomalyBase] = active_anomalies.duplicate()
+	var still_attacking: Array[AnomalyBase] = []
 	for anomaly in list:
 		if is_instance_valid(anomaly) and anomaly.has_method("resolve"):
+			# Si la anomalía está en pleno ataque o ejecutando consecuencias, no interrumpirla bruscamente
+			if anomaly.get("is_attacking") == true:
+				still_attacking.append(anomaly)
+				continue
 			anomaly.resolve()
-	active_anomalies.clear()
-	debug_active_count = 0
+	active_anomalies = still_attacking
+	debug_active_count = active_anomalies.size()
 
 
 ## Reinicia el estado de todas las anomalías (para nuevas partidas o cambio de día)

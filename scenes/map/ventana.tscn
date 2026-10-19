@@ -26,4 +26,5 @@ material = SubResource("StandardMaterial3D_y1tym")
 
 [node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=504103639]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.16312584)
+light_energy = 0.5
 area_size = Vector2(0.8331502, 1.0603027)

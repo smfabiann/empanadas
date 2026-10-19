@@ -15,11 +15,25 @@ const SWITCH_STATIC_DURATION := 0.25
 @onready var screen_mesh: CSGBox3D = $ScreenMesh
 @onready var security_cam_viewport: SubViewport = $SubViewport
 
+@export_group("Linterna de CCTV (Flashlight)")
+## Permite encender una linterna/foco apuntando en la dirección de la cámara activa al hacer click izquierdo.
+@export var flashlight_enabled: bool = true
+## Intensidad de la linterna de la cámara CCTV
+@export_range(0.0, 10.0, 0.1) var flashlight_energy: float = 3.5
+## Alcance del haz de luz de la linterna (metros)
+@export_range(5.0, 60.0, 1.0) var flashlight_range: float = 35.0
+## Ángulo de apertura del cono de luz (grados)
+@export_range(15.0, 90.0, 1.0) var flashlight_angle: float = 40.0
+## Color de la luz de la linterna
+@export var flashlight_color: Color = Color(1.0, 0.96, 0.88)
+
 var is_viewing: bool = false
 var is_anomaly_vision: bool = false
+var is_flashlight_on: bool = false
 var anomaly_env: Environment = null
 var player_camera: Camera3D = null
 var security_camera: Camera3D = null
+var _flashlight: SpotLight3D = null
 
 ## Cámaras disponibles ordenadas por canal
 var channels: Array[Camera3D] = []
@@ -169,9 +183,12 @@ func interact(player: Node3D) -> void:
 		if player.has_method("set"):
 			player.is_viewing_monitor = false
 
-		# Apagar visión nocturna al salir
+		# Apagar visión nocturna y linterna al salir
 		if is_anomaly_vision:
 			toggle_anomaly_vision()
+		if is_flashlight_on:
+			is_flashlight_on = false
+			_update_flashlight()
 
 	if _overlay_layer:
 		_overlay_layer.visible = is_viewing
@@ -201,6 +218,7 @@ func set_channel(index: int) -> void:
 
 	if is_viewing:
 		security_camera.current = true
+	_update_flashlight()
 	_switch_static = SWITCH_STATIC_DURATION
 
 	if typeof(SFXManager) != TYPE_NIL and SFXManager != null and SFXManager.has_method("play_pickup"):
@@ -281,9 +299,66 @@ func _set_night_vision_layer(enabled: bool) -> void:
 		security_camera.set_cull_mask_value(CCTVCamera.NIGHT_VISION_RENDER_LAYER, enabled)
 
 
+func _setup_flashlight() -> void:
+	if _flashlight != null and is_instance_valid(_flashlight):
+		return
+	_flashlight = SpotLight3D.new()
+	_flashlight.name = "CCTVFlashlight"
+	_flashlight.light_color = flashlight_color
+	_flashlight.light_energy = flashlight_energy
+	_flashlight.spot_range = flashlight_range
+	_flashlight.spot_angle = flashlight_angle
+	_flashlight.spot_attenuation = 1.0
+	_flashlight.shadow_enabled = true
+	_flashlight.visible = false
+	add_child(_flashlight)
+
+
+func _update_flashlight() -> void:
+	if not flashlight_enabled:
+		if _flashlight and is_instance_valid(_flashlight):
+			_flashlight.visible = false
+		return
+
+	if _flashlight == null or not is_instance_valid(_flashlight):
+		_setup_flashlight()
+
+	if security_camera and is_instance_valid(security_camera):
+		if _flashlight.get_parent() != security_camera:
+			if _flashlight.get_parent():
+				_flashlight.get_parent().remove_child(_flashlight)
+			security_camera.add_child(_flashlight)
+		_flashlight.position = Vector3.ZERO
+		_flashlight.rotation = Vector3.ZERO
+		_flashlight.light_color = flashlight_color
+		_flashlight.light_energy = flashlight_energy
+		_flashlight.spot_range = flashlight_range
+		_flashlight.spot_angle = flashlight_angle
+		_flashlight.visible = is_viewing and is_flashlight_on
+	else:
+		_flashlight.visible = false
+
+
+func toggle_flashlight() -> void:
+	if not flashlight_enabled:
+		return
+	is_flashlight_on = not is_flashlight_on
+	_update_flashlight()
+	if typeof(SFXManager) != TYPE_NIL and SFXManager != null and SFXManager.has_method("play_pickup"):
+		SFXManager.play_pickup()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not is_viewing:
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		toggle_flashlight()
+		get_viewport().set_input_as_handled()
+
+
 func get_interaction_prompt(_player: Node3D) -> Dictionary:
 	if is_viewing:
-		var text := "[E] Volver a tu vista\n[F] Visión Nocturna"
+		var text := "[E] Volver a tu vista\n[Click Izq] Linterna CCTV\n[F] Visión Nocturna"
 		if channels.size() > 1:
 			text += "\n[A/D] Cambiar cámara"
 		return {"text": text, "actionable": true}
@@ -367,6 +442,8 @@ func _update_overlay(delta: float) -> void:
 	_channel_label.text = "%s REC   CAM %02d · %s" % [rec, current_channel + 1, get_current_channel_name()]
 	if is_anomaly_vision:
 		_channel_label.text += "\n◐ VISIÓN NOCTURNA"
+	if is_flashlight_on:
+		_channel_label.text += "\n☼ LINTERNA"
 
 	# Reloj nocturno ficticio que avanza desde las 23:00
 	var day := 1

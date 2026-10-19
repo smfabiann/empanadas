@@ -9,7 +9,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
 | ID | Nombre | Tipo / Ubicación | Detección Clave | Peligrosidad / Penalización | Método de Resolución |
 |---|---|---|---|---|---|
 | `glitch_sprite` | **Distorsión Espectral** | Ambiental / Pantalla (HUD) | Efecto visual obvio en pantalla, niebla roja y parpadeo de luces | Tensión ambiental y desorientación visual | Se disipa sola (8s) o bajando la persiana |
-| `aware` | **El Consciente** | HUD / Monitor de Seguridad | Solo aparece al mirar el monitor de seguridad (`[E]`) | Presencia psicológica inquietante | Dejar de mirar el monitor |
+| `aware` | **El Consciente** | Cámara CCTV + Monitor + Cliente | Observa directo a la cámara que miras por CCTV | 💀 **LETAL (2 Strikes compartidos)**: Screamer facial a quemarropa. Game Over al 2.º error | **¡PROHIBIDO ATENDER! Bajar la persiana** para desterrarlo |
 | `cctv_lurker` | **Silueta Acechando** | Cámara CCTV (CAM 01 / CAM 02) | Mirar la cámara de seguridad asignada | Se acerca progresivamente hacia la cámara al cambiar de canal | Desaparece sola tras 35s |
 | `cctv_intruder` | **Intruso en el Perímetro** | Cámara CCTV (CAM 01 / CAM 02) | Mirar la cámara de seguridad asignada | Merodea el perímetro; si lo miras >2s se detiene y te mira fijamente | Desaparece solo tras 35s |
 | `cctv_power_failure` | **Fallo Eléctrico** | Cámara CCTV / Modificador de Feed | Pérdida de señal e interferencias en un canal específico | Deja ciega una cámara con estática y cortes de "SIN SEÑAL" | Se repara solo tras 35s |
@@ -53,10 +53,14 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
 - **¿Qué hace?**:
   1. Permanece en total latencia mientras el jugador se encuentra en el mostrador o atendiendo pedidos. No hay cambios visuales en el mundo físico.
   2. En el instante exacto en que el jugador se acerca al monitor de seguridad de la pared izquierda e interactúa (`[E]`) para ver las cámaras, la anomalía "se da cuenta de que la estás mirando".
-  3. Manifiesta un gran ojo rojo estilizado en el centro del HUD, con pulsaciones rítmicas de pupila, parpadeos periódicos y un sonido de advertencia espeluznante.
-  4. En cuanto el jugador suelta el monitor o deja de mirar las cámaras, el ojo desaparece de inmediato.
-- **Resolución**:
-  - No penaliza económicamente; es una anomalía de tensión psicológica que juega con la paranoia del jugador mientras monitorea el perímetro.
+  3. La cabeza del propio NPC cliente gira de forma inquietante y continua para **clavar su mirada directamente en el jugador** mientras está en la cocina, o **hacia el lente de la cámara CCTV activa** cuando el jugador visualiza el monitor de seguridad. Si el jugador cambia de canal, la cabeza del cliente rota hacia la nueva cámara. No tiene ojos artificiales agregados; es la propia cara texturizada del NPC la que te observa.
+  4. Sin carteles de texto ni avisos de advertencia en pantalla, sumergiendo al jugador en una atmósfera de tensión visual pura y suspenso con silencio configurable (`suspense_audio`).
+  5. En cuanto el jugador suelta el monitor o deja de mirar las cámaras, la entidad y el audio desaparecen de inmediato.
+  6. **Consecuencias si se le atiende en el mostrador (Sistema de 2 Strikes compartidos)**:
+     - **Primer Strike (Screamer y Advertencia)**: Un screamer violento lanza la cara del NPC a escasos centímetros de la cámara del jugador con un ruido estruendoso (`play_gunshot` / `play_sonic_boom` o `screamer_sound` configurable), sacudida extrema de pantalla y las paredes de la tienda se tiñen de rojo burdeo corrupto. El cliente advierte: *"¡TE VEO! ... ¡Al próximo error no sobrevivirás!"*.
+     - **Segundo Strike (Ataque Mortal)**: Si el jugador comete un segundo error atendiendo una anomalía (sea Aware o Shadow Companion), la cara salta a quemarropa cubriendo la pantalla, el jugador es derribado al suelo y se desencadena un **Game Over definitivo**.
+- **Defensa y Resolución**:
+  - **Bajar la persiana del mostrador**: Al detectar la anomalía en las cámaras, el jugador debe bajar la persiana. Se produce el estruendo metálico (`*¡CLANG!*`), la presencia consciente se desvanece y el cliente se retira pacíficamente salvando al jugador.
 
 ---
 

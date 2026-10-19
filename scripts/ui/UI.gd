@@ -272,7 +272,7 @@ func _show_banner_text(text: String) -> void:
 
 ## Notifica al jugador que la jornada terminó (el avance de día se realiza durmiendo en la cama)
 func _on_day_ended(_day: int) -> void:
-	if GameManager.is_game_won:
+	if not GameManager.game_active or GameManager.is_game_won:
 		return
 
 	# Reemplazado por la mecánica de la cama:

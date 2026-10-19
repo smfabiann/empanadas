@@ -101,6 +101,7 @@ func _rebuild_clone_visuals() -> void:
 	var body_color: Color = Color(0.2, 0.22, 0.25, 1.0)
 	var head_color: Color = Color(0.2, 0.22, 0.25, 1.0)
 	var head_texture: Texture2D = null
+	var orig_head: Node3D = null
 
 	# Clonar colores y materiales del NPC original
 	if target_npc:
@@ -108,7 +109,7 @@ func _rebuild_clone_visuals() -> void:
 		if orig_body and orig_body.get("material") is StandardMaterial3D:
 			body_color = (orig_body.material as StandardMaterial3D).albedo_color
 
-		var orig_head = target_npc.get_node_or_null("Head")
+		orig_head = target_npc.get_node_or_null("Head") as Node3D
 		if orig_head and orig_head.get("material") is StandardMaterial3D:
 			var mat = orig_head.material as StandardMaterial3D
 			head_color = mat.albedo_color
@@ -147,7 +148,7 @@ func _rebuild_clone_visuals() -> void:
 	sph.height = 0.48
 	head_mesh.mesh = sph
 	head_mesh.material_override = head_mat
-	head_mesh.position = Vector3(0, 1.6, 0)
+	head_mesh.position = orig_head.position if orig_head else Vector3(0, 1.6, 0)
 	_shadow_clone.add_child(head_mesh)
 
 	# 3. Ojos sobrenaturales blancos y penetrantes (mirando a la cámara)
@@ -259,22 +260,28 @@ func _execute_first_warning_strike(npc: CharacterBody3D) -> void:
 	# 5. Notificación / Pista en pantalla
 	_hint("¡ATENDISTE A UNA ANOMALÍA! La casa se tiñó de burdeo. ¡Al 2.º error morirás!")
 
-	# 6. La sombra y el cliente se disuelven en la oscuridad
+	# 6. La sombra se disuelve en la oscuridad
 	if _shadow_clone and is_instance_valid(_shadow_clone):
 		var tw := create_tween()
 		tw.tween_property(_shadow_clone, "scale", Vector3.ZERO, 0.9)\
 			.set_trans(Tween.TRANS_SINE)
 
+	# 7. CONSECUENCIAS PRIMERO: Esperar a que se completen las consecuencias (sacudida, diálogo de corrupción, advertencia)
+	# antes de dar paso al fin de la visita del cliente o al avance de día si sobrevive.
+	await get_tree().create_timer(2.0).timeout
+
+	if not is_instance_valid(self):
+		return
+
+	# 8. Si el jugador sobrevive, el cliente concluye su visita y se retira
 	if npc and is_instance_valid(npc):
 		if npc.has_method("finish_visit"):
 			npc.finish_visit(" ... La presencia te perdona la vida... por ahora ... ", "wrong", Color(0.78, 0.18, 0.25, 1.0))
 		elif npc.has_method("_start_leaving"):
 			npc._start_leaving()
 
-	get_tree().create_timer(1.2).timeout.connect(func():
-		is_attacking = false
-		resolve()
-	)
+	is_attacking = false
+	resolve()
 
 
 ## Segundo error: Jumpscare letal, derribo y Game Over definitivo
@@ -356,7 +363,7 @@ func handle_persiana_closed(npc: CharacterBody3D) -> bool:
 	# El cliente se retira de la ventana
 	if npc and is_instance_valid(npc):
 		if npc.has_method("finish_visit"):
-			npc.finish_visit(" ... La anomalía fue desterrada ... ", "correct")
+			npc.finish_visit(" *¡CLANG!* ... La anomalía fue desterrada ... ", "correct", Color(0.4, 1.0, 0.5, 1.0))
 		elif npc.has_method("_start_leaving"):
 			npc._start_leaving()
 
