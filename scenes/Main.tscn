@@ -26,7 +26,7 @@
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_lurker.tres" id="21_cctv_lurker"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_intruder.tres" id="22_cctv_intruder"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_power_failure.tres" id="23_cctv_power"]
-[ext_resource type="PackedScene" path="res://scenes/map/Neighborhood.tscn" id="24_neighborhood"]
+[ext_resource type="PackedScene" uid="uid://bsoq3wmul0bie" path="res://scenes/map/Neighborhood.tscn" id="24_neighborhood"]
 [ext_resource type="PackedScene" path="res://scenes/map/ShopDecor.tscn" id="25_shop_decor"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_night_entity.tres" id="26_cctv_night_entity"]
 [ext_resource type="Resource" path="res://resources/anomalies/cctv_patio_thief.tres" id="27_cctv_patio_thief"]
@@ -35,10 +35,10 @@
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("6_sky_shader")
 shader_parameter/sky_top_color = Color(0.01, 0.02, 0.05, 1)
-shader_parameter/horizon_color = Color(0.058893472, 0.08326913, 0.14014357, 1)
+shader_parameter/horizon_color = Color(0.06, 0.08, 0.14, 1)
 shader_parameter/ground_color = Color(0.01, 0.015, 0.02, 1)
-shader_parameter/star_density = 30.0
-shader_parameter/star_threshold = 0.9995
+shader_parameter/star_density = 65.0
+shader_parameter/star_threshold = 0.993
 shader_parameter/star_brightness = 2.0
 
 [sub_resource type="Sky" id="Sky_nxtc6"]
@@ -113,12 +113,13 @@ environment = SubResource("Environment_2a6q0")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment" unique_id=1813892540]
 transform = Transform3D(0.9659258, 0, -0.25881907, 0.18301271, 0.7071068, 0.6830127, 0.18301271, -0.7071068, 0.6830127, 0, 10, 0)
 light_color = Color(0.3403393, 0.34033933, 0.3403393, 1)
-light_energy = 0.001
+light_energy = 0.2
 light_indirect_energy = 0.663
 shadow_enabled = true
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="Enviroment/DirectionalLight3D" unique_id=245148827]
 transform = Transform3D(0.9740807, 0.12597725, -0.18787387, -0.07488176, 0.9633187, 0.25770092, 0.21344693, -0.23695326, 0.94778347, 0, 50.000008, 4.7683716e-07)
+visible = false
 light_color = Color(0.3403393, 0.34033933, 0.3403393, 1)
 light_energy = 3.281
 light_indirect_energy = 0.663
