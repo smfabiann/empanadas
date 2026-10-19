@@ -3,52 +3,44 @@
 [ext_resource type="Script" path="res://scripts/ui/OptionsMenu.gd" id="1_opt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.07, 0.05, 0.12, 0.96)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.9, 0.72, 0.25, 0.9)
-content_margin_left = 40.0
-content_margin_top = 28.0
-content_margin_right = 40.0
-content_margin_bottom = 28.0
+content_margin_left = 36.0
+content_margin_top = 26.0
+content_margin_right = 36.0
+content_margin_bottom = 26.0
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
-bg_color = Color(0.22, 0.15, 0.38, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.75, 0.58, 0.98, 1)
-content_margin_left = 18.0
+content_margin_left = 16.0
 content_margin_top = 8.0
-content_margin_right = 18.0
+content_margin_right = 16.0
 content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
-bg_color = Color(0.34, 0.23, 0.58, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.85, 1, 1)
-content_margin_left = 18.0
+content_margin_left = 16.0
 content_margin_top = 8.0
-content_margin_right = 18.0
+content_margin_right = 16.0
 content_margin_bottom = 8.0
+bg_color = Color(0.08, 0.26, 0.48, 0.8)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
-bg_color = Color(0.14, 0.09, 0.24, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 0.35, 0.7, 1)
-content_margin_left = 18.0
+content_margin_left = 16.0
 content_margin_top = 8.0
-content_margin_right = 18.0
+content_margin_right = 16.0
 content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.32, 0.60, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [node name="OptionsMenu" type="Control"]
 process_mode = 3
@@ -67,7 +59,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.01, 0.05, 0.88)
+color = Color(0, 0, 0, 0.6)
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -88,9 +80,9 @@ theme_override_constants/separation = 16
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
-theme_override_font_sizes/font_size = 26
-text = "⚙ CONFIGURACIÓN DE PANTALLA"
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "CONFIGURACIÓN DE PANTALLA"
 horizontal_alignment = 1
 
 [node name="HSeparator1" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
@@ -104,30 +96,42 @@ columns = 2
 
 [node name="WindowModeLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
 theme_override_font_sizes/font_size = 15
 text = "Modo de pantalla:"
 
 [node name="WindowModeOption" type="OptionButton" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 
 [node name="ResolutionLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
 theme_override_font_sizes/font_size = 15
 text = "Resolución:"
 
 [node name="ResolutionOption" type="OptionButton" parent="CenterContainer/OptionsPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 
 [node name="EmbeddedHintLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer"]
 visible = false
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.75, 0.3, 0.9)
 theme_override_font_sizes/font_size = 11
-text = "ℹ El juego se ejecuta incrustado en el editor. Para cambiar el tamaño de la ventana de forma libre, desmarca 'Incrustar juego' en Godot."
+text = "El juego se ejecuta incrustado en el editor. Para cambiar el tamaño de la ventana de forma libre, desmarca 'Incrustar juego' en Godot."
 autowrap_mode = 2
 
 [node name="HSeparator2" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
@@ -142,13 +146,13 @@ layout_mode = 2
 
 [node name="ScaleTitle" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/ScaleHeader"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
 theme_override_font_sizes/font_size = 15
 text = "Escala de Renderizado 3D (Nitidez):"
 
 [node name="ScaleValueLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
+theme_override_colors/font_color = Color(0.35, 0.75, 1.0, 1)
 theme_override_font_sizes/font_size = 14
 text = "100% — Nativo — Máxima nitidez"
 
@@ -158,7 +162,7 @@ theme_override_constants/separation = 12
 
 [node name="MinLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/SliderContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 1)
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 1)
 theme_override_font_sizes/font_size = 12
 text = "50%"
 
@@ -173,7 +177,7 @@ value = 1.0
 
 [node name="MaxLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/SliderContainer"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 1)
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 1)
 theme_override_font_sizes/font_size = 12
 text = "100%"
 
@@ -184,17 +188,35 @@ alignment = 1
 
 [node name="Btn50" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/PresetsContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "50% (Rendimiento)"
 
 [node name="Btn75" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/PresetsContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "75% (Equilibrado)"
 
 [node name="Btn100" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ScaleSection/PresetsContainer"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "100% (Nativo)"
 
 [node name="HSeparator3" type="HSeparator" parent="CenterContainer/OptionsPanel/VBoxContainer"]
@@ -206,7 +228,7 @@ layout_mode = 2
 [node name="VSyncLabel" type="Label" parent="CenterContainer/OptionsPanel/VBoxContainer/VSyncContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.85, 0.8, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
 theme_override_font_sizes/font_size = 15
 text = "Sincronización Vertical (VSync):"
 
@@ -223,28 +245,46 @@ theme_override_constants/separation = 12
 alignment = 1
 
 [node name="ResetButton" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 theme_override_font_sizes/font_size = 14
-text = "↺ Restablecer"
+text = "RESTABLECER"
 
 [node name="ApplyButton" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 theme_override_font_sizes/font_size = 14
-text = "✔ Aplicar"
+text = "APLICAR"
 
 [node name="CloseButton" type="Button" parent="CenterContainer/OptionsPanel/VBoxContainer/ButtonsVBox"]
+custom_minimum_size = Vector2(0, 38)
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 theme_override_font_sizes/font_size = 14
-text = "✕ Volver"
+text = "VOLVER"

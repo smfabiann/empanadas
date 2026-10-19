@@ -17,7 +17,6 @@
 [ext_resource type="Script" uid="uid://dine3e1ujv6i7" path="res://scripts/anomalies/AnomaliesManager.gd" id="9_anomalies_manager"]
 [ext_resource type="PackedScene" path="res://scenes/Bed.tscn" id="11_bb450"]
 [ext_resource type="Script" uid="uid://hx502d73tbjj" path="res://scripts/anomalies/AnomalyData.gd" id="14_3p2gp"]
-[ext_resource type="Resource" path="res://resources/anomalies/glitch_sprite_anomaly.tres" id="15_cvmbd"]
 [ext_resource type="Script" uid="uid://djv60iak8lud6" path="res://scripts/Main.gd" id="16_main"]
 [ext_resource type="Resource" path="res://resources/anomalies/aware.tres" id="17_aware"]
 [ext_resource type="PackedScene" uid="uid://10pgshgdr0ub" path="res://scenes/map/ChemicalToilet.tscn" id="18_toilet"]
@@ -362,14 +361,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6, 0.3, -2.5)
 
 [node name="ShopDecor" parent="Map" unique_id=1543170393 instance=ExtResource("25_shop_decor")]
 
-[node name="MainSign" type="Label3D" parent="." unique_id=1382313851]
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 2.2, -0.2)
-visible = false
-modulate = Color(1, 0.85, 0.3, 1)
-text = " COMPLETOS "
-font_size = 80
-outline_size = 6
-
 [node name="SpawnPoint" type="Marker3D" parent="." unique_id=1205264049]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.43, 0.2, -11)
 gizmo_extents = 0.5
@@ -407,7 +398,7 @@ robber_trigger_served_count = 1
 script = ExtResource("9_anomalies_manager")
 random_anomaly_chance = 0.7
 max_concurrent_anomalies = 3
-registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("15_cvmbd"), ExtResource("17_aware"), ExtResource("21_cctv_lurker"), ExtResource("22_cctv_intruder"), ExtResource("23_cctv_power"), ExtResource("26_cctv_night_entity"), ExtResource("27_cctv_patio_thief"), ExtResource("28_cctv_shadow_companion")])
+registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("17_aware"), ExtResource("21_cctv_lurker"), ExtResource("22_cctv_intruder"), ExtResource("23_cctv_power"), ExtResource("26_cctv_night_entity"), ExtResource("27_cctv_patio_thief"), ExtResource("28_cctv_shadow_companion")])
 
 [node name="CCTVZones" type="Node3D" parent="." unique_id=1161441138]
 

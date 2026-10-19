@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dirda8oxu3l77"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ashw"]
+resource_name = "Mat_frame"
+albedo_color = Color(0.15, 0.14, 0.13, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1tym"]
+resource_name = "Mat_window_lit"
+albedo_color = Color(1, 0.8, 0.45, 1)
+roughness = 0.85
+emission_enabled = true
+emission = Color(1, 0.8, 0.45, 1)
+emission_energy_multiplier = 1.6
+
+[node name="Ventana" type="Node3D" unique_id=901245681]
+
+[node name="Marco" type="CSGBox3D" parent="." unique_id=1249836692]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="." unique_id=1056954074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="AreaLight3D" type="AreaLight3D" parent="." unique_id=504103639]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.16312584)
+area_size = Vector2(0.8331502, 1.0603027)

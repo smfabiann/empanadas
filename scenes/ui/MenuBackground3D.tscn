@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://do6rg0tvronp1"]
+[gd_scene format=3 uid="uid://bqvjaefj2xe62"]
 
 [ext_resource type="Shader" uid="uid://d2h8ainh7oeat" path="res://shaders/night_sky.gdshader" id="1_sky"]
 [ext_resource type="PackedScene" uid="uid://dtdqocd2hb5r" path="res://scenes/map/shop.tscn" id="2_shop"]
@@ -8,7 +8,9 @@
 [ext_resource type="PackedScene" uid="uid://b6547fxse71w" path="res://scenes/map/exterior_bulp.tscn" id="6_evo1o"]
 [ext_resource type="PackedScene" uid="uid://bx0efxm1hjlgs" path="res://scenes/map/Patio.tscn" id="6_patio"]
 [ext_resource type="PackedScene" path="res://scenes/map/ShopDecor.tscn" id="7_shop_decor"]
+[ext_resource type="PackedScene" uid="uid://c1qin7mi73i0q" path="res://scenes/map/Basurero.tscn" id="8_hb5gl"]
 [ext_resource type="Script" uid="uid://bbcabnkgk12bc" path="res://scripts/ui/MenuBackground.gd" id="8_script"]
+[ext_resource type="PackedScene" uid="uid://10pgshgdr0ub" path="res://scenes/map/ChemicalToilet.tscn" id="9_37qwu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
 shader = ExtResource("1_sky")
@@ -149,6 +151,18 @@ shadow_enabled = true
 
 [node name="Patio" parent="Map" unique_id=2089266326 instance=ExtResource("6_patio")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0330544, -0.0716277, 5.96813)
+
+[node name="Basurero2" parent="Map/Patio" unique_id=342418862 instance=ExtResource("8_hb5gl")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -0.10000019, 0.6, 4.7)
+
+[node name="Basurero3" parent="Map/Patio" unique_id=1902930491 instance=ExtResource("8_hb5gl")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -3.1000001, 0.6, 4.7)
+
+[node name="ChemicalToilet" parent="Map/Patio" unique_id=956148951 instance=ExtResource("9_37qwu")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9, 0.1, 4.6)
+
+[node name="ExteriorBulp2" parent="Map/Patio/ChemicalToilet" unique_id=1486393367 instance=ExtResource("6_evo1o")]
+transform = Transform3D(-0.1699951, 0.001291341, -5.618109e-05, -5.615318e-05, -0.014760101, -0.16935799, -0.0012913424, -0.1693531, 0.014760099, 0.50000036, 2.1617572, -0.70370007)
 
 [node name="Neighborhood" parent="Map" unique_id=1168662620 instance=ExtResource("5_neighborhood")]
 

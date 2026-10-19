@@ -153,6 +153,7 @@ Eventos que ocurren en zonas cubiertas por las cámaras de seguridad. **Solo se 
 | `cctv_power_failure` | Fallo Eléctrico | Caja eléctrica chisporroteando; la señal de ese canal se llena de estática con cortes de "SIN SEÑAL". Los demás canales siguen normales. | Día 1 |
 | `cctv_night_entity` | Presencia en la Vereda | Figura pálida que se acerca a la ventana por la CAM 01. **Solo se ve con la visión nocturna `[F]`**; sin ella deja una leve interferencia. Bajar la persiana la ahuyenta; si llega a la ventana con la persiana arriba se pierden $4.000. | Día 1 |
 | `cctv_patio_thief` | Ladrón del Patio | Cruza el patio por la CAM 02, fuerza la puerta trasera y espera antes de entrar. **Cerrar la puerta trasera** mientras sigue afuera lo hace arrancar; si entra, roba $5.000. También es visible en el mundo. | Día 2 |
+| `cctv_shadow_companion` | El Acompañante Oculto | Un doppelgänger oscuro acecha justo detrás de un cliente normal. **Solo visible con visión nocturna `[F]` en CAM 01**. ¡Prohibido atenderlo! Atenderlo acumula strikes hasta un Game Over letal. Se neutraliza bajando la persiana. | Día 1 |
 
 Canales actuales: `frente` (CAM 01, cámara `Map/Shop/Camara`) y `patio` (CAM 02, cámara `Map/Shop/Camara2`).
 

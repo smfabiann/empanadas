@@ -5,67 +5,75 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 30.0
-content_margin_top = 30.0
+content_margin_top = 26.0
 content_margin_right = 30.0
-content_margin_bottom = 30.0
-bg_color = Color(0.03, 0.02, 0.08, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.6, 0.4, 0.9, 0.8)
+content_margin_bottom = 26.0
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.32, 0.60, 0.9)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+bg_color = Color(0.08, 0.26, 0.48, 0.8)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_debug"]
 content_margin_left = 10.0
 content_margin_top = 8.0
 content_margin_right = 10.0
 content_margin_bottom = 8.0
-bg_color = Color(0.04, 0.03, 0.08, 0.75)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.4, 0.35, 0.6, 0.6)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victory"]
-content_margin_left = 30.0
-content_margin_top = 26.0
-content_margin_right = 30.0
-content_margin_bottom = 26.0
-bg_color = Color(0.02, 0.05, 0.03, 0.94)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.3, 0.88, 0.45, 0.9)
+bg_color = Color(0, 0, 0, 0.6)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_day_panel"]
 content_margin_left = 16.0
 content_margin_top = 10.0
 content_margin_right = 16.0
 content_margin_bottom = 10.0
-bg_color = Color(0.04, 0.03, 0.08, 0.85)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.65, 0.45, 0.95, 0.75)
+bg_color = Color(0, 0, 0, 0.55)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_bg"]
 content_margin_left = 2.0
 content_margin_top = 2.0
 content_margin_right = 2.0
 content_margin_bottom = 2.0
-bg_color = Color(0.08, 0.06, 0.14, 0.9)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.4, 0.3, 0.6, 0.5)
+bg_color = Color(0.04, 0.06, 0.12, 0.9)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_fill"]
 bg_color = Color(0.3, 0.85, 0.45, 1)
-
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_savings_fill"]
 bg_color = Color(0.98, 0.78, 0.25, 1)
@@ -75,24 +83,33 @@ content_margin_left = 18.0
 content_margin_top = 10.0
 content_margin_right = 18.0
 content_margin_bottom = 10.0
-bg_color = Color(0.08, 0.05, 0.02, 0.88)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.98, 0.78, 0.25, 0.85)
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_victory"]
+content_margin_left = 30.0
+content_margin_top = 26.0
+content_margin_right = 30.0
+content_margin_bottom = 26.0
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_intro"]
 content_margin_left = 40.0
 content_margin_top = 22.0
 content_margin_right = 40.0
 content_margin_bottom = 22.0
-bg_color = Color(0.03, 0.02, 0.06, 0.96)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.98, 0.78, 0.25, 0.85)
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="UI" type="CanvasLayer" unique_id=1164930736]
 script = ExtResource("1_ui")
@@ -342,13 +359,29 @@ horizontal_alignment = 1
 
 [node name="RetryButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer" unique_id=628316910]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = "▶ Reintentar"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "REINTENTAR"
 
 [node name="MenuButton" type="Button" parent="HUD/GameOverPanel/VBoxContainer" unique_id=490200360]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 14
-text = "◀ Menú Principal"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "MENÚ PRINCIPAL"
 
 [node name="AlphaLabel" type="Label" parent="HUD" unique_id=461763810]
 layout_mode = 0
@@ -417,14 +450,13 @@ offset_bottom = 100.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_day_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/DayPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/DayPanel" unique_id=698029192]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 6
 
 [node name="DayLabel" type="Label" parent="HUD/DayPanel/VBoxContainer" unique_id=1934817220]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.98, 0.86, 0.35, 1)
 theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.08, 1)
 theme_override_constants/outline_size = 5
@@ -435,23 +467,21 @@ text = "Noche 1/3  ·  Clientes 0/8"
 custom_minimum_size = Vector2(0, 16)
 layout_mode = 2
 mouse_filter = 2
+theme_override_font_sizes/font_size = 12
 theme_override_styles/background = SubResource("StyleBoxFlat_progress_bg")
 theme_override_styles/fill = SubResource("StyleBoxFlat_progress_fill")
-theme_override_font_sizes/font_size = 12
 max_value = 8.0
 step = 1.0
-value = 0.0
 
-[node name="SavingsLabel" type="Label" parent="HUD/DayPanel/VBoxContainer"]
+[node name="SavingsLabel" type="Label" parent="HUD/DayPanel/VBoxContainer" unique_id=1955946099]
 layout_mode = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
 theme_override_colors/font_outline_color = Color(0.04, 0.02, 0.08, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 17
 text = "Pasaje: $20.000 / $50.000  ·  Faltan $30.000"
 
-[node name="SavingsBar" type="ProgressBar" parent="HUD/DayPanel/VBoxContainer"]
+[node name="SavingsBar" type="ProgressBar" parent="HUD/DayPanel/VBoxContainer" unique_id=183068529]
 custom_minimum_size = Vector2(0, 10)
 layout_mode = 2
 mouse_filter = 2
@@ -461,21 +491,20 @@ max_value = 50000.0
 value = 20000.0
 show_percentage = false
 
-[node name="MoneyPopup" type="Label" parent="HUD"]
+[node name="MoneyPopup" type="Label" parent="HUD" unique_id=1642204809]
 modulate = Color(1, 1, 1, 0)
 layout_mode = 0
 offset_left = 30.0
 offset_top = 150.0
 offset_right = 520.0
 offset_bottom = 186.0
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.45, 1, 0.5, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.04, 0.02, 1)
 theme_override_constants/outline_size = 6
 theme_override_font_sizes/font_size = 24
 text = "+$3.000"
 
-[node name="HintPanel" type="PanelContainer" parent="HUD"]
+[node name="HintPanel" type="PanelContainer" parent="HUD" unique_id=1677523571]
 visible = false
 layout_mode = 1
 anchors_preset = 5
@@ -489,7 +518,7 @@ grow_horizontal = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hint")
 
-[node name="HintLabel" type="Label" parent="HUD/HintPanel"]
+[node name="HintLabel" type="Label" parent="HUD/HintPanel" unique_id=913534906]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.92, 0.7, 1)
 theme_override_font_sizes/font_size = 17
@@ -505,7 +534,6 @@ anchor_right = 1.0
 offset_top = 90.0
 offset_bottom = 150.0
 grow_horizontal = 2
-mouse_filter = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
 theme_override_colors/font_outline_color = Color(0.05, 0.02, 0.1, 1)
 theme_override_constants/outline_size = 8
@@ -582,15 +610,31 @@ horizontal_alignment = 1
 
 [node name="NextDayButton" type="Button" parent="HUD/DayEndPanel/VBoxContainer" unique_id=1934817212]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = "▶ Comenzar Día 2"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "COMENZAR SIGUIENTE DÍA"
 
 [node name="DayEndMenuButton" type="Button" parent="HUD/DayEndPanel/VBoxContainer" unique_id=1934817213]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 14
-text = "◀ Menú Principal"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "MENÚ PRINCIPAL"
 
-[node name="VictoryPanel" type="PanelContainer" parent="HUD" unique_id=1934817220]
+[node name="VictoryPanel" type="PanelContainer" parent="HUD" unique_id=1884252642]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -606,16 +650,16 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_victory")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/VictoryPanel" unique_id=1934817221]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/VictoryPanel" unique_id=740399702]
 layout_mode = 2
 theme_override_constants/separation = 8
 alignment = 1
 
 [node name="VictoryTitle" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817222]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.35, 1.0, 0.5, 1)
+theme_override_colors/font_color = Color(0.35, 1, 0.5, 1)
 theme_override_font_sizes/font_size = 30
-text = " ¡HAS GANADO! "
+text = "¡HAS GANADO!"
 horizontal_alignment = 1
 
 [node name="VictorySubtitle" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817223]
@@ -640,48 +684,64 @@ layout_mode = 2
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.95, 1)
 theme_override_font_sizes/font_size = 14
-text = " Días sobrevividos: 3/3"
+text = "Días sobrevividos: 3/3"
 horizontal_alignment = 1
 
 [node name="VictoryStatServed" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817227]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.95, 0.5, 1)
 theme_override_font_sizes/font_size = 14
-text = " Pedidos correctos: 0"
+text = "Pedidos correctos: 0"
 horizontal_alignment = 1
 
 [node name="VictoryStatWrong" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817228]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.6, 0.3, 1)
 theme_override_font_sizes/font_size = 14
-text = " Pedidos equivocados: 0"
+text = "Pedidos equivocados: 0"
 horizontal_alignment = 1
 
 [node name="VictoryStatLost" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817229]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.4, 0.4, 1)
 theme_override_font_sizes/font_size = 14
-text = " Clientes que se fueron: 0"
+text = "Clientes que se fueron: 0"
 horizontal_alignment = 1
 
-[node name="VictoryStatMoney" type="Label" parent="HUD/VictoryPanel/VBoxContainer"]
+[node name="VictoryStatMoney" type="Label" parent="HUD/VictoryPanel/VBoxContainer" unique_id=358762959]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
 theme_override_font_sizes/font_size = 15
-text = " Plata juntada: $50.000 / $50.000"
+text = "Plata juntada: $50.000 / $50.000"
 horizontal_alignment = 1
 
 [node name="VictoryRestartButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817230]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
-text = " Reiniciar Partida"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "REINICIAR PARTIDA"
 
 [node name="VictoryMenuButton" type="Button" parent="HUD/VictoryPanel/VBoxContainer" unique_id=1934817231]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 14
-text = "◀ Menú Principal"
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "MENÚ PRINCIPAL"
 
-[node name="IntroPanel" type="ColorRect" parent="HUD"]
+[node name="IntroPanel" type="ColorRect" parent="HUD" unique_id=767631946]
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -689,9 +749,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.82)
+color = Color(0, 0, 0, 0.6)
 
-[node name="CenterContainer" type="CenterContainer" parent="HUD/IntroPanel"]
+[node name="CenterContainer" type="CenterContainer" parent="HUD/IntroPanel" unique_id=437255823]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -699,48 +759,57 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="IntroBox" type="PanelContainer" parent="HUD/IntroPanel/CenterContainer"]
+[node name="IntroBox" type="PanelContainer" parent="HUD/IntroPanel/CenterContainer" unique_id=29929772]
 custom_minimum_size = Vector2(760, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_intro")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HUD/IntroPanel/CenterContainer/IntroBox"]
+[node name="VBoxContainer" type="VBoxContainer" parent="HUD/IntroPanel/CenterContainer/IntroBox" unique_id=1768085207]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="IntroTitle" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+[node name="IntroTitle" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer" unique_id=153320222]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
-theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 28
 text = "3 NOCHES PARA ESCAPAR"
 horizontal_alignment = 1
 
-[node name="IntroStory" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+[node name="IntroStory" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer" unique_id=287848365]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.88, 0.95, 1)
+theme_override_colors/font_color = Color(0.85, 0.88, 0.95, 1)
 theme_override_font_sizes/font_size = 15
 text = "Historia"
 autowrap_mode = 3
 
-[node name="IntroSeparator" type="HSeparator" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+[node name="IntroSeparator" type="HSeparator" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer" unique_id=1348389521]
 layout_mode = 2
 
-[node name="IntroHowToTitle" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+[node name="IntroHowToTitle" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer" unique_id=1745023304]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.98, 0.78, 0.25, 1)
-theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.35, 0.75, 1, 1)
+theme_override_font_sizes/font_size = 17
 text = "CÓMO JUGAR"
 
-[node name="IntroHowTo" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+[node name="IntroHowTo" type="Label" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer" unique_id=1415893521]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.85, 0.85, 0.9, 1)
+theme_override_colors/font_color = Color(0.85, 0.88, 0.92, 1)
 theme_override_font_sizes/font_size = 14
 text = "Controles"
 autowrap_mode = 3
 
-[node name="IntroStartButton" type="Button" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer"]
+[node name="IntroStartButton" type="Button" parent="HUD/IntroPanel/CenterContainer/IntroBox/VBoxContainer" unique_id=1753525153]
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "Abrir el local (Noche 1)"
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "ABRIR EL LOCAL (NOCHE 1)"
 
 [node name="PauseMenu" parent="." unique_id=578554817 instance=ExtResource("2_pause")]
