@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cwu55rxllmw6b" path="res://scripts/ui/MainMenu.gd" id="1_menu"]
 [ext_resource type="PackedScene" path="res://scenes/ui/OptionsMenu.tscn" id="2_options"]
-[ext_resource type="PackedScene" uid="uid://do6rg0tvronp1" path="res://scenes/ui/MenuBackground3D.tscn" id="3_bg3d"]
+[ext_resource type="PackedScene" uid="uid://bqvjaefj2xe62" path="res://scenes/ui/MenuBackground3D.tscn" id="3_bg3d"]
 
 [sub_resource type="Gradient" id="Gradient_vignette"]
 colors = PackedColorArray(0.015, 0.02, 0.04, 0.68, 0.015, 0.02, 0.04, 0)
@@ -29,12 +29,7 @@ content_margin_left = 18.0
 content_margin_top = 10.0
 content_margin_right = 18.0
 content_margin_bottom = 10.0
-bg_color = Color(0.12, 0.35, 0.65, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.45, 0.88, 1, 1)
+bg_color = Color(0.1, 0.32, 0.60, 0.9)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -45,12 +40,7 @@ content_margin_left = 18.0
 content_margin_top = 10.0
 content_margin_right = 18.0
 content_margin_bottom = 10.0
-bg_color = Color(0.06, 0.22, 0.44, 0.75)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.25, 0.72, 1, 0.95)
+bg_color = Color(0.08, 0.26, 0.48, 0.8)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -65,12 +55,11 @@ content_margin_left = 45.0
 content_margin_top = 35.0
 content_margin_right = 45.0
 content_margin_bottom = 35.0
-bg_color = Color(0.05, 0.07, 0.12, 0.96)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.25, 0.65, 0.95, 0.8)
+bg_color = Color(0, 0, 0, 0.65)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="MainMenu" type="Control" unique_id=1870732346]
 layout_mode = 3
@@ -243,7 +232,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.02, 0.05, 0.9)
+color = Color(0, 0, 0, 0.6)
 
 [node name="CenterContainer" type="CenterContainer" parent="CreditsModal" unique_id=1477223291]
 layout_mode = 1
@@ -264,7 +253,7 @@ theme_override_constants/separation = 12
 
 [node name="CreditsTitle" type="Label" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=41389555]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 24
 text = "IDENTIFICACIÓN Y CRÉDITOS"
 horizontal_alignment = 1
@@ -297,10 +286,15 @@ layout_mode = 2
 [node name="CloseCreditsButton" type="Button" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=780587668]
 unique_name_in_owner = true
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
 text = "CERRAR"
 
 [node name="OptionsMenu" parent="." unique_id=1467489600 instance=ExtResource("2_options")]
