@@ -25,6 +25,9 @@ Arquitectura modular para modificar la apariencia, comportamiento y lógica de l
 | [`RobberNPC.gd`](./static/RobberNPC.gd) | Controlador y comportamiento del NPC del Ladrón para el evento estático (Día 1). |
 | [`UfoEvent.gd`](./static/ufo/UfoEvent.gd) | Evento estático del Visitante Espacial / OVNI (Día 2). |
 | [`UfoNPC.gd`](./static/ufo/UfoNPC.gd) | Controlador del NPC alienígena: temblor de pantalla previo, flash supersónico (Star Wars stop), planeo por el cielo, descenso flotante y retirada al cosmos. |
+| [`TalquinoEvent.gd`](./static/talca/TalquinoEvent.gd) | El Talquino (Noche 2, tras 2 clientes): con chupalla, pide un Italiano MOJADO y desbloquea los pedidos mojados (HU-14). |
+| [`ScammerEvent.gd`](./static/estafador/ScammerEvent.gd) | El Estafador del chip de perro (Noche 3, tras 1 cliente): falso inspector que exige $5.000. Persiana = se va sin nada; entregarle algo o ignorarlo = pierdes $5.000 (HU-15). |
+| [`RappiEvent.gd`](./static/rappi/RappiEvent.gd) | Repartidor de Rappi (Noche 3, tras 3 clientes): llega en moto y retira un pedido de 2 completos en orden contra el reloj de la app; paga cada completo y propina (HU-16). |
 | [`NPCEventManager.gd`](./NPCEventManager.gd) | Nodo en escena (`Main.tscn`) y catálogo central. Resuelve: Debug > Estáticos/Condicionales > Sorteo Ponderado. |
 | [`NPCSpawner.gd`](../NPCSpawner.gd) | Consulta evento, instancia la escena (estándar o dedicada) y le asigna el evento. |
 | [`NPC.gd`](../NPC.gd) | Invoca los ganchos del evento activo en sus transiciones de estado. |
@@ -40,6 +43,29 @@ Implementa solo los métodos que necesites:
 | `apply(npc)` | En `_ready()` del NPC. | Escalar mallas, materiales/shaders, alterar `speed`, `patience_time`. |
 | `on_arrive(npc)` | Al llegar al mostrador. | Modificar pedido, cambiar texto/color en `Label3D`, animaciones. |
 | `on_leave(npc)` | Al retirarse. | Cambiar velocidad de huida, sonidos especiales, efectos de salida. |
+| `on_item_received(npc, item) -> bool` | Al entregarle un ítem. | Lógica de entrega propia (pedidos múltiples, sobornos). Retorna `true` si el evento la manejó. |
+| `on_persiana_closed(npc) -> bool` | Al bajar la persiana con el NPC en el mostrador. | Reacción especial (echar a un estafador). Retorna `true` si la manejó. |
+| `on_timeout(npc) -> bool` | Al agotarse la paciencia. | Salida especial (cobrarse solo, cancelar pedido). Retorna `true` si la manejó. |
+
+Ayudas de `NPC.gd` para eventos con lógica propia (sin escena dedicada):
+
+- `set_completo_order(nombre, desc, palta, mayo, ketchup, mojado)`: fija un pedido concreto.
+- `finish_visit(texto, "correct" | "wrong" | "left", color)`: cierra la visita, registra el resultado en `GameManager` y hace salir al NPC.
+- `is_order_resolved()` y `get_patience_ratio()`.
+- La plata se mueve con `GameManager.earn_money(monto, motivo)` y `GameManager.lose_money(monto, motivo)`; las pistas en pantalla con `GameManager.request_hint(texto)`.
+- Los eventos son `Resource` compartidos: guarda el estado de cada visita en el NPC (`npc.set_meta(...)`), no en el evento.
+
+### Calendario de eventos estáticos (5 clientes por noche)
+
+| Noche | Evento | Condición |
+|---|---|---|
+| 1 | Ladrón | Tras 1 cliente atendido |
+| 2 | OVNI | Tras 1 cliente de la noche |
+| 2 | Talquino (mojados) | Tras 2 clientes de la noche |
+| 3 | Estafador del chip de perro | Tras 1 cliente de la noche |
+| 3 | Rappi | Tras 3 clientes de la noche |
+
+Para probarlos al tiro: `NPCSpawner.debug_force_event = "talquino"`, `"estafador_chip"` o `"rappi"` en el Inspector.
 
 ---
 

@@ -44,7 +44,7 @@ func _ready() -> void:
 	GameManager.day_active = true
 	ui._on_day_progress(3, 8)
 	_assert(day_label.text.contains("Clientes 3/8") or day_label.text.contains("3/8"), "DayLabel displays client progression in Spanish (current: '%s')" % day_label.text)
-	_assert(day_label.text.contains("Día 1/3") or day_label.text.contains("Día"), "DayLabel displays Día in Spanish")
+	_assert(day_label.text.contains("Noche 1/3"), "DayLabel displays the night (Noche 1/3) in Spanish")
 	_assert(progress_bar.max_value == 8.0, "DayProgressBar max_value is 8.0")
 
 	# Test 4: Quota reached

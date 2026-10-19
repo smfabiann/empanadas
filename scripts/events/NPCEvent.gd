@@ -25,3 +25,21 @@ func on_arrive(_npc: CharacterBody3D) -> void:
 ## Se ejecuta cuando el NPC comienza a retirarse
 func on_leave(_npc: CharacterBody3D) -> void:
 	pass
+
+
+## Se ejecuta cuando el jugador le entrega un ítem al NPC.
+## Retorna true si el evento manejó la entrega por completo (el NPC no aplica su lógica normal).
+func on_item_received(_npc: CharacterBody3D, _item: Node) -> bool:
+	return false
+
+
+## Se ejecuta cuando se baja la persiana con el NPC en el mostrador.
+## Retorna true si el evento manejó la reacción (el NPC no se va por timeout normal).
+func on_persiana_closed(_npc: CharacterBody3D) -> bool:
+	return false
+
+
+## Se ejecuta cuando al NPC se le agota la paciencia.
+## Retorna true si el evento manejó la salida (el NPC no ejecuta su timeout normal).
+func on_timeout(_npc: CharacterBody3D) -> bool:
+	return false

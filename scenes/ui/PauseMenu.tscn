@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/PauseMenu.gd" id="1_pause"]
+[ext_resource type="PackedScene" path="res://scenes/ui/OptionsMenu.tscn" id="2_options"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pause_panel"]
 bg_color = Color(0.03, 0.02, 0.08, 0.95)
@@ -64,6 +65,11 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "▶ Continuar"
 
+[node name="OptionsButton" type="Button" parent="PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "⚙ Opciones"
+
 [node name="RestartButton" type="Button" parent="PanelContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 16
@@ -83,3 +89,8 @@ theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 0.7)
 theme_override_font_sizes/font_size = 10
 text = "Completos  ·  Nicolaz Perez, Nicolas Vargas, Fabian San Martin"
 horizontal_alignment = 1
+
+[node name="OptionsMenu" parent="." instance=ExtResource("2_options")]
+visible = false
+layout_mode = 1
+

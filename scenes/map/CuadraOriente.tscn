@@ -1,0 +1,493 @@
+[gd_scene format=3 uid="uid://c66s8bjt4bmbg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nnb5m"]
+resource_name = "Mat_facade_minimarket"
+albedo_color = Color(0.45, 0.285, 0.255, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4bnfn"]
+resource_name = "Mat_cornice"
+albedo_color = Color(0.25, 0.24, 0.23, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7t5bm"]
+resource_name = "Mat_shutter"
+albedo_color = Color(0.32, 0.33, 0.35, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8ashw"]
+resource_name = "Mat_frame"
+albedo_color = Color(0.15, 0.14, 0.13, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1sv14"]
+resource_name = "Mat_sign_minimarket"
+albedo_color = Color(0.68, 0.504, 0.472, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gxb0p"]
+resource_name = "Mat_facade_peluqueria"
+albedo_color = Color(0.285, 0.3, 0.375, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5qkwx"]
+resource_name = "Mat_sign_peluqueria"
+albedo_color = Color(0.504, 0.52, 0.6, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_y1tym"]
+resource_name = "Mat_window_lit"
+albedo_color = Color(1, 0.8, 0.45, 1)
+roughness = 0.85
+emission_enabled = true
+emission = Color(1, 0.8, 0.45, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0x441"]
+resource_name = "Mat_window_dark"
+albedo_color = Color(0.06, 0.07, 0.09, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7vg8a"]
+resource_name = "Mat_facade_residencial1"
+albedo_color = Color(0.465, 0.36, 0.24, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_urv7h"]
+resource_name = "Mat_door"
+albedo_color = Color(0.3, 0.2, 0.12, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_kvfhb"]
+resource_name = "Mat_facade_residencial2"
+albedo_color = Color(0.285, 0.3, 0.375, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_i2e5d"]
+resource_name = "Mat_facade_botilleria"
+albedo_color = Color(0.465, 0.36, 0.24, 1)
+roughness = 0.85
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jfyv6"]
+resource_name = "Mat_sign_botilleria"
+albedo_color = Color(0.504, 0.52, 0.6, 1)
+roughness = 0.85
+
+[node name="CuadraOriente" type="Node3D" unique_id=1797834747]
+
+[node name="Edificio_0_Minimarket" type="Node3D" parent="." unique_id=356278797]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.65324, 0, 0)
+
+[node name="Estructura" type="CSGBox3D" parent="Edificio_0_Minimarket" unique_id=151429095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -3)
+use_collision = true
+size = Vector3(7.306479, 3, 6)
+material = SubResource("StandardMaterial3D_nnb5m")
+
+[node name="Cornisa" type="CSGBox3D" parent="Edificio_0_Minimarket" unique_id=1231893841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.12, -0.1)
+size = Vector3(7.506479, 0.25, 0.35)
+material = SubResource("StandardMaterial3D_4bnfn")
+
+[node name="CortinaMetalica" type="CSGBox3D" parent="Edificio_0_Minimarket" unique_id=986086149]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.04)
+size = Vector3(3.6, 2.4, 0.08)
+material = SubResource("StandardMaterial3D_7t5bm")
+
+[node name="ListonesCortina" type="Node3D" parent="Edificio_0_Minimarket" unique_id=415740505]
+
+[node name="Liston_1" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=700495039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_2" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=723869282]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_3" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=620298401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.81, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_4" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=557981886]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_5" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=500857107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_6" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=270432369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_7" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=766572190]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_8" type="CSGBox3D" parent="Edificio_0_Minimarket/ListonesCortina" unique_id=629409104]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.21, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Letrero" type="CSGBox3D" parent="Edificio_0_Minimarket" unique_id=296142766]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.06)
+size = Vector3(3.6, 0.55, 0.12)
+material = SubResource("StandardMaterial3D_1sv14")
+
+[node name="TextoLetrero" type="Label3D" parent="Edificio_0_Minimarket" unique_id=1940319114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.14)
+pixel_size = 0.0055
+modulate = Color(0.12, 0.1, 0.1, 1)
+outline_modulate = Color(1, 1, 1, 0.25)
+text = "MINIMARKET"
+font_size = 64
+outline_size = 8
+
+[node name="Edificio_1_Peluqueria" type="Node3D" parent="." unique_id=1141448996]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.59218, 0, 0)
+
+[node name="Estructura" type="CSGBox3D" parent="Edificio_1_Peluqueria" unique_id=1192104224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -3)
+use_collision = true
+size = Vector3(5.965465, 9, 6)
+material = SubResource("StandardMaterial3D_gxb0p")
+
+[node name="Cornisa" type="CSGBox3D" parent="Edificio_1_Peluqueria" unique_id=1174613420]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 9.12, -0.1)
+size = Vector3(6.165465, 0.25, 0.35)
+material = SubResource("StandardMaterial3D_4bnfn")
+
+[node name="CortinaMetalica" type="CSGBox3D" parent="Edificio_1_Peluqueria" unique_id=1128173792]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.04)
+size = Vector3(3.6, 2.4, 0.08)
+material = SubResource("StandardMaterial3D_7t5bm")
+
+[node name="ListonesCortina" type="Node3D" parent="Edificio_1_Peluqueria" unique_id=1012263893]
+
+[node name="Liston_1" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=782720031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_2" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=464553074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_3" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=1164859713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.81, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_4" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=1688498632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_5" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=739366842]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_6" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=1427981521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_7" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=1790314396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_8" type="CSGBox3D" parent="Edificio_1_Peluqueria/ListonesCortina" unique_id=1886245061]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.21, 0.05)
+size = Vector3(3.6, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Letrero" type="CSGBox3D" parent="Edificio_1_Peluqueria" unique_id=2018226654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.06)
+size = Vector3(3.6, 0.55, 0.12)
+material = SubResource("StandardMaterial3D_5qkwx")
+
+[node name="TextoLetrero" type="Label3D" parent="Edificio_1_Peluqueria" unique_id=706959797]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.14)
+pixel_size = 0.0055
+modulate = Color(0.12, 0.1, 0.1, 1)
+outline_modulate = Color(1, 1, 1, 0.25)
+text = "PELUQUERÍA"
+font_size = 64
+outline_size = 8
+
+[node name="VentanasPiso2" type="Node3D" parent="Edificio_1_Peluqueria" unique_id=592116038]
+
+[node name="VentanaIzq" type="Node3D" parent="Edificio_1_Peluqueria/VentanasPiso2" unique_id=909847736]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.491366, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso2/VentanaIzq" unique_id=598502224]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso2/VentanaIzq" unique_id=1703172158]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="VentanaDer" type="Node3D" parent="Edificio_1_Peluqueria/VentanasPiso2" unique_id=1011411737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.491366, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso2/VentanaDer" unique_id=1926520479]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso2/VentanaDer" unique_id=1479175272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="VentanasPiso3" type="Node3D" parent="Edificio_1_Peluqueria" unique_id=468073686]
+
+[node name="VentanaIzq" type="Node3D" parent="Edificio_1_Peluqueria/VentanasPiso3" unique_id=1506139400]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.491366, 7.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso3/VentanaIzq" unique_id=1604362309]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso3/VentanaIzq" unique_id=1339973351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_0x441")
+
+[node name="VentanaDer" type="Node3D" parent="Edificio_1_Peluqueria/VentanasPiso3" unique_id=1675437200]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.491366, 7.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso3/VentanaDer" unique_id=933527982]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_1_Peluqueria/VentanasPiso3/VentanaDer" unique_id=771380242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_0x441")
+
+[node name="Edificio_2_Residencial" type="Node3D" parent="." unique_id=338757418]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.23606, 0, 0)
+
+[node name="Estructura" type="CSGBox3D" parent="Edificio_2_Residencial" unique_id=1333886857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -3)
+use_collision = true
+size = Vector3(4.711955, 6, 6)
+material = SubResource("StandardMaterial3D_7vg8a")
+
+[node name="Cornisa" type="CSGBox3D" parent="Edificio_2_Residencial" unique_id=364785555]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.12, -0.1)
+size = Vector3(4.911954, 0.25, 0.35)
+material = SubResource("StandardMaterial3D_4bnfn")
+
+[node name="Puerta" type="CSGBox3D" parent="Edificio_2_Residencial" unique_id=49477596]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.177989, 1.1, 0.04)
+size = Vector3(1, 2.2, 0.08)
+material = SubResource("StandardMaterial3D_urv7h")
+
+[node name="VentanaPlantaBaja" type="CSGBox3D" parent="Edificio_2_Residencial" unique_id=2138278204]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.942391, 1.5, 0.04)
+size = Vector3(1.4, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_0x441")
+
+[node name="VentanasPiso2" type="Node3D" parent="Edificio_2_Residencial" unique_id=1586036589]
+
+[node name="VentanaIzq" type="Node3D" parent="Edificio_2_Residencial/VentanasPiso2" unique_id=1344820843]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.177989, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_2_Residencial/VentanasPiso2/VentanaIzq" unique_id=793429311]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_2_Residencial/VentanasPiso2/VentanaIzq" unique_id=296352771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="VentanaDer" type="Node3D" parent="Edificio_2_Residencial/VentanasPiso2" unique_id=1614522350]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.177989, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_2_Residencial/VentanasPiso2/VentanaDer" unique_id=1220451549]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_2_Residencial/VentanasPiso2/VentanaDer" unique_id=504780838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="Edificio_3_Residencial" type="Node3D" parent="." unique_id=115567124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.11813, 0, 0)
+
+[node name="Estructura" type="CSGBox3D" parent="Edificio_3_Residencial" unique_id=368236605]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9333477, 4.5, -3)
+use_collision = true
+size = Vector3(5, 9, 6)
+material = SubResource("StandardMaterial3D_kvfhb")
+
+[node name="Cornisa" type="CSGBox3D" parent="Edificio_3_Residencial" unique_id=650999919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9333477, 9.12, -0.1)
+size = Vector3(5.2000003, 0.25, 0.35)
+material = SubResource("StandardMaterial3D_4bnfn")
+
+[node name="Puerta" type="CSGBox3D" parent="Edificio_3_Residencial" unique_id=2032305963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.716674, 1.1, 0.04)
+size = Vector3(1, 2.2, 0.08)
+material = SubResource("StandardMaterial3D_urv7h")
+
+[node name="VentanaPlantaBaja" type="CSGBox3D" parent="Edificio_3_Residencial" unique_id=38746781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3733387, 1.5, 0.04)
+size = Vector3(1.4, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="VentanasPiso2" type="Node3D" parent="Edificio_3_Residencial" unique_id=170850770]
+
+[node name="VentanaCol1" type="Node3D" parent="Edificio_3_Residencial/VentanasPiso2" unique_id=1009154693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.288899, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso2/VentanaCol1" unique_id=749693170]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso2/VentanaCol1" unique_id=1484109676]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="VentanaCol2" type="Node3D" parent="Edificio_3_Residencial/VentanasPiso2" unique_id=1680018561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso2/VentanaCol2" unique_id=2095610178]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso2/VentanaCol2" unique_id=1125603700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_0x441")
+
+[node name="VentanasPiso3" type="Node3D" parent="Edificio_3_Residencial" unique_id=1300126669]
+
+[node name="VentanaCol1" type="Node3D" parent="Edificio_3_Residencial/VentanasPiso3" unique_id=2044537454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.288899, 7.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso3/VentanaCol1" unique_id=23752081]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso3/VentanaCol1" unique_id=1250501932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="VentanaCol2" type="Node3D" parent="Edificio_3_Residencial/VentanasPiso3" unique_id=510895474]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso3/VentanaCol2" unique_id=254145266]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_3_Residencial/VentanasPiso3/VentanaCol2" unique_id=306935022]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")
+
+[node name="Edificio_4_Botilleria" type="Node3D" parent="." unique_id=1645787119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.87984, 0, 0)
+visible = false
+
+[node name="Estructura" type="CSGBox3D" parent="Edificio_4_Botilleria" unique_id=1643374934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, -3)
+size = Vector3(4.24033, 6, 6)
+material = SubResource("StandardMaterial3D_i2e5d")
+
+[node name="Cornisa" type="CSGBox3D" parent="Edificio_4_Botilleria" unique_id=1914672744]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.12, -0.1)
+size = Vector3(4.44033, 0.25, 0.35)
+material = SubResource("StandardMaterial3D_4bnfn")
+
+[node name="CortinaMetalica" type="CSGBox3D" parent="Edificio_4_Botilleria" unique_id=835260256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0.04)
+size = Vector3(3.24033, 2.4, 0.08)
+material = SubResource("StandardMaterial3D_7t5bm")
+
+[node name="ListonesCortina" type="Node3D" parent="Edificio_4_Botilleria" unique_id=339610543]
+
+[node name="Liston_1" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=437935088]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_2" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=865447418]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_3" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=1171725482]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.81, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_4" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=805820621]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_5" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=250307017]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.37, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_6" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=1588138548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.65, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_7" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=26063906]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.93, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Liston_8" type="CSGBox3D" parent="Edificio_4_Botilleria/ListonesCortina" unique_id=1975789440]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.21, 0.05)
+size = Vector3(3.24033, 0.03, 0.1)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Letrero" type="CSGBox3D" parent="Edificio_4_Botilleria" unique_id=2001773197]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.06)
+size = Vector3(3.24033, 0.55, 0.12)
+material = SubResource("StandardMaterial3D_jfyv6")
+
+[node name="TextoLetrero" type="Label3D" parent="Edificio_4_Botilleria" unique_id=1038944017]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0.14)
+pixel_size = 0.0055
+modulate = Color(0.12, 0.1, 0.1, 1)
+outline_modulate = Color(1, 1, 1, 0.25)
+text = "BOTILLERÍA"
+font_size = 64
+outline_size = 8
+
+[node name="VentanasPiso2" type="Node3D" parent="Edificio_4_Botilleria" unique_id=1865791534]
+
+[node name="VentanaCentro" type="Node3D" parent="Edificio_4_Botilleria/VentanasPiso2" unique_id=2087771778]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0.03)
+
+[node name="Marco" type="CSGBox3D" parent="Edificio_4_Botilleria/VentanasPiso2/VentanaCentro" unique_id=929177068]
+size = Vector3(1, 1.25, 0.06)
+material = SubResource("StandardMaterial3D_8ashw")
+
+[node name="Vidrio" type="CSGBox3D" parent="Edificio_4_Botilleria/VentanasPiso2/VentanaCentro" unique_id=205374726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.01)
+size = Vector3(0.86, 1.1, 0.08)
+material = SubResource("StandardMaterial3D_y1tym")

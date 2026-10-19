@@ -1,0 +1,313 @@
+[gd_scene format=3 uid="uid://bsoq3wmul0bie"]
+
+[ext_resource type="Script" uid="uid://ce8qvkgd024wq" path="res://scripts/map/CityBlock.gd" id="1_block"]
+[ext_resource type="Script" uid="uid://b5qod4ngryqtr" path="res://scripts/map/NeonSign.gd" id="2_neon"]
+[ext_resource type="PackedScene" path="res://scenes/map/CuadraOriente.tscn" id="3_oriente"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_sign_board"]
+albedo_color = Color(0.06, 0.05, 0.08, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_glass"]
+transparency = 1
+albedo_color = Color(0.6, 0.75, 0.85, 0.25)
+roughness = 0.05
+
+[sub_resource type="StandardMaterial3D" id="Mat_metal"]
+albedo_color = Color(0.45, 0.47, 0.5, 1)
+metallic = 0.6
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_bench"]
+albedo_color = Color(0.35, 0.22, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_poster"]
+albedo_color = Color(0.95, 0.9, 0.75, 1)
+emission_enabled = true
+emission = Color(0.9, 0.85, 0.7, 1)
+emission_energy_multiplier = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_car"]
+albedo_color = Color(0.45, 0.08, 0.08, 1)
+metallic = 0.4
+roughness = 0.35
+
+[sub_resource type="StandardMaterial3D" id="Mat_car_glass"]
+albedo_color = Color(0.08, 0.1, 0.14, 1)
+roughness = 0.1
+
+[sub_resource type="StandardMaterial3D" id="Mat_tire"]
+albedo_color = Color(0.04, 0.04, 0.04, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_tail"]
+albedo_color = Color(1, 0.1, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.1, 0.05, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_trunk"]
+albedo_color = Color(0.25, 0.17, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_leaves"]
+albedo_color = Color(0.1, 0.22, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_pole"]
+albedo_color = Color(0.3, 0.27, 0.24, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_cable"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+
+[node name="Neighborhood" type="Node3D" unique_id=667998404]
+
+[node name="CuadraEnfrente" type="Node3D" parent="." unique_id=2031340872]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, -21.6)
+script = ExtResource("1_block")
+block_length = 60.0
+depth = 8.0
+lit_window_chance = 0.4
+seed_value = 7
+sign_lights = true
+
+[node name="CuadraPoniente" type="Node3D" parent="." unique_id=220241430]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -4.9, 0, -4)
+script = ExtResource("1_block")
+block_length = 30.0
+max_floors = 3
+seed_value = 3
+
+[node name="CuadraOriente" parent="." unique_id=1941309772 instance=ExtResource("3_oriente")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 34.2, 0, -4)
+
+[node name="LetreroNeon" type="Node3D" parent="." unique_id=1142737340]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -0.43, 3.75, -3.82)
+script = ExtResource("2_neon")
+
+[node name="Board" type="CSGBox3D" parent="LetreroNeon" unique_id=508231681]
+size = Vector3(3.6, 0.95, 0.12)
+material = SubResource("Mat_sign_board")
+
+[node name="Text" type="Label3D" parent="LetreroNeon" unique_id=1981870362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0.075)
+pixel_size = 0.0045
+modulate = Color(1, 0.25, 0.45, 1)
+outline_modulate = Color(1, 0.1, 0.3, 0.45)
+text = "COMPLETOS"
+font_size = 150
+outline_size = 18
+
+[node name="Open" type="Label3D" parent="LetreroNeon" unique_id=787573309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.33, 0.075)
+pixel_size = 0.003
+modulate = Color(0.35, 1, 0.55, 1)
+text = "ABIERTO DE NOCHE · MOJADOS DE TALCA"
+font_size = 56
+outline_size = 6
+
+[node name="Glow" type="OmniLight3D" parent="LetreroNeon" unique_id=1979894314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0.8)
+light_color = Color(1, 0.3, 0.5, 1)
+light_energy = 1.4
+shadow_enabled = true
+omni_range = 4.5
+
+[node name="Paradero" type="Node3D" parent="." unique_id=1050106073]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.1, -6.3)
+
+[node name="Back" type="CSGBox3D" parent="Paradero" unique_id=410866963]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0.65)
+size = Vector3(3, 2.2, 0.05)
+material = SubResource("Mat_glass")
+
+[node name="Roof" type="CSGBox3D" parent="Paradero" unique_id=1045263857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.3, 0.15)
+size = Vector3(3.3, 0.08, 1.3)
+material = SubResource("Mat_metal")
+
+[node name="PostLeft" type="CSGBox3D" parent="Paradero" unique_id=967868023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 1.15, 0.65)
+size = Vector3(0.08, 2.3, 0.08)
+material = SubResource("Mat_metal")
+
+[node name="PostRight" type="CSGBox3D" parent="Paradero" unique_id=1161148449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 1.15, 0.65)
+size = Vector3(0.08, 2.3, 0.08)
+material = SubResource("Mat_metal")
+
+[node name="Bench" type="CSGBox3D" parent="Paradero" unique_id=1120077919]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.35)
+size = Vector3(2.2, 0.08, 0.4)
+material = SubResource("Mat_bench")
+
+[node name="Poster" type="CSGBox3D" parent="Paradero" unique_id=206230387]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.75, 1.3, 0.62)
+size = Vector3(1.1, 1.5, 0.02)
+material = SubResource("Mat_poster")
+
+[node name="PosterText" type="Label3D" parent="Paradero" unique_id=200991686]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0.75, 1.3, 0.605)
+pixel_size = 0.0025
+modulate = Color(0.15, 0.1, 0.1, 1)
+text = "TERMINAL DE BUSES
+
+ÚLTIMA SALIDA
+06:00 AM
+
+¡Deja atrás
+la ciudad!
+
+Pasaje + empezar
+de nuevo: $50.000"
+font_size = 42
+outline_size = 0
+
+[node name="SignPole" type="CSGCylinder3D" parent="Paradero" unique_id=790093436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, 1.3, -0.6)
+radius = 0.04
+height = 2.6
+material = SubResource("Mat_metal")
+
+[node name="SignPlate" type="CSGBox3D" parent="Paradero/SignPole" unique_id=272907629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+size = Vector3(0.5, 0.6, 0.03)
+material = SubResource("Mat_poster")
+
+[node name="SignText" type="Label3D" parent="Paradero/SignPole" unique_id=830263407]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 1.05, -0.02)
+pixel_size = 0.0025
+modulate = Color(0.05, 0.2, 0.5, 1)
+text = "PARADERO
+PD-1043
+Terminal"
+font_size = 36
+outline_size = 0
+
+[node name="AutoEstacionado" type="Node3D" parent="." unique_id=21321092]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -9.3)
+
+[node name="Body" type="CSGBox3D" parent="AutoEstacionado" unique_id=1292896241]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+size = Vector3(4.2, 0.7, 1.8)
+material = SubResource("Mat_car")
+
+[node name="Cabin" type="CSGBox3D" parent="AutoEstacionado" unique_id=1032183205]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.2, 0)
+size = Vector3(2.2, 0.55, 1.6)
+material = SubResource("Mat_car_glass")
+
+[node name="WheelFL" type="CSGCylinder3D" parent="AutoEstacionado" unique_id=274204853]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.35, 0.33, 0.85)
+radius = 0.33
+height = 0.22
+sides = 14
+material = SubResource("Mat_tire")
+
+[node name="WheelFR" type="CSGCylinder3D" parent="AutoEstacionado" unique_id=965309040]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 1.35, 0.33, -0.85)
+radius = 0.33
+height = 0.22
+sides = 14
+material = SubResource("Mat_tire")
+
+[node name="WheelRL" type="CSGCylinder3D" parent="AutoEstacionado" unique_id=2129100653]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -1.35, 0.33, 0.85)
+radius = 0.33
+height = 0.22
+sides = 14
+material = SubResource("Mat_tire")
+
+[node name="WheelRR" type="CSGCylinder3D" parent="AutoEstacionado" unique_id=1453398612]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -1.35, 0.33, -0.85)
+radius = 0.33
+height = 0.22
+sides = 14
+material = SubResource("Mat_tire")
+
+[node name="TailLightL" type="CSGBox3D" parent="AutoEstacionado" unique_id=842401398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.11, 0.7, 0.6)
+size = Vector3(0.04, 0.15, 0.35)
+material = SubResource("Mat_tail")
+
+[node name="TailLightR" type="CSGBox3D" parent="AutoEstacionado" unique_id=447449671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.11, 0.7, -0.6)
+size = Vector3(0.04, 0.15, 0.35)
+material = SubResource("Mat_tail")
+
+[node name="Arboles" type="Node3D" parent="." unique_id=785675482]
+
+[node name="Arbol1" type="Node3D" parent="Arboles" unique_id=778945604]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 0.1, -19.4)
+
+[node name="Trunk" type="CSGCylinder3D" parent="Arboles/Arbol1" unique_id=707349433]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+radius = 0.14
+height = 2.5
+material = SubResource("Mat_trunk")
+
+[node name="Crown" type="CSGSphere3D" parent="Arboles/Arbol1" unique_id=526045056]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 3, 0)
+radius = 1.3
+radial_segments = 10
+material = SubResource("Mat_leaves")
+
+[node name="Arbol2" type="Node3D" parent="Arboles" unique_id=1009895955]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.1, -19.4)
+
+[node name="Trunk" type="CSGCylinder3D" parent="Arboles/Arbol2" unique_id=863420074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+radius = 0.14
+height = 2.5
+material = SubResource("Mat_trunk")
+
+[node name="Crown" type="CSGSphere3D" parent="Arboles/Arbol2" unique_id=471836099]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 3, 0)
+radius = 1.2
+radial_segments = 10
+material = SubResource("Mat_leaves")
+
+[node name="Arbol3" type="Node3D" parent="Arboles" unique_id=559510858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.1, -19.4)
+
+[node name="Trunk" type="CSGCylinder3D" parent="Arboles/Arbol3" unique_id=994277469]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+radius = 0.14
+height = 2.5
+material = SubResource("Mat_trunk")
+
+[node name="Crown" type="CSGSphere3D" parent="Arboles/Arbol3" unique_id=694471907]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 3, 0)
+radius = 1.4
+radial_segments = 10
+material = SubResource("Mat_leaves")
+
+[node name="Postes" type="Node3D" parent="." unique_id=413808934]
+
+[node name="Poste1" type="CSGCylinder3D" parent="Postes" unique_id=1450712374]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 3.6, -5.6)
+radius = 0.12
+height = 7.0
+material = SubResource("Mat_pole")
+
+[node name="Cruceta" type="CSGBox3D" parent="Postes/Poste1" unique_id=449647899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+size = Vector3(0.1, 0.1, 1.4)
+material = SubResource("Mat_pole")
+
+[node name="Poste2" type="CSGCylinder3D" parent="Postes" unique_id=1906119372]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 3.6, -5.6)
+radius = 0.12
+height = 7.0
+material = SubResource("Mat_pole")
+
+[node name="Cruceta" type="CSGBox3D" parent="Postes/Poste2" unique_id=2011429295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+size = Vector3(0.1, 0.1, 1.4)
+material = SubResource("Mat_pole")
+
+[node name="Cable1" type="CSGBox3D" parent="Postes" unique_id=44036863]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 6.55, -5)
+size = Vector3(32, 0.025, 0.025)
+material = SubResource("Mat_cable")
+
+[node name="Cable2" type="CSGBox3D" parent="Postes" unique_id=1845494956]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 6.55, -6.2)
+size = Vector3(32, 0.025, 0.025)
+material = SubResource("Mat_cable")

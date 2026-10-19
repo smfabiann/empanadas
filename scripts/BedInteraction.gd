@@ -1,7 +1,7 @@
 class_name BedInteraction
 extends StaticBody3D
 ## Interactive bed mechanic.
-## Detects the player by proximity and only displays "Press E to sleep"
+## Detects the player by proximity and only displays "[E] Dormir hasta la próxima noche"
 ## when the day quota of clients has been completed (GameManager.can_sleep()).
 ## Interacting advances the day (or triggers victory on final day) without
 ## showing a blocking next-day popup menu.
@@ -9,7 +9,7 @@ extends StaticBody3D
 signal bed_interacted
 signal slept
 
-@export var prompt_text: String = "Press E to sleep"
+@export var prompt_text: String = "[E] Dormir hasta la próxima noche"
 @export var interaction_distance: float = 3.2
 
 const PLAYER_GROUP: String = "player"

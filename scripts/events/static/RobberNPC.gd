@@ -21,6 +21,8 @@ extends NPC
 @export var wrong_item_patience_penalty: float = 5.0
 ## Si es true, el ladrón intentará robar si se le agota la paciencia
 @export var steal_on_timeout: bool = true
+## Plata que se lleva de la caja si el jugador le entrega todo (cerrar la persiana a tiempo la protege)
+@export var robbery_amount: int = 5000
 
 @export_group("Puntos de Manipulación del Arma (Handles)")
 ## Referencia al nodo del arma (se busca $Gun automáticamente si está vacío)
@@ -217,11 +219,12 @@ func receive_item(item_node: Interactable) -> void:
 			patience_bar_pivot.visible = false
 			
 			if label:
-				label.text = " ¡Trato hecho! Me voy satisfecho con mis completos... "
-				label.modulate = Color(0.2, 1.0, 0.4, 1.0)
+				label.text = " ¡Trato hecho! Y me llevo la caja... -$%s " % GameManager.format_money(robbery_amount)
+				label.modulate = Color(1.0, 0.55, 0.2, 1.0)
 			
 			_holster_gun()
 			GameManager.register_npc_served(true)
+			GameManager.lose_money(robbery_amount, "El ladrón se llevó la caja")
 			await get_tree().create_timer(1.2).timeout
 			if is_instance_valid(self):
 				_start_leaving()

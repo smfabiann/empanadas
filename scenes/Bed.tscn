@@ -90,6 +90,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Press E to sleep"
+text = "[E] Dormir hasta la próxima noche"
 horizontal_alignment = 1
 vertical_alignment = 1

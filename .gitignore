@@ -2,6 +2,7 @@
 .godot/
 /android/
 /export/
+Godot_v4.7.2-stable_mono_win64/
 
 # Configuraciones locales de editores
 .vscode/

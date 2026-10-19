@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://dtdqocd2hb5r"]
 
+[ext_resource type="Script" path="res://scripts/map/BackDoor.gd" id="1_backdoor"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
 albedo_color = Color(0.22, 0.18, 0.15, 1)
 
@@ -8,25 +10,6 @@ albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wall_side"]
 albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
-
-[sub_resource type="GDScript" id="GDScript_puerta"]
-script/source = "extends AnimatableBody3D
-
-var is_open: bool = false
-var is_moving: bool = false
-
-func interact(player: Node3D) -> void:
-	if is_moving:
-		return
-	is_moving = true
-	var tween = create_tween()
-	if is_open:
-		tween.tween_property(self, \"rotation_degrees:y\", 0.0, 0.4)
-	else:
-		tween.tween_property(self, \"rotation_degrees:y\", -90.0, 0.4)
-	is_open = not is_open
-	tween.tween_callback(func(): is_moving = false)
-"
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_door"]
 size = Vector3(1.1, 2.2, 0.1)
@@ -47,6 +30,9 @@ albedo_color = Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
 script/source = "extends Node3D
 
 var is_open: bool = true
+
+func _ready() -> void:
+	add_to_group(\"persiana\")
 
 func toggle() -> void:
 	if is_open:
@@ -77,6 +63,9 @@ func close() -> void:
 				npc.on_persiana_closed()
 			elif npc.has_method(\"_timeout\"):
 				npc._timeout()
+
+	# Las anomalías también reaccionan a la persiana (ej. la presencia nocturna se va)
+	get_tree().call_group(\"anomalies_managers\", \"on_persiana_closed\")
 "
 
 [sub_resource type="GDScript" id="GDScript_boton"]
@@ -138,7 +127,7 @@ material = SubResource("StandardMaterial3D_wall_side")
 [node name="BackDoor" type="AnimatableBody3D" parent="." unique_id=900000001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.55, -1.5, 3.5)
 collision_layer = 3
-script = SubResource("GDScript_puerta")
+script = ExtResource("1_backdoor")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BackDoor" unique_id=900000003]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 1.1, 0)

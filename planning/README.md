@@ -15,6 +15,9 @@ Documentación técnica centralizada y optimizada para proporcionar contexto cla
 3. **[Roadmap y Backlog de Tareas (`ROADMAP.md`)](./ROADMAP.md)**:
    - Visión del proyecto, estado actual y backlog activo de tareas prioritarias.
    - Fases de desarrollo (Fase 1 completada, Fase 2 en curso, fases futuras).
+4. **[Rúbrica Alpha: estado y brechas (`RUBRICA_ALPHA.md`)](./RUBRICA_ALPHA.md)**:
+   - Evaluación criterio por criterio de la rúbrica Alpha (140 pts) con evidencia.
+   - Qué falta para cerrar cada brecha y prioridades antes de la entrega.
 
 ---
 

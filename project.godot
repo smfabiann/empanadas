@@ -17,12 +17,15 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+SettingsManager="*res://scripts/SettingsManager.gd"
 GameManager="*res://scripts/GameManager.gd"
 SFXManager="*res://scripts/SFXManager.gd"
 DayCycle="*res://scripts/DayCycle.gd"
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
@@ -60,11 +63,12 @@ jump={
 
 [layer_names]
 
+3d_render/layer_11="CCTV"
+3d_render/layer_12="NightVision"
 3d_physics/layer_1="World"
 3d_physics/layer_2="Interactable"
 3d_physics/layer_3="NPC"
 3d_physics/layer_4="Interaction"
-3d_render/layer_11="CCTV"
 
 [physics]
 

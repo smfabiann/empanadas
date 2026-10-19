@@ -10,7 +10,7 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 
 - **Escenas (`res://scenes/`):**
   - Gameplay principal: `res://scenes/Main.tscn`
-  - Mapa y entorno: `res://scenes/map/` (`shop.tscn`, `KitchenStations.tscn`, etc.)
+  - Mapa y entorno: `res://scenes/map/` (`shop.tscn`, `KitchenStations.tscn`, `Neighborhood.tscn`, `ShopDecor.tscn`, etc.)
   - Jugador y NPCs: `res://scenes/Player.tscn`, `res://scenes/NPC.tscn`, `res://scenes/RobberNPC.tscn`
   - Ítems: `res://scenes/items/` (`Completo.tscn`, `Drink.tscn`, `Empanada.tscn`, `Sopaipilla.tscn`)
   - Anomalías: `res://scenes/anomalies/` (`AnomalyBase.tscn`, `GlitchSpriteAnomaly.tscn`, `Aware.tscn`, `CCTVLurker.tscn`, `CCTVIntruder.tscn`, `CCTVPowerFailure.tscn`)
@@ -18,7 +18,8 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 - **Scripts (`res://scripts/`):**
   - Autoloads: `GameManager.gd`, `SFXManager.gd`
   - Lógica base: `Player.gd`, `NPC.gd`, `NPCSpawner.gd`, `IngredientStation.gd`, `Interactable.gd`
-  - Eventos: `scripts/events/` y `scripts/events/static/`
+  - Eventos: `scripts/events/` y `scripts/events/static/` (`ufo/`, `talca/`, `estafador/`, `rappi/`)
+  - Mapa: `scripts/map/` (`CityBlock.gd`, `NeonSign.gd`, `EscapeProgressProp.gd`, baño químico, ampolletas)
   - Anomalías: `scripts/anomalies/` (eventos de CCTV en `scripts/anomalies/cctv/`)
   - Cámaras de seguridad: `scripts/cctv/` (`CCTVCamera.gd`, `CCTVZone.gd`) y `SecurityMonitor.gd`
   - UI: `scripts/ui/`
@@ -43,7 +44,9 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 4. **Capa de render 11 (`CCTV`) reservada:**
    - Solo la ven las cámaras de seguridad (`CCTVCamera.gd`). No usarla para objetos que el jugador deba ver.
 5. **Verificar control del jugador:**
-   - Respetar `GameManager.can_player_act()` en `Player.gd` antes de procesar movimiento o interacción.
+   - Respetar `GameManager.can_player_act()` en `Player.gd` antes de procesar movimiento o interacción (es `false` durante la intro, el sueño, la victoria y el game over).
+6. **La plata pasa siempre por `GameManager`:**
+   - Usar `earn_money()` / `lose_money()` con un motivo corto; nunca modificar `savings` directamente fuera de tests. La UI, la alcancía y el calendario escuchan `money_changed` y `day_started`.
 
 ---
 
@@ -51,7 +54,7 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 
 ### A. Crear un nuevo Evento de NPC
 1. Heredar de `NPCEvent` (aleatorio) o `StaticNPCEvent` (narrativo/condicional).
-2. Implementar ganchos necesarios: `apply(npc)`, `on_arrive(npc)`, `on_leave(npc)`.
+2. Implementar ganchos necesarios: `apply(npc)`, `on_arrive(npc)`, `on_leave(npc)` y, si el evento cambia la entrega o la salida, `on_item_received(npc, item)`, `on_persiana_closed(npc)` u `on_timeout(npc)` (retornan `true` si manejaron el caso). Para pedidos y cierres usar `npc.set_completo_order(...)` y `npc.finish_visit(...)`; el estado por visita va en `npc.set_meta(...)` porque el evento es un `Resource` compartido.
 3. Registrar en `_register_default_events()` de `res://scripts/events/NPCEventManager.gd`.
 4. Guía detallada en [`scripts/events/README.md`](../scripts/events/README.md).
 
@@ -69,8 +72,12 @@ Usar siempre rutas relativas estándar de Godot (`res://...`):
 5. Guía detallada en [`scripts/anomalies/README.md`](../scripts/anomalies/README.md#eventos-de-cctv-hu-10). Validar con `tests/test_cctv_events.tscn`.
 
 ### D. Agregar una nueva Estación de Cocina
-1. Instanciar `IngredientStation.tscn` dentro de `KitchenStations.tscn`.
-2. Asignar el tipo de ingrediente exportado (`station_type`) y manejar su lógica en `IngredientStation.gd` y `CompletoItem.gd`.
+1. Agregar un `StaticBody3D` con `IngredientStation.gd` dentro de `KitchenStations.tscn` (ver `Station_Olla` como ejemplo con mueble propio).
+2. Asignar el tipo exportado (`station_type`) y manejar su prompt e interacción en `IngredientStation.gd`; si cambia el completo, agregar el estado en `CompletoItem.gd` y, si los clientes lo pueden pedir, un parámetro opcional en `matches_order()` / `get_match_error()` para no romper llamadas existentes.
+
+### E. Ajustar la meta del escape o el barrio
+1. Meta y ahorros iniciales: `starting_savings` y `escape_goal` en el Inspector del nodo raíz de `Main.tscn`; precios en las constantes de `GameManager.gd`.
+2. Barrio: cada cuadra de `Neighborhood.tscn` es un `CityBlock` (`@tool`): cambiar `seed_value`, `block_length`, pisos o `sign_lights` y se regenera en el editor. Mantener libres la línea de los clientes (x ≈ -0.43, z de -11 a -4.5) y el encuadre de las cámaras de CCTV.
 
 ---
 
@@ -81,3 +88,4 @@ Antes de finalizar cualquier tarea técnica:
 - [ ] La escena principal `Main.tscn` carga sin errores de dependencias rotas.
 - [ ] El flujo de interacción del jugador ([E], recoger, cocinar, entregar) funciona.
 - [ ] Las señales entre `GameManager`, `NPCSpawner` y `UI` se mantienen intactas.
+- [ ] Las suites de `tests/` pasan en headless: `godot --headless res://tests/<suite>.tscn` (código de salida 0).
