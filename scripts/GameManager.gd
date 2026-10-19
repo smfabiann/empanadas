@@ -24,6 +24,15 @@ signal money_changed(savings: int, delta: int, reason: String)
 signal intro_finished()
 ## Pista contextual para el jugador (la UI la muestra como aviso temporal)
 signal hint_requested(text: String)
+## Sistema de dos strikes para errores con anomalías (persiste entre días)
+signal anomaly_strikes_changed(strikes: int)
+
+## Color sutil de rojo burdeo para las paredes de la tienda en estado de corrupción
+const CORRUPTED_BURGUNDY_WALL_COLOR := Color(0.42, 0.15, 0.20, 1.0)
+const NORMAL_WALL_COLOR := Color(0.41394377, 0.41844547, 0.44428653, 0.7607843)
+
+## Cantidad acumulada de veces que el jugador atendió una anomalía por error (persiste entre días)
+var anomaly_strikes: int = 0
 
 var game_active: bool = true
 var is_game_won: bool = false
@@ -332,6 +341,56 @@ func restore_environment(tree: SceneTree = null) -> void:
 		ceiling_light.light_energy = DEFAULT_CEILING_LIGHT_ENERGY
 
 
+func _ready() -> void:
+	if not day_started.is_connected(_on_day_started_reapply_corruption):
+		day_started.connect(_on_day_started_reapply_corruption)
+
+
+func _on_day_started_reapply_corruption(_day: int, _max_clients: int) -> void:
+	if get_tree():
+		apply_wall_corruption(get_tree(), false)
+
+
+## Registra un error al atender una anomalía.
+## Retorna la cantidad acumulada de strikes (1 = advertencia y paredes burdeo, 2+ = muerte fatal).
+func record_anomaly_strike() -> int:
+	anomaly_strikes += 1
+	anomaly_strikes_changed.emit(anomaly_strikes)
+	return anomaly_strikes
+
+
+## Aplica la corrupción (rojo burdeo) a las paredes interiores de la tienda si hay strikes activos.
+func apply_wall_corruption(target_tree: SceneTree, animated: bool = false, duration: float = 1.5) -> void:
+	if target_tree == null:
+		return
+	var shop = target_tree.root.find_child("Shop", true, false)
+	if shop == null:
+		return
+
+	var target_color: Color = CORRUPTED_BURGUNDY_WALL_COLOR if anomaly_strikes >= 1 else NORMAL_WALL_COLOR
+
+	var wall_names := [
+		"WallBack", "WallLeft", "WallRight",
+		"WallFrontLeft", "WallFrontRight", "WallFrontTop", "WallFrontBottom"
+	]
+
+	for w_name in wall_names:
+		var wall = shop.find_child(w_name, true, false)
+		if wall and ("material" in wall) and wall.material is StandardMaterial3D:
+			if not wall.material.has_meta("is_unique_wall_mat"):
+				wall.material = wall.material.duplicate()
+				wall.material.set_meta("is_unique_wall_mat", true)
+
+			var mat: StandardMaterial3D = wall.material
+			if animated:
+				var tw := shop.create_tween()
+				tw.tween_property(mat, "albedo_color", target_color, duration)\
+					.set_trans(Tween.TRANS_SINE)\
+					.set_ease(Tween.EASE_OUT)
+			else:
+				mat.albedo_color = target_color
+
+
 func reset_game() -> void:
 	game_active = true
 	is_game_won = false
@@ -344,12 +403,15 @@ func reset_game() -> void:
 	day_active = true
 	mojados_unlocked = false
 	savings = starting_savings
+	anomaly_strikes = 0
 	_reset_day_counters()
 	money_changed.emit(savings, 0, "")
 	npc_spawned.emit(npcs_spawned)
 	npc_served.emit(npcs_served, true)
 	day_progress.emit(clients_attended_today, max_clients_per_day)
 	restore_environment()
+	if get_tree():
+		apply_wall_corruption(get_tree(), false)
 
 
 ## Formatea montos al estilo chileno: 50000 -> "50.000"

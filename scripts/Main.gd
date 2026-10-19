@@ -61,3 +61,6 @@ func _ready() -> void:
 
 	if DayCycle and DayCycle.has_method("on_main_scene_ready"):
 		DayCycle.on_main_scene_ready()
+
+	if GameManager:
+		GameManager.apply_wall_corruption(get_tree(), false)
