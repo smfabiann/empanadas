@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/anomalies/AnomalyBase.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/anomalies/cctv/CCTVShadowCompanionAnomaly.gd" id="2_script"]
+
+[node name="CCTVShadowCompanion" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+anomaly_id = "cctv_shadow_companion"
+auto_execute_on_ready = false
+event_duration = 0.0
