@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://ce8qvkgd024wq" path="res://scripts/map/CityBlock.gd" id="1_block"]
 [ext_resource type="Script" uid="uid://b5qod4ngryqtr" path="res://scripts/map/NeonSign.gd" id="2_neon"]
-[ext_resource type="PackedScene" path="res://scenes/map/CuadraOriente.tscn" id="3_oriente"]
+[ext_resource type="PackedScene" uid="uid://c66s8bjt4bmbg" path="res://scenes/map/CuadraOriente.tscn" id="3_oriente"]
 
 [sub_resource type="StandardMaterial3D" id="Mat_sign_board"]
 albedo_color = Color(0.06, 0.05, 0.08, 1)
@@ -185,6 +185,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, -9.3)
 
 [node name="Body" type="CSGBox3D" parent="AutoEstacionado" unique_id=1292896241]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+use_collision = true
 size = Vector3(4.2, 0.7, 1.8)
 material = SubResource("Mat_car")
 

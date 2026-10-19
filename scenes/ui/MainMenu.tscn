@@ -1,69 +1,78 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene format=3 uid="uid://dfc7ikk613gly"]
 
-[ext_resource type="Script" path="res://scripts/ui/MainMenu.gd" id="1_menu"]
+[ext_resource type="Script" uid="uid://cwu55rxllmw6b" path="res://scripts/ui/MainMenu.gd" id="1_menu"]
 [ext_resource type="PackedScene" path="res://scenes/ui/OptionsMenu.tscn" id="2_options"]
+[ext_resource type="PackedScene" uid="uid://do6rg0tvronp1" path="res://scenes/ui/MenuBackground3D.tscn" id="3_bg3d"]
+
+[sub_resource type="Gradient" id="Gradient_vignette"]
+colors = PackedColorArray(0.015, 0.02, 0.04, 0.68, 0.015, 0.02, 0.04, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vignette"]
+gradient = SubResource("Gradient_vignette")
+
+[sub_resource type="LabelSettings" id="LabelSettings_2a6q0"]
+font_size = 92
+
+[sub_resource type="LabelSettings" id="LabelSettings_tem6s"]
+font_size = 18
+font_color = Color(0.65, 0.72, 0.85, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.12, 0.35, 0.65, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.45, 0.88, 1, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.06, 0.22, 0.44, 0.75)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.72, 1, 0.95)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_fk6vv"]
+font_size = 15
+font_color = Color(0.65, 0.7, 0.8, 0.85)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.07, 0.05, 0.12, 0.94)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.9, 0.72, 0.25, 0.9)
 content_margin_left = 45.0
 content_margin_top = 35.0
 content_margin_right = 45.0
 content_margin_bottom = 35.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
-bg_color = Color(0.22, 0.15, 0.38, 1)
+bg_color = Color(0.05, 0.07, 0.12, 0.96)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.75, 0.58, 0.98, 1)
-content_margin_left = 25.0
-content_margin_top = 12.0
-content_margin_right = 25.0
-content_margin_bottom = 12.0
+border_color = Color(0.25, 0.65, 0.95, 0.8)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
-bg_color = Color(0.34, 0.23, 0.58, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.85, 1, 1)
-content_margin_left = 25.0
-content_margin_top = 12.0
-content_margin_right = 25.0
-content_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
-bg_color = Color(0.14, 0.09, 0.24, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.5, 0.35, 0.7, 1)
-content_margin_left = 25.0
-content_margin_top = 12.0
-content_margin_right = 25.0
-content_margin_bottom = 12.0
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_controls"]
-bg_color = Color(0.04, 0.03, 0.08, 0.65)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.4, 0.32, 0.55, 0.4)
-content_margin_left = 16.0
-content_margin_top = 12.0
-content_margin_right = 16.0
-content_margin_bottom = 12.0
-
-[node name="MainMenu" type="Control"]
+[node name="MainMenu" type="Control" unique_id=1870732346]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -72,143 +81,161 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu")
 
-[node name="BGRect" type="ColorRect" parent="."]
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=869653643]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.05, 0.03, 0.09, 1)
+mouse_filter = 2
+stretch = true
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=1542601893]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="MenuBackground3D" parent="SubViewportContainer/SubViewport" unique_id=343230885 instance=ExtResource("3_bg3d")]
+
+[node name="LeftVignette" type="TextureRect" parent="." unique_id=1536628928]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
+anchors_preset = 9
 anchor_bottom = 1.0
-grow_horizontal = 2
+offset_right = 720.0
 grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_vignette")
 
-[node name="MainPanel" type="PanelContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(460, 0)
+[node name="TitleContainer" type="MarginContainer" parent="." unique_id=5829446]
+layout_mode = 0
+offset_right = 800.0
+offset_bottom = 180.0
+theme_override_constants/margin_left = 60
+theme_override_constants/margin_top = 60
+
+[node name="VBoxContainer" type="VBoxContainer" parent="TitleContainer" unique_id=1186900926]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_constants/separation = 4
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/MainPanel"]
+[node name="TitleLabel" type="Label" parent="TitleContainer/VBoxContainer" unique_id=1856027505]
 layout_mode = 2
-theme_override_constants/separation = 16
-alignment = 1
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "ESCAPE OF TALCA"
+label_settings = SubResource("LabelSettings_2a6q0")
 
-[node name="TitleLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
+[node name="VersionLabel" type="Label" parent="TitleContainer/VBoxContainer" unique_id=1409233934]
 layout_mode = 2
-text = "COMPLETOS"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 46
-theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
+theme_override_colors/font_color = Color(0.65, 0.72, 0.85, 0.8)
+text = "v0.8 ALPHA"
+label_settings = SubResource("LabelSettings_tem6s")
 
-[node name="SubtitleLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
-layout_mode = 2
-text = "3 noches  ·  Junta la plata del pasaje  ·  Escapa de la ciudad"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.78, 0.72, 0.88, 1)
+[node name="ButtonsMargin" type="MarginContainer" parent="." unique_id=1959417727]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -120.0
+offset_right = 360.0
+offset_bottom = 180.0
+grow_vertical = 2
+theme_override_constants/margin_left = 60
 
-[node name="HighScoreLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer"]
-visible = false
-layout_mode = 2
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 15
-theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBoxContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="ButtonsVBox" type="VBoxContainer" parent="CenterContainer/MainPanel/VBoxContainer"]
+[node name="ButtonsVBox" type="VBoxContainer" parent="ButtonsMargin" unique_id=1502678930]
+unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="PlayButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonsVBox"]
+[node name="PlayButton" type="Button" parent="ButtonsMargin/ButtonsVBox" unique_id=2020377441]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
 theme_override_font_sizes/font_size = 22
-text = "▶  JUGAR"
-
-[node name="CreditsButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonsVBox"]
-layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_font_sizes/font_size = 18
-text = "ℹ  CRÉDITOS"
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "JUGAR"
+alignment = 0
 
-[node name="OptionsButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonsVBox"]
+[node name="OptionsButton" type="Button" parent="ButtonsMargin/ButtonsVBox" unique_id=2039432243]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_font_sizes/font_size = 18
-text = "⚙  OPCIONES"
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "OPCIONES"
+alignment = 0
 
-[node name="QuitButton" type="Button" parent="CenterContainer/MainPanel/VBoxContainer/ButtonsVBox"]
+[node name="CreditsButton" type="Button" parent="ButtonsMargin/ButtonsVBox" unique_id=865128927]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_font_sizes/font_size = 18
-text = "  SALIR"
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "CRÉDITOS"
+alignment = 0
 
-[node name="ControlsPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBoxContainer"]
+[node name="QuitButton" type="Button" parent="ButtonsMargin/ButtonsVBox" unique_id=734651941]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 46)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_controls")
+theme_override_colors/font_color = Color(0.88, 0.92, 0.96, 1)
+theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.65, 0.9, 1, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_hover")
+text = "SALIR"
+alignment = 0
 
-[node name="ControlsLabel" type="Label" parent="CenterContainer/MainPanel/VBoxContainer/ControlsPanel"]
-layout_mode = 2
-text = "WASD: Mover  |  Shift: Correr  |  Espacio: Saltar  |  E: Usar / Entregar\nQ: Soltar  |  Monitor: A/D cambia cámara, F visión nocturna  |  ESC: Pausa"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 12
-theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 1)
-
-[node name="VersionLabel" type="Label" parent="."]
+[node name="CreditsFooterMargin" type="MarginContainer" parent="." unique_id=774265473]
 layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -140.0
-offset_top = -35.0
-offset_right = -15.0
-offset_bottom = -15.0
+offset_left = -620.0
+offset_top = -90.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.5, 0.4, 0.65, 0.7)
-theme_override_font_sizes/font_size = 12
-text = "ALPHA v0.1"
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="CreditsLabel" type="Label" parent="CreditsFooterMargin" unique_id=1292222436]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.7, 0.8, 0.8)
+theme_override_font_sizes/font_size = 14
+text = "Nicolaz Perez, Nicolas Vargas, Fabian San Martin
+Taller de Juegos — 2026"
+label_settings = SubResource("LabelSettings_fk6vv")
 horizontal_alignment = 2
 
-[node name="CreditsLabel" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -320.0
-offset_top = -45.0
-offset_right = 320.0
-offset_bottom = -10.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(0.65, 0.6, 0.75, 0.8)
-theme_override_font_sizes/font_size = 11
-text = "Completos  ·  Nicolaz Perez, Nicolas Vargas, Fabian San Martin
-Taller de Juegos — 2026"
-horizontal_alignment = 1
-
-[node name="CreditsModal" type="ColorRect" parent="."]
+[node name="CreditsModal" type="ColorRect" parent="." unique_id=1396441408]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
 anchors_preset = 15
@@ -216,9 +243,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.02, 0.01, 0.05, 0.88)
+color = Color(0.02, 0.02, 0.05, 0.9)
 
-[node name="CenterContainer" type="CenterContainer" parent="CreditsModal"]
+[node name="CenterContainer" type="CenterContainer" parent="CreditsModal" unique_id=1477223291]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -226,29 +253,29 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="CreditsPanel" type="PanelContainer" parent="CreditsModal/CenterContainer"]
+[node name="CreditsPanel" type="PanelContainer" parent="CreditsModal/CenterContainer" unique_id=1586189984]
 custom_minimum_size = Vector2(560, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CreditsModal/CenterContainer/CreditsPanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="CreditsModal/CenterContainer/CreditsPanel" unique_id=384174608]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="CreditsTitle" type="Label" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+[node name="CreditsTitle" type="Label" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=41389555]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.78, 0.22, 1)
 theme_override_font_sizes/font_size = 24
 text = "IDENTIFICACIÓN Y CRÉDITOS"
 horizontal_alignment = 1
 
-[node name="HSeparator1" type="HSeparator" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+[node name="HSeparator1" type="HSeparator" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=651555475]
 layout_mode = 2
 
-[node name="GameInfoLabel" type="RichTextLabel" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+[node name="GameInfoLabel" type="RichTextLabel" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=2003635487]
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=#f5c638][b]Juego:[/b][/color] Completos [color=#888888](Placeholder / Rúbrica)[/color]
+text = "[color=#f5c638][b]Juego:[/b][/color] Scape of Talca [color=#888888](Completos)[/color]
 [color=#f5c638][b]Creadores:[/b][/color]
   • Nicolaz Perez
   • Nicolas Vargas
@@ -264,18 +291,19 @@ text = "[color=#f5c638][b]Juego:[/b][/color] Completos [color=#888888](Placehold
   • [b]Texturas:[/b] Textura propia (nachito.jpg) e ícono de Godot Engine."
 fit_content = true
 
-[node name="HSeparator2" type="HSeparator" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=584938268]
 layout_mode = 2
 
-[node name="CloseCreditsButton" type="Button" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer"]
+[node name="CloseCreditsButton" type="Button" parent="CreditsModal/CenterContainer/CreditsPanel/VBoxContainer" unique_id=780587668]
+unique_name_in_owner = true
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_font_sizes/font_size = 18
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_pressed")
 text = "CERRAR"
 
-[node name="OptionsMenu" parent="." instance=ExtResource("2_options")]
+[node name="OptionsMenu" parent="." unique_id=1467489600 instance=ExtResource("2_options")]
+unique_name_in_owner = true
 visible = false
 layout_mode = 1
-

@@ -1,0 +1,155 @@
+[gd_scene format=3 uid="uid://do6rg0tvronp1"]
+
+[ext_resource type="Shader" uid="uid://d2h8ainh7oeat" path="res://shaders/night_sky.gdshader" id="1_sky"]
+[ext_resource type="PackedScene" uid="uid://dtdqocd2hb5r" path="res://scenes/map/shop.tscn" id="2_shop"]
+[ext_resource type="PackedScene" uid="uid://deuv1f0onumkr" path="res://scenes/map/KitchenStations.tscn" id="3_kitchen"]
+[ext_resource type="PackedScene" uid="uid://mue4ocm7ph4v" path="res://scenes/map/Farol.tscn" id="4_farol"]
+[ext_resource type="PackedScene" uid="uid://bsoq3wmul0bie" path="res://scenes/map/Neighborhood.tscn" id="5_neighborhood"]
+[ext_resource type="PackedScene" uid="uid://b6547fxse71w" path="res://scenes/map/exterior_bulp.tscn" id="6_evo1o"]
+[ext_resource type="PackedScene" uid="uid://bx0efxm1hjlgs" path="res://scenes/map/Patio.tscn" id="6_patio"]
+[ext_resource type="PackedScene" path="res://scenes/map/ShopDecor.tscn" id="7_shop_decor"]
+[ext_resource type="Script" uid="uid://bbcabnkgk12bc" path="res://scripts/ui/MenuBackground.gd" id="8_script"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("1_sky")
+shader_parameter/sky_top_color = Color(0.01, 0.02, 0.05, 1)
+shader_parameter/horizon_color = Color(0.06, 0.08, 0.14, 1)
+shader_parameter/ground_color = Color(0.01, 0.015, 0.02, 1)
+shader_parameter/star_density = 65.0
+shader_parameter/star_threshold = 0.993
+shader_parameter/star_brightness = 2.0
+
+[sub_resource type="Sky" id="Sky_menu"]
+sky_material = SubResource("ShaderMaterial_sky")
+
+[sub_resource type="Environment" id="Environment_menu"]
+background_mode = 2
+background_color = Color(0.02, 0.01, 0.06, 1)
+background_energy_multiplier = 0.33
+sky = SubResource("Sky_menu")
+ambient_light_energy = 0.45
+fog_light_color = Color(0.44, 0.48, 0.55, 1)
+fog_density = 0.038
+fog_sky_affect = 0.0
+fog_depth_begin = 5.0
+fog_depth_end = 36.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_floor"]
+albedo_color = Color(0.00395763, 0.0792998, 0.0352636, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_floor"]
+material = SubResource("StandardMaterial3D_floor")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bereda"]
+albedo_color = Color(0.501407, 0.501407, 0.501406, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_calle"]
+albedo_color = Color(0.244776, 0.244776, 0.244776, 1)
+
+[node name="MenuBackground3D" type="Node3D" unique_id=1652071109]
+script = ExtResource("8_script")
+drift_amplitude = Vector3(1.6, 0.35, 0.8)
+drift_speed = 0.1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1205766891]
+environment = SubResource("Environment_menu")
+
+[node name="MoonLight" type="DirectionalLight3D" parent="." unique_id=409252688]
+transform = Transform3D(0.965926, 0, -0.258819, 0.183013, 0.707107, 0.683013, 0.183013, -0.707107, 0.683013, 0, 10, 0)
+light_color = Color(0.34, 0.34, 0.34, 1)
+light_energy = 0.25
+light_indirect_energy = 0.66
+shadow_enabled = true
+
+[node name="MenuCamera" type="Camera3D" parent="." unique_id=1624516645]
+unique_name_in_owner = true
+transform = Transform3D(0.852869, -0.224144, 0.471602, 0, 0.902585, 0.430511, -0.522123, -0.367169, 0.769788, 7.5, 9.2, -19.5)
+current = true
+fov = 64.0
+
+[node name="Map" type="Node3D" parent="." unique_id=1246142538]
+
+[node name="Floor" type="MeshInstance3D" parent="Map" unique_id=2097814749]
+transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, -4, 0, 10)
+mesh = SubResource("PlaneMesh_floor")
+
+[node name="Beredas" type="Node3D" parent="Map" unique_id=1102025253]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Map/Beredas" unique_id=1909854385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, -0.35, -6.75)
+size = Vector3(205, 0.9, 2.9)
+material = SubResource("StandardMaterial3D_bereda")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Map/Beredas" unique_id=391459055]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, -0.35, -19.75)
+size = Vector3(203, 0.9, 2.9)
+material = SubResource("StandardMaterial3D_bereda")
+
+[node name="Calle" type="Node3D" parent="Map" unique_id=1905141433]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Map/Calle" unique_id=800637753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.25, -0.499345, -0.25)
+size = Vector3(206.5, 1, 10.1)
+material = SubResource("StandardMaterial3D_calle")
+
+[node name="Faroles" type="Node3D" parent="Map" unique_id=501735348]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.6, 0, -7.9)
+
+[node name="Farol" parent="Map/Faroles" unique_id=151255718 instance=ExtResource("4_farol")]
+
+[node name="Farol2" parent="Map/Faroles" unique_id=1205001464 instance=ExtResource("4_farol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
+
+[node name="Farol3" parent="Map/Faroles" unique_id=1213715436 instance=ExtResource("4_farol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 0, 0)
+
+[node name="Farol4" parent="Map/Faroles" unique_id=1274830299 instance=ExtResource("4_farol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -100, 0, 0)
+
+[node name="Farol5" parent="Map/Faroles" unique_id=2056168358 instance=ExtResource("4_farol")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 100, 0, 0)
+
+[node name="Shop" parent="Map" unique_id=647547207 instance=ExtResource("2_shop")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.47037, 1.70498, -0.221622)
+
+[node name="KitchenStations" parent="Map/Shop" unique_id=1639823723 instance=ExtResource("3_kitchen")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.47002, -1.70498, 0.525094)
+
+[node name="ExteriorBulp" parent="Map/Shop" unique_id=826666554 instance=ExtResource("6_evo1o")]
+transform = Transform3D(0.17, 0, 0, 0, 0.17, 0, 0, 0, 0.17, -1.3999996, 0.9999999, 3.7)
+
+[node name="CeilingLight" type="SpotLight3D" parent="Map" unique_id=669473556]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.195717, 3.0396, 0.5)
+light_color = Color(1, 0.92, 0.75, 1)
+light_energy = 2.5
+shadow_enabled = true
+spot_range = 6.0
+spot_angle = 50.0
+
+[node name="ShelfLight" type="SpotLight3D" parent="Map" unique_id=567662032]
+transform = Transform3D(1, 0, 0, 0, -0.342, 0.9397, 0, -0.9397, -0.342, -0.195717, 2.6396, 2)
+light_color = Color(1, 0.9, 0.7, 1)
+light_energy = 1.5
+shadow_enabled = true
+spot_range = 4.0
+spot_angle = 40.0
+
+[node name="ShelfOmniLight" type="OmniLight3D" parent="Map" unique_id=823790989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.195717, 1.9396, 2.7)
+light_color = Color(1, 0.95, 0.85, 1)
+light_energy = 0.9
+shadow_enabled = true
+omni_range = 4.5
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Map" unique_id=913513570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.542359, 2.67434, -0.57862)
+light_energy = 0.9
+shadow_enabled = true
+
+[node name="Patio" parent="Map" unique_id=2089266326 instance=ExtResource("6_patio")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0330544, -0.0716277, 5.96813)
+
+[node name="Neighborhood" parent="Map" unique_id=1168662620 instance=ExtResource("5_neighborhood")]
+
+[node name="ShopDecor" parent="Map" unique_id=243112116 instance=ExtResource("7_shop_decor")]

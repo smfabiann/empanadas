@@ -1,29 +1,37 @@
 extends Control
-## Menú principal del juego.
-## Proporciona inicio de partida, visualización de récord y controles.
+## Menú principal del juego con estilo R.E.P.O.
+## Proporciona navegación al juego, opciones y créditos.
 
-@onready var main_panel: PanelContainer = $CenterContainer/MainPanel
-@onready var high_score_label: Label = $CenterContainer/MainPanel/VBoxContainer/HighScoreLabel
-@onready var play_button: Button = $CenterContainer/MainPanel/VBoxContainer/ButtonsVBox/PlayButton
-@onready var credits_button: Button = $CenterContainer/MainPanel/VBoxContainer/ButtonsVBox/CreditsButton
-@onready var options_button: Button = $CenterContainer/MainPanel/VBoxContainer/ButtonsVBox/OptionsButton
-@onready var quit_button: Button = $CenterContainer/MainPanel/VBoxContainer/ButtonsVBox/QuitButton
-@onready var credits_modal: Control = $CreditsModal
-@onready var close_credits_button: Button = $CreditsModal/CenterContainer/CreditsPanel/VBoxContainer/CloseCreditsButton
-@onready var options_menu: Control = $OptionsMenu
+@onready var buttons_margin: Control = %ButtonsMargin
+@onready var play_button: Button = %PlayButton
+@onready var options_button: Button = %OptionsButton
+@onready var credits_button: Button = %CreditsButton
+@onready var quit_button: Button = %QuitButton
+@onready var credits_modal: Control = %CreditsModal
+@onready var close_credits_button: Button = %CloseCreditsButton
+@onready var options_menu: Control = %OptionsMenu
 
 
 func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+	# Iniciar ambiente sonoro nocturno
+	if SFXManager and SFXManager.has_method("start_ambience"):
+		SFXManager.start_ambience()
+
+	# Conexión de señales de botones principales
 	play_button.pressed.connect(_on_play)
-	credits_button.pressed.connect(_on_credits_pressed)
 	options_button.pressed.connect(_on_options_pressed)
+	credits_button.pressed.connect(_on_credits_pressed)
 	quit_button.pressed.connect(_on_quit)
+
+	# Conexión de modales
 	close_credits_button.pressed.connect(_on_close_credits_pressed)
 	options_menu.closed.connect(_on_options_closed)
+
 	credits_modal.visible = false
 	options_menu.visible = false
-	_update_high_score()
+
 	_animate_entrance()
 
 
@@ -39,29 +47,16 @@ func _input(event: InputEvent) -> void:
 
 
 func _animate_entrance() -> void:
-	# Animamos la opacidad del panel general de manera limpia
-	# Evitamos manipular posiciones individuales de hijos dentro de contenedores VBoxContainer
-	main_panel.modulate.a = 0.0
+	# Animación suave de entrada de los botones
+	buttons_margin.modulate.a = 0.0
 	var tween := create_tween()
-	tween.tween_property(main_panel, "modulate:a", 1.0, 0.35).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-
-
-func _update_high_score() -> void:
-	high_score_label.visible = false
+	tween.tween_property(buttons_margin, "modulate:a", 1.0, 0.35).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 
 
 func _on_play() -> void:
 	GameManager.reset_game()
 	GameManager.show_intro = true
 	get_tree().change_scene_to_file("res://scenes/Main.tscn")
-
-
-func _on_credits_pressed() -> void:
-	credits_modal.visible = true
-
-
-func _on_close_credits_pressed() -> void:
-	credits_modal.visible = false
 
 
 func _on_options_pressed() -> void:
@@ -72,6 +67,13 @@ func _on_options_closed() -> void:
 	options_menu.visible = false
 
 
+func _on_credits_pressed() -> void:
+	credits_modal.visible = true
+
+
+func _on_close_credits_pressed() -> void:
+	credits_modal.visible = false
+
+
 func _on_quit() -> void:
 	get_tree().quit()
-
