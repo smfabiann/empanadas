@@ -29,7 +29,7 @@ content_margin_left = 18.0
 content_margin_top = 10.0
 content_margin_right = 18.0
 content_margin_bottom = 10.0
-bg_color = Color(0.1, 0.32, 0.60, 0.9)
+bg_color = Color(0.1, 0.32, 0.6, 0.9)
 corner_radius_top_left = 2
 corner_radius_top_right = 2
 corner_radius_bottom_right = 2
@@ -110,7 +110,7 @@ theme_override_constants/separation = 4
 [node name="TitleLabel" type="Label" parent="TitleContainer/VBoxContainer" unique_id=1856027505]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
-text = "ESCAPE OF TALCA"
+text = "ESCAPE FROM TALCA"
 label_settings = SubResource("LabelSettings_2a6q0")
 
 [node name="VersionLabel" type="Label" parent="TitleContainer/VBoxContainer" unique_id=1409233934]

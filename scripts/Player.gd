@@ -277,6 +277,14 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("drop_item"):
 		_drop_held_item()
 		
+	# Linterna de CCTV en el monitor (click izquierdo)
+	if is_viewing_monitor and event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+		var sec_script = load("res://scripts/SecurityMonitor.gd")
+		if sec_script and sec_script.active_monitor:
+			sec_script.active_monitor.toggle_flashlight()
+			get_viewport().set_input_as_handled()
+			return
+
 	# Visión de anomalías en el monitor (tecla F)
 	if event is InputEventKey and event.keycode == KEY_F and event.pressed and not event.echo:
 		if is_viewing_monitor:

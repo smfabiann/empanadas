@@ -37,6 +37,7 @@ func _ready() -> void:
 	await _test_layer_and_tracking()
 	await _test_persiana_defense()
 	await _test_lethal_serving()
+	await _test_last_customer_anomaly_serving()
 
 	print("\n[ShadowTest] RESULTADOS: %d pasadas, %d fallidas." % [_passed, _failed])
 	if _failed > 0:
@@ -183,3 +184,55 @@ func _test_lethal_serving() -> void:
 	if is_instance_valid(dummy_item2):
 		dummy_item2.queue_free()
 	await _frames(2)
+
+
+func _test_last_customer_anomaly_serving() -> void:
+	print("\n[ShadowTest] Probando atención de anomalía en el ÚLTIMO CLIENTE DEL DÍA...")
+	GameManager.reset_game()
+	# Solo 1 cliente por día: el cliente con la anomalía es el último cliente del día
+	GameManager.set_max_clients_per_day(1)
+	_check(GameManager.max_clients_per_day == 1, "Cupo del día configurado en 1 (el cliente actual es el último)")
+	_check(GameManager.clients_attended_today == 0, "Inicia con 0 clientes atendidos hoy")
+
+	var npc_scene := load("res://scenes/NPC.tscn") as PackedScene
+	var npc: CharacterBody3D = npc_scene.instantiate()
+	_main.add_child(npc)
+	npc.global_position = Vector3(-0.43, 0.2, -4.5)
+	await _frames(2)
+
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		player.is_dead = false
+
+	var anom: CCTVShadowCompanionClass = _manager.spawn_anomaly(_manager.get_anomaly_data("cctv_shadow_companion"), {"npc": npc}) as CCTVShadowCompanionClass
+	await _frames(2)
+
+	var dummy_item := Node3D.new()
+	var handled = npc.active_event.on_item_received(npc, dummy_item)
+	_check(handled == true, "Último cliente: on_item_received interceptado por la anomalía")
+
+	# En este momento, las consecuencias DEBEN estar en curso primero (is_attacking = true)
+	_check(anom.is_attacking == true, "Consecuencias primero: anom.is_attacking es true inmediatamente tras atender")
+	if npc.label:
+		_check(npc.label.text.contains("corrompe") or npc.label.text.contains("Risa"), "Consecuencias primero: el cliente muestra la advertencia de corrupción ('%s')" % npc.label.text)
+
+	# El turno NO debe haberse cerrado aún mientras se muestran las consecuencias
+	_check(GameManager.clients_attended_today == 0, "Consecuencias primero: clients_attended_today sigue en 0 (la visita aún no concluye)")
+	_check(GameManager.day_active == true, "Consecuencias primero: day_active sigue activo (no se adelantó el cambio de día)")
+
+	# Esperar a que se completen las consecuencias (2.1s)
+	await get_tree().create_timer(2.2).timeout
+
+	# Tras la consecuencia: el jugador sobrevivió (strike 1) y concluye la visita
+	if player:
+		_check(player.is_dead == false, "El jugador sobrevivió al primer strike de la anomalía")
+
+	_check(not is_instance_valid(anom) or anom.is_attacking == false, "Las consecuencias de la anomalía finalizaron y la instancia se resolvió")
+	_check(GameManager.clients_attended_today == 1, "Ahora sí: clients_attended_today se actualiza a 1 tras las consecuencias")
+	_check(GameManager.is_day_quota_reached() == true, "La cuota del día se completó tras las consecuencias")
+
+	npc.queue_free()
+	if is_instance_valid(dummy_item):
+		dummy_item.queue_free()
+	await _frames(2)
+

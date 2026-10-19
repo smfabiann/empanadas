@@ -39,6 +39,7 @@ func _ready() -> void:
 	await _frames(3)
 
 	await _test_channels()
+	await _test_flashlight()
 	await _test_render_layers()
 	await _test_zones_covered()
 	await _test_lurker()
@@ -73,6 +74,33 @@ func _test_channels() -> void:
 	_monitor.switch_channel(1)
 	await _frames(1)
 	_check(_monitor.get_current_channel_id() == "frente", "Cambiar de canal da la vuelta al primero")
+
+
+func _test_flashlight() -> void:
+	_check(_monitor.is_viewing, "El monitor está en modo vista")
+	_check(not _monitor.is_flashlight_on, "La linterna inicia apagada")
+
+	# 1. Encender linterna (simulando click izquierdo)
+	_monitor.toggle_flashlight()
+	await _frames(2)
+	_check(_monitor.is_flashlight_on, "Al hacer click izquierdo la linterna se enciende")
+	_check(_monitor._flashlight != null and _monitor._flashlight is SpotLight3D, "Existe el nodo SpotLight3D de la linterna")
+	_check(_monitor._flashlight.visible, "El foco SpotLight3D está visible")
+	_check(_monitor._flashlight.get_parent() == _monitor.security_camera, "La linterna está montada en la cámara activa (frente)")
+
+	# 2. Cambiar al canal de patio: la linterna debe mudarse a la cámara de patio
+	_monitor.switch_channel(1)
+	await _frames(2)
+	_check(_monitor._flashlight.get_parent() == _monitor.security_camera, "Al cambiar de canal, la linterna se reubica en la cámara de patio")
+	_check(_monitor._flashlight.visible, "La linterna sigue encendida e iluminando el nuevo canal")
+
+	# 3. Volver al frente y apagar linterna
+	_monitor.switch_channel(1)
+	await _frames(2)
+	_monitor.toggle_flashlight()
+	await _frames(2)
+	_check(not _monitor.is_flashlight_on, "Al hacer click de nuevo, la linterna se apaga")
+	_check(not _monitor._flashlight.visible, "El foco SpotLight3D se oculta")
 
 
 func _test_render_layers() -> void:
