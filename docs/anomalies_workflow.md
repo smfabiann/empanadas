@@ -1,6 +1,6 @@
 #  Guía Técnica y Flujo de Trabajo: Sistema de Anomalías Configurables (`anomaliesManagement`)
 
-Esta guía describe la arquitectura, el ciclo de vida y el proceso paso a paso para crear, configurar e integrar nuevas anomalías modulares en el juego utilizando **Godot 4**.
+Esta guía describe la arquitectura, el ciclo de vida y el proceso paso a paso para crear, configurar e integrar nuevas anomalías modulares en el juego utilizando **Godot 4**. Para consultar el listado detallado de todas las anomalías existentes y qué hace cada una, consulta el [Catálogo de Anomalías](anomalies_catalog.md).
 
 ---
 
@@ -30,11 +30,11 @@ Toda anomalía implementa el ciclo de vida desacoplado:
 
 ```mermaid
 graph LR
-    Instanciar["Instanciación (PackedScene)"] --> Init["_init_anomaly(context)"]
-    Init --> Behavior["execute_behavior()"]
-    Behavior --> Active["En curso (Animaciones / Efectos / Hooks)"]
-    Active --> Resolve["resolve()"]
-    Resolve --> Cleanup["Desvanecimiento y queue_free()"]
+	Instanciar["Instanciación (PackedScene)"] --> Init["_init_anomaly(context)"]
+	Init --> Behavior["execute_behavior()"]
+	Behavior --> Active["En curso (Animaciones / Efectos / Hooks)"]
+	Active --> Resolve["resolve()"]
+	Resolve --> Cleanup["Desvanecimiento y queue_free()"]
 ```
 
 1. **`_init_anomaly(context: Dictionary)`**:
@@ -77,45 +77,45 @@ extends AnomalyBase
 var _original_values: Dictionary = {}
 
 func _init_anomaly(context: Dictionary = {}) -> void:
-    super._init_anomaly(context)
-    # Capturar estado original del ambiente ANTES de modificarlo
-    _capture_original_state()
-    # Configurar valores iniciales
-    if mi_sprite:
-        mi_sprite.modulate.a = 0.0
+	super._init_anomaly(context)
+	# Capturar estado original del ambiente ANTES de modificarlo
+	_capture_original_state()
+	# Configurar valores iniciales
+	if mi_sprite:
+		mi_sprite.modulate.a = 0.0
 
 func execute_behavior() -> void:
-    super.execute_behavior()
-    # Afectar el ambiente del juego (luces, niebla, etc.)
-    _distort_environment()
-    # Disparar animación o efectos visuales propios
-    if animation_player and animation_player.has_animation("execute"):
-        animation_player.play("execute")
-    # SFX opcional
-    if SFXManager:
-        SFXManager.play_tense_anger()
+	super.execute_behavior()
+	# Afectar el ambiente del juego (luces, niebla, etc.)
+	_distort_environment()
+	# Disparar animación o efectos visuales propios
+	if animation_player and animation_player.has_animation("execute"):
+		animation_player.play("execute")
+	# SFX opcional
+	if SFXManager:
+		SFXManager.play_tense_anger()
 
 func resolve() -> void:
-    if is_resolved:
-        return
-    # Restaurar el ambiente a su estado original
-    _restore_environment()
-    super.resolve()
+	if is_resolved:
+		return
+	# Restaurar el ambiente a su estado original
+	_restore_environment()
+	super.resolve()
 
 func on_persiana_closed() -> void:
-    resolve()
+	resolve()
 
 func _capture_original_state() -> void:
-    # Guardar valores que serán modificados para poder restaurarlos
-    pass
+	# Guardar valores que serán modificados para poder restaurarlos
+	pass
 
 func _distort_environment() -> void:
-    # Modificar luces, niebla, shaders del mundo, etc.
-    pass
+	# Modificar luces, niebla, shaders del mundo, etc.
+	pass
 
 func _restore_environment() -> void:
-    # Restaurar todo a _original_values
-    pass
+	# Restaurar todo a _original_values
+	pass
 ```
 
 ### Paso 3: Crear el Recurso `AnomalyData.tres`
