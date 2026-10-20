@@ -406,7 +406,7 @@ robber_trigger_served_count = 1
 
 [node name="AnomaliesManagement" type="Node" parent="." unique_id=1987654321]
 script = ExtResource("9_anomalies_manager")
-random_anomaly_chance = 0.7
+random_anomaly_chance = 0.65
 registered_anomalies = Array[ExtResource("14_3p2gp")]([ExtResource("17_aware"), ExtResource("21_cctv_lurker"), ExtResource("22_cctv_intruder"), ExtResource("23_cctv_power"), ExtResource("26_cctv_night_entity"), ExtResource("27_cctv_patio_thief"), ExtResource("28_cctv_shadow_companion")])
 
 [node name="CCTVZones" type="Node3D" parent="." unique_id=1161441138]
