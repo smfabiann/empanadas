@@ -76,7 +76,7 @@ const HOW_TO_PLAY_TEXT := "• Lee el pedido del cliente en la ventana y arma el
 
 
 func _ready() -> void:
-	# Ocultar todos los elementos de arcade / vidas / puntuación
+	# Ocultar todos los elementos de arcade / vidas / puntuación y paneles modales
 	for node_name in [
 			"ScoreLabel", 
 			"LivesLabel",
@@ -86,7 +86,10 @@ func _ready() -> void:
 			"GameOverPanel",
 			"TutorialPanel",
 			"DamageFlash",
-			"SuccessFlash"
+			"SuccessFlash",
+			"IntroPanel",
+			"DayEndPanel",
+			"VictoryPanel"
 			]:
 		var node = $HUD.get_node_or_null(node_name)
 		if node:
