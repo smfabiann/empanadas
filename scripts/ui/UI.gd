@@ -11,6 +11,7 @@ extends CanvasLayer
 
 @onready var crosshair: ColorRect = $HUD/Crosshair
 @onready var prompt_label: Label = $HUD/PromptLabel
+@onready var talk_prompt: TalkPromptHUD = $HUD.get_node_or_null("TalkPromptHUD") as TalkPromptHUD
 @onready var debug_panel: PanelContainer = $HUD.get_node_or_null("DebugPanel")
 @onready var debug_spawned_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugSpawnedLabel")
 @onready var debug_served_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugServedLabel")
@@ -374,6 +375,16 @@ func set_prompt(text: String, is_interactable: bool = false) -> void:
 		else:
 			crosshair.color = Color(1.0, 1.0, 1.0, 0.6)
 			crosshair.scale = Vector2(1.0, 1.0)
+
+
+## Muestra u oculta el indicador flotante grande [E] Hablar con cliente
+func set_talk_prompt(show_box: bool, text: String = "Hablar con cliente") -> void:
+	if talk_prompt == null:
+		return
+	if show_box:
+		talk_prompt.show_prompt(text)
+	else:
+		talk_prompt.hide_prompt()
 
 
 func _on_game_over(reason: String) -> void:

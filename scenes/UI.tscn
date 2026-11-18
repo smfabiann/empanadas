@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/DayEndPanel.tscn" id="8_dayend_panel"]
 [ext_resource type="PackedScene" path="res://scenes/ui/VictoryPanel.tscn" id="9_victory_panel"]
 [ext_resource type="PackedScene" path="res://scenes/ui/IntroPanel.tscn" id="10_intro_panel"]
+[ext_resource type="PackedScene" path="res://scenes/ui/TalkPromptHUD.tscn" id="11_talk_prompt"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 content_margin_left = 30.0
@@ -240,6 +241,10 @@ layout_mode = 0
 layout_mode = 1
 
 [node name="DialogBoxHUD" parent="HUD" instance=ExtResource("5_dialog_box")]
+visible = false
+layout_mode = 1
+
+[node name="TalkPromptHUD" parent="HUD" instance=ExtResource("11_talk_prompt")]
 visible = false
 layout_mode = 1
 

@@ -105,10 +105,14 @@ func _process(_delta: float) -> void:
 			_exit_npc_dialog()
 		if ui and ui.has_method("set_prompt"):
 			ui.set_prompt("", false)
+		if ui and ui.has_method("set_talk_prompt"):
+			ui.set_talk_prompt(false)
 		return
 	if not GameManager.can_player_act() or is_dead:
 		if ui and ui.has_method("set_prompt"):
 			ui.set_prompt("", false)
+		if ui and ui.has_method("set_talk_prompt"):
+			ui.set_talk_prompt(false)
 		return
 	_update_interaction_prompt()
 
@@ -191,6 +195,9 @@ func _update_interaction_prompt() -> void:
 	if not ui or not ui.has_method("set_prompt"):
 		return
 
+	if ui.has_method("set_talk_prompt"):
+		ui.set_talk_prompt(false)
+
 	if is_viewing_monitor:
 		var sec_script = load("res://scripts/SecurityMonitor.gd")
 		if sec_script and sec_script.active_monitor:
@@ -239,11 +246,13 @@ func _update_interaction_prompt() -> void:
 			ui.set_prompt("[E] Interactuar", true)
 			return
 
-	# Si miramos al cliente con las manos vacías, mostrar lo que pide y permitir hablar
+	# Si miramos al cliente con las manos vacías, mostrar el indicador flotante grande [E] Hablar con cliente
 	var target_npc := _get_target_npc()
 	if target_npc != null and target_npc.requested_item != null:
 		if target_npc.has_method("can_talk") and target_npc.can_talk():
-			ui.set_prompt("[E] Hablar con cliente (Pide: " + target_npc.requested_item.display_name + ")", true)
+			ui.set_prompt("", true)
+			if ui.has_method("set_talk_prompt"):
+				ui.set_talk_prompt(true, "Hablar con cliente")
 		else:
 			ui.set_prompt(" Cliente pide: " + target_npc.requested_item.display_name, false)
 		return
