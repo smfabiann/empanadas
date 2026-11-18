@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d0qu7kueql6hb" path="res://scripts/NPC.gd" id="1_npc"]
 [ext_resource type="Texture2D" uid="uid://c36uydbf1c0uc" path="res://resources/npc_textures/nachito.jpg" id="2_6xvi5"]
+[ext_resource type="AudioStream" uid="uid://dqadugirctyg6" path="res://assets/audio/coins.mp3" id="2_ktgr7"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_npc"]
 albedo_color = Color(0.6, 0.2, 0.5, 1)
@@ -29,6 +30,7 @@ albedo_color = Color(0.30699706, 0.09079873, 0.17116693, 1)
 [node name="NPC" type="CharacterBody3D" unique_id=1323159594]
 collision_layer = 4
 script = ExtResource("1_npc")
+correct_order_sound = ExtResource("2_ktgr7")
 
 [node name="BodyMesh" type="CSGCylinder3D" parent="." unique_id=265668372]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70000005, 0)
@@ -83,7 +85,7 @@ transform = Transform3D(1, 0, 0, 0, 0.9659257, 0.25881898, 0, -0.25881898, 0.965
 size = Vector3(0.13476563, 0.1, 0.076660156)
 material = SubResource("StandardMaterial3D_fk6vv")
 
-[node name="VoicePlayer" type="AudioStreamPlayer3D" parent="."]
+[node name="VoicePlayer" type="AudioStreamPlayer3D" parent="." unique_id=895962403]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
 volume_db = -4.0
 unit_size = 3.0

@@ -1,8 +1,8 @@
 # Lista de cambios
 
-## `exp/npc-dialog-hud` (candidato a v0.0.10 / v0.0.9-d)
+## v0.0.9-d
 
-> Rama experimental que reemplaza el diálogo flotante en 3D por una caja de diálogo estilo HUD con enfoque de cámara, audio posicional "crunchy" y escenas dedicadas para eventos estáticos.  
+> Sistema de diálogo HUD con enfoque de cámara, audio posicional "crunchy", escenas dedicadas para eventos estáticos y UI modularizada en sub-escenas.  
 > *(La primera iteración en 3D con `SubViewport` quedó respaldada en la rama local `exp/npc-dialog-3d`.)*
 
 - **Caja de diálogo HUD modular (`scenes/ui/DialogBoxHUD.tscn`, `scripts/ui/DialogBoxHUD.gd`, `scripts/ui/UI.gd`)**:
@@ -33,3 +33,14 @@
     - [`scenes/events/static/TalquinoNPC.tscn`](scenes/events/static/TalquinoNPC.tscn) (poncho y chupalla).
     - [`scenes/events/static/ScammerNPC.tscn`](scenes/events/static/ScammerNPC.tscn) (traje, lentes oscuros y credencial trucha).
     - [`scenes/events/static/RappiNPC.tscn`](scenes/events/static/RappiNPC.tscn) (uniforme naranja, casco, mochila con logo y moto con foco).
+
+- **Sonido de entrega correcta configurable en el Inspector (`scripts/NPC.gd`, `scenes/NPC.tscn`)**:
+  - Agregada propiedad `@export var correct_order_sound: AudioStream = null` en `NPC.gd`, reproducida posicionalmente en `VoicePlayer` al entregar un pedido correcto (asignado `assets/audio/coins.mp3` en `NPC.tscn`).
+
+- **Pistas / pistas contextuales estilo GMod (`scenes/ui/HintPanel.tscn`)**:
+  - Movido `HintPanel` a la esquina **inferior derecha** de la pantalla (`anchors_preset = 3`).
+  - Estilo GMod: fondo negro semitransparente (`Color(0, 0, 0, 0.72)`), **sin borde de color**, esquinas redondeadas suaves y texto blanco alineado a la izquierda.
+
+- **Modularización visual de `UI.tscn` en sub-escenas (`scenes/ui/`)**:
+  - Dividido `scenes/UI.tscn` (de ~850 líneas a ~215) instanciando cada panel como escena independiente manteniendo intactas las rutas de nodos para `UI.gd` y los tests:
+    - [`scenes/ui/DayPanel.tscn`](scenes/ui/DayPanel.tscn), [`scenes/ui/HintPanel.tscn`](scenes/ui/HintPanel.tscn), [`scenes/ui/DialogBoxHUD.tscn`](scenes/ui/DialogBoxHUD.tscn), [`scenes/ui/DebugPanel.tscn`](scenes/ui/DebugPanel.tscn), [`scenes/ui/GameOverPanel.tscn`](scenes/ui/GameOverPanel.tscn), [`scenes/ui/DayEndPanel.tscn`](scenes/ui/DayEndPanel.tscn), [`scenes/ui/VictoryPanel.tscn`](scenes/ui/VictoryPanel.tscn) e [`scenes/ui/IntroPanel.tscn`](scenes/ui/IntroPanel.tscn).
