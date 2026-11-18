@@ -6,6 +6,8 @@ enum State { APPROACHING, WAITING, REACTING, LEAVING }
 @export var speed: float = 2.5
 ## Si es true, preserva los materiales y apariencia definidos en la escena del NPC
 @export var custom_appearance: bool = false
+## Sonido opcional (3D posicional) al entregar correctamente el pedido
+@export var correct_order_sound: AudioStream = null
 var SPEED: float:
 	get:
 		return speed
@@ -16,6 +18,7 @@ var patience_drain_rate: float = 1.0
 var _is_order_resolved: bool = false
 
 @onready var label: Label3D = $Label3D
+@onready var voice_player: AudioStreamPlayer3D = get_node_or_null("VoicePlayer") as AudioStreamPlayer3D
 @onready var body_mesh: CSGCylinder3D = (get_node_or_null("BodyMesh") as CSGCylinder3D) if get_node_or_null("BodyMesh") else (get_node_or_null("ShipPivot/BodyMesh") as CSGCylinder3D)
 @onready var head: CSGSphere3D = (get_node_or_null("Head") as CSGSphere3D) if get_node_or_null("Head") else (get_node_or_null("ShipPivot/Head") as CSGSphere3D)
 @onready var patience_bar_bg: CSGBox3D = $PatienceBarPivot/PatienceBarBG
@@ -34,6 +37,11 @@ var is_at_counter: bool = false
 var is_leaving_cleanly: bool = false
 
 var active_event: NPCEvent = null
+
+# --- Diálogo HUD modular (al interactuar con [E]) ---
+var dialog_speaker: String = "Cliente"
+var dialog_lines: Array = []
+var dialog_options: Dictionary = {}
 
 ## Recetas de completos interactivos (HU-11)
 const COMPLETO_RECIPES: Array[Dictionary] = [
@@ -129,6 +137,16 @@ func _ready() -> void:
 
 	if active_event:
 		_apply_active_event()
+
+	if voice_player == null:
+		voice_player = AudioStreamPlayer3D.new()
+		voice_player.name = "VoicePlayer"
+		voice_player.position = Vector3(0.0, 1.6, 0.0)
+		voice_player.volume_db = -4.0
+		voice_player.unit_size = 3.0
+		voice_player.max_distance = 16.0
+		voice_player.max_polyphony = 3
+		add_child(voice_player)
 
 
 ## Determina si el material asignado en la escena debe preservarse (ej. si contiene texturas o shaders)
@@ -404,6 +422,10 @@ func receive_item(item_node: Interactable) -> void:
 		var payment: int = GameManager.calculate_completo_payment(patience_ratio, order_req_mojado)
 		GameManager.earn_money(payment, "Completo vendido")
 		SFXManager.play_cash()
+		if correct_order_sound != null and voice_player != null:
+			voice_player.stream = correct_order_sound
+			voice_player.pitch_scale = 1.0
+			voice_player.play()
 		label.text += "\n+$%s" % GameManager.format_money(payment)
 
 	await get_tree().create_timer(1.2).timeout
@@ -532,3 +554,45 @@ func _fade_and_free() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector3(0.1, 0.1, 0.1), 0.25).set_ease(Tween.EASE_IN)
 	tween.tween_callback(queue_free)
+
+
+## true si el jugador puede acercarse a hablar con el cliente (en espera en el mostrador)
+func can_talk() -> bool:
+	return not _is_order_resolved and is_at_counter and state == State.WAITING
+
+
+## Devuelve la posición mundial hacia donde la cámara debe enfocar al hablar (cabeza del NPC)
+func get_dialog_focus_position() -> Vector3:
+	if head:
+		return head.global_position
+	return global_position + Vector3(0.0, 1.6, 0.0)
+
+
+## Configura de forma segura las líneas, hablante y estilo/audio del diálogo HUD
+func set_dialog(lines: Array, speaker: String = "", options: Dictionary = {}) -> void:
+	dialog_lines = lines.duplicate()
+	if not speaker.is_empty():
+		dialog_speaker = speaker
+	if not options.is_empty():
+		dialog_options = options.duplicate()
+
+
+## Devuelve las líneas de diálogo para la caja HUD (personalizables por eventos)
+func get_dialog_lines() -> Array:
+	if not dialog_lines.is_empty():
+		return dialog_lines
+	var order_name := String(order_recipe.get("name", "Completo"))
+	var order_desc := String(order_recipe.get("desc", ""))
+	if order_desc.is_empty():
+		return ["Buenas... me das un [color=yellow]%s[/color], por favor." % order_name]
+	return ["Buenas... quiero un [color=yellow]%s[/color] (%s), porfa." % [order_name, order_desc]]
+
+
+## Devuelve las opciones de estilo y audio posicional para DialogBoxHUD
+func get_dialog_options() -> Dictionary:
+	var opts := dialog_options.duplicate()
+	if not opts.has("speaker"):
+		opts["speaker"] = dialog_speaker
+	if voice_player and not opts.has("voice_player_3d"):
+		opts["voice_player_3d"] = voice_player
+	return opts

@@ -11,6 +11,7 @@ extends CanvasLayer
 
 @onready var crosshair: ColorRect = $HUD/Crosshair
 @onready var prompt_label: Label = $HUD/PromptLabel
+@onready var talk_prompt: TalkPromptHUD = $HUD.get_node_or_null("TalkPromptHUD") as TalkPromptHUD
 @onready var debug_panel: PanelContainer = $HUD.get_node_or_null("DebugPanel")
 @onready var debug_spawned_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugSpawnedLabel")
 @onready var debug_served_label: Label = $HUD.get_node_or_null("DebugPanel/DebugVBox/DebugServedLabel")
@@ -76,7 +77,7 @@ const HOW_TO_PLAY_TEXT := "• Lee el pedido del cliente en la ventana y arma el
 
 
 func _ready() -> void:
-	# Ocultar todos los elementos de arcade / vidas / puntuación
+	# Ocultar todos los elementos de arcade / vidas / puntuación y paneles modales
 	for node_name in [
 			"ScoreLabel", 
 			"LivesLabel",
@@ -86,7 +87,10 @@ func _ready() -> void:
 			"GameOverPanel",
 			"TutorialPanel",
 			"DamageFlash",
-			"SuccessFlash"
+			"SuccessFlash",
+			"IntroPanel",
+			"DayEndPanel",
+			"VictoryPanel"
 			]:
 		var node = $HUD.get_node_or_null(node_name)
 		if node:
@@ -373,6 +377,16 @@ func set_prompt(text: String, is_interactable: bool = false) -> void:
 			crosshair.scale = Vector2(1.0, 1.0)
 
 
+## Muestra u oculta el indicador flotante grande [E] Hablar con cliente
+func set_talk_prompt(show_box: bool, text: String = "Hablar con cliente") -> void:
+	if talk_prompt == null:
+		return
+	if show_box:
+		talk_prompt.show_prompt(text)
+	else:
+		talk_prompt.hide_prompt()
+
+
 func _on_game_over(reason: String) -> void:
 	# Flash rojo en pantalla simulando el impacto del disparo
 	if damage_flash:
@@ -517,3 +531,24 @@ func show_hint(text: String) -> void:
 	_hint_tween.tween_interval(hint_duration)
 	_hint_tween.tween_property(hint_panel, "modulate:a", 0.0, 0.6)
 	_hint_tween.tween_callback(func(): hint_panel.visible = false)
+
+
+const DIALOG_BOX_SCENE := preload("res://scenes/ui/DialogBoxHUD.tscn")
+var _dialog_box: DialogBoxHUD = null
+
+
+## Devuelve (o instancia) la caja de diálogo HUD modular para NPCs
+func get_dialog_box() -> DialogBoxHUD:
+	if _dialog_box != null and is_instance_valid(_dialog_box):
+		return _dialog_box
+	var hud := get_node_or_null("HUD")
+	if hud == null:
+		return null
+	var existing := hud.get_node_or_null("DialogBoxHUD") as DialogBoxHUD
+	if existing:
+		_dialog_box = existing
+		return _dialog_box
+	_dialog_box = DIALOG_BOX_SCENE.instantiate() as DialogBoxHUD
+	if _dialog_box:
+		hud.add_child(_dialog_box)
+	return _dialog_box

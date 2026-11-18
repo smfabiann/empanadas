@@ -11,7 +11,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
 | `glitch_sprite` | **Distorsión Espectral** | Ambiental / Pantalla (HUD) | Efecto visual obvio en pantalla, niebla roja y parpadeo de luces | Tensión ambiental y desorientación visual | Se disipa sola (8s) o bajando la persiana |
 | `aware` | **El Consciente** | Cámara CCTV + Monitor + Cliente | Observa directo a la cámara que miras por CCTV | 💀 **LETAL (2 Strikes compartidos)**: Screamer facial a quemarropa. Game Over al 2.º error | **¡PROHIBIDO ATENDER! Bajar la persiana** para desterrarlo |
 | `cctv_lurker` | **Silueta Acechando** | Cámara CCTV (CAM 01 / CAM 02) | Mirar la cámara de seguridad asignada | Se acerca progresivamente hacia la cámara al cambiar de canal | Desaparece sola tras 35s |
-| `cctv_intruder` | **Intruso en el Perímetro** | Cámara CCTV (CAM 01 / CAM 02) | Mirar la cámara de seguridad asignada | Merodea el perímetro; si lo miras >2s se detiene y te mira fijamente | Desaparece solo tras 35s |
+| `cctv_intruder` | **Intruso en el Perímetro** | Cámara CCTV (CAM 01 / CAM 02) | Mirar la cámara de seguridad asignada | Merodea el perímetro; si lo miras >2s se detiene y te mira fijamente | Desaparece solo tras 30s |
 | `cctv_power_failure` | **Fallo Eléctrico** | Cámara CCTV / Modificador de Feed | Pérdida de señal e interferencias en un canal específico | Deja ciega una cámara con estática y cortes de "SIN SEÑAL" | Se repara solo tras 35s |
 | `cctv_night_entity` | **Presencia en la Vereda** | CCTV (CAM 01 Frente) + Visión Nocturna | **Solo visible con Visión Nocturna (`[F]`)** en CAM 01 | **Robo de $4.000** si llega a la ventana | **Bajar la persiana** antes de que alcance el local |
 | `cctv_patio_thief` | **Ladrón del Patio** | CCTV (CAM 02 Patio) + Mundo Real 3D | Revisar CAM 02 o escuchar el forcejeo en la puerta trasera | **Robo de $5.000** si logra entrar a la cocina | **Cerrar la puerta trasera (`[E]`)** mientras sigue afuera |
@@ -28,7 +28,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
   - Recurso: `resources/anomalies/glitch_sprite_anomaly.tres`
 - **Condiciones de Activación**:
   - Días: Desde el Día 1.
-  - Peso probabilístico: `25.0` (Tier RARE).
+  - Peso probabilístico: `8.0` (Tier RARE).
   - Puede ocurrir como evento aleatorio o configurarse por cliente exacto.
 - **¿Qué hace?**:
   1. Oscurece la iluminación ambiental del local y reduce la luz direccional.
@@ -71,7 +71,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
   - Recurso: `resources/anomalies/cctv_lurker.tres`
 - **Condiciones de Activación**:
   - Días: Desde el Día 1.
-  - Peso probabilístico: `8.0` (Tier UNCOMMON).
+  - Peso probabilístico: `10.0` (Tier UNCOMMON).
   - Canales: Cualquier zona con cámara (Frente o Patio).
 - **¿Qué hace?**:
   1. Instancia una silueta humanoide pálida de 1.9 metros en una zona vigilada por cámaras.
@@ -88,14 +88,14 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
   - Escena: `scenes/anomalies/CCTVIntruder.tscn`
   - Recurso: `resources/anomalies/cctv_intruder.tres`
 - **Condiciones de Activación**:
-  - Días: Desde el Día 2.
-  - Peso probabilístico: `6.0` (Tier RARE).
+  - Días: Desde el Día 1.
+  - Peso probabilístico: `10.0` (Tier RARE).
   - Canales: Cualquier zona con cámara (Frente o Patio).
 - **¿Qué hace?**:
   1. Una silueta con tonos rojizos aparece caminando de un lado a otro (patrullando un tramo de 3 metros) en el área monitoreada.
   2. Si el jugador sintoniza ese canal y mantiene la vista en la cámara durante más de 2 segundos consecutivos, el intruso interrumpe bruscamente su caminata, se detiene y gira su cuerpo hacia la cámara para devolverle la mirada al jugador.
 - **Resolución**:
-  - Desaparece pacíficamente al expirar su duración de 35 segundos.
+  - Desaparece pacíficamente al expirar su duración de 30 segundos (`event_duration = 30.0` en `CCTVIntruder.tscn`).
 
 ---
 
@@ -106,7 +106,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
   - Recurso: `resources/anomalies/cctv_power_failure.tres`
 - **Condiciones de Activación**:
   - Días: Desde el Día 1.
-  - Peso probabilístico: `6.0` (Tier COMMON).
+  - Peso probabilístico: `8.0` (Tier COMMON).
 - **¿Qué hace?**:
   1. Aparece una caja de fusibles en un poste en la zona vigilada, con arcos eléctricos brillantes y emisión de chispas intermitentes.
   2. Se registra en el grupo `cctv_feed_modifiers` e inyecta interferencia estática (35% base) en la transmisión de esa cámara en particular.
@@ -125,7 +125,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
 - **Condiciones de Activación**:
   - Días: Desde el Día 1.
   - Canal: Exclusivamente CAM 01 (`frente`).
-  - Peso probabilístico: `7.0` (Tier RARE).
+  - Peso probabilístico: `9.0` (Tier RARE).
 - **¿Qué hace?**:
   1. Una entidad humanoide pálida y esbelta con cuencas oscuras empieza a caminar desde el extremo exterior de la vereda rumbo a la ventana del local (tarda 40 segundos en llegar).
   2. **Mecánica de Visión Nocturna**: No se ve en la imagen normal de la CAM 01 (solo produce una levísima interferencia del 12%). **Únicamente se revela si el jugador activa la visión nocturna pulsando `[F]` en el monitor**.
@@ -142,9 +142,9 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
   - Escena: `scenes/anomalies/CCTVPatioThief.tscn`
   - Recurso: `resources/anomalies/cctv_patio_thief.tres`
 - **Condiciones de Activación**:
-  - Días: Desde el Día 2.
+  - Días: Desde el Día 1.
   - Canal: Exclusivamente CAM 02 (`patio`).
-  - Peso probabilístico: `6.0` (Tier RARE).
+  - Peso probabilístico: `9.0` (Tier RARE).
 - **¿Qué hace?**:
   1. Un intruso vestido con sudadera oscura y gorro de lana rojo entra por el fondo del patio trasero.
   2. **Entidad Física en el Mundo**: A diferencia de otras anomalías de CCTV, este ladrón existe en la capa del mundo real: se le puede ver mirando por la ventana trasera o acudiendo a la puerta.
@@ -166,7 +166,7 @@ Este documento describe todas las anomalías implementadas en el juego, su compo
 - **Condiciones de Activación**:
   - Días: Desde el Día 1.
   - Canal: CAM 01 (`frente`).
-  - Peso probabilístico: `50.0` (Tier RARE).
+  - Peso probabilístico: `12.0` (Tier RARE).
 - **¿Qué hace?**:
   1. Llega al mostrador un cliente aparentemente inofensivo y normal pidiendo un pedido común (empanadas, completo, etc.).
   2. En persona, el cliente no muestra nada fuera de lo común. Sin embargo, al revisar la cámara exterior (CAM 01) con la **visión nocturna activada `[F]`**, se revela un **doppelgänger oscuro** (una copia exacta con el mismo cuerpo, textura y ropa) parado a escasos centímetros detrás de él, con ojos blancos penetrantes clavados en la cámara.
@@ -188,3 +188,20 @@ Para probar cualquier anomalía en tiempo de ejecución sin esperar a que salga 
 3. En el Inspector:
    - En el campo **`debug_force_anomaly`**, escribir el ID de la anomalía deseada (ej. `cctv_shadow_companion`, `cctv_patio_thief`, `cctv_night_entity`, `glitch_sprite`, `aware`, `cctv_lurker`, `cctv_intruder`, `cctv_power_failure`).
    - Activar la casilla **`debug_trigger_now`** para forzar su aparición de inmediato.
+
+---
+
+## ⚖️ Quick Reference: Spawning, Pesos y Pruebas
+
+- **Registro activo (`Main.tscn`)**: Las anomalías disponibles en partida se definen en `Main/AnomaliesManagement.registered_anomalies` (`random_anomaly_chance = 0.65`). Si un `.tres` no está en ese array, no aparece en juego.
+- **Pool actual (Día 1+, peso total = `76.0`)**:
+  - `cctv_shadow_companion`: `12.0` (~15.8%) | `aware`: `10.0` (~13.2%) | `cctv_lurker`: `10.0` (~13.2%) | `cctv_intruder`: `10.0` (~13.2%)
+  - `cctv_night_entity`: `9.0` (~11.8%) | `cctv_patio_thief`: `9.0` (~11.8%) | `cctv_power_failure`: `8.0` (~10.5%) | `glitch_sprite`: `8.0` (~10.5%)
+- **Debug vs. Gameplay real**: `force_trigger_anomaly()` / `debug_trigger_now` salta `evaluate_and_trigger()` (ignora `min_day`, `weight`, y bloqueos por `NPCEvent`).
+- **Interacción con Eventos de NPC (`NPCSpawner.gd`)**: Si el cliente tiene un `NPCEvent`, no se evalúan anomalías; si tiene un `StaticNPCEvent` (ej. Robber, UFO), se llama a `resolve_all_anomalies()`.
+- **Pruebas headless (Godot 4.7)**:
+  - `Godot_v4.7.2-stable_win64_console.exe --headless --path . tests/test_cctv_events.tscn`
+  - `Godot_v4.7.2-stable_win64_console.exe --headless --path . tests/test_event_anomaly_separation.tscn`
+  - `Godot_v4.7.2-stable_win64_console.exe --headless --path . tests/test_night_vision_and_patio_thief.tscn`
+  - `Godot_v4.7.2-stable_win64_console.exe --headless --path . tests/test_shadow_companion.tscn`
+  - `Godot_v4.7.2-stable_win64_console.exe --headless --path . tests/test_aware_integration.tscn`

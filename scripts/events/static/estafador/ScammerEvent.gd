@@ -24,9 +24,12 @@ func _init() -> void:
 	trigger_day_served_count = 1
 	trigger_served_count = 0
 	trigger_once = true
+	custom_npc_scene = preload("res://scenes/events/static/ScammerNPC.tscn")
 
 
 func apply(npc: CharacterBody3D) -> void:
+	if npc.has_node("Lentes"):
+		return
 	if "custom_appearance" in npc:
 		npc.custom_appearance = true
 	var body := npc.get_node_or_null("BodyMesh") as CSGCylinder3D
@@ -72,8 +75,22 @@ func on_arrive(npc: CharacterBody3D) -> void:
 	npc.patience_remaining = scammer_patience
 	var label := npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		label.text = " ¡Oiga! Soy inspector sanitario.\nSus vienesas tienen CHIP DE PERRO.\nPáseme $%s o lo denuncio. " % GameManager.format_money(scam_amount)
+		label.text = " Pide: $%s (Inspector) " % GameManager.format_money(scam_amount)
 		label.modulate = Color(1.0, 0.6, 0.25, 1.0)
+	if npc.has_method("set_dialog"):
+		npc.set_dialog(
+			[
+				"¡Oiga! Soy inspector sanitario.",
+				"Sus vienesas tienen [color=orange]CHIP DE PERRO[/color]. Páseme [color=yellow]$%s[/color] o lo denuncio." % GameManager.format_money(scam_amount)
+			],
+			"Inspector Sanitario (?)",
+			{
+				"bg_color": Color(0.07, 0.04, 0.01, 0.94),
+				"border_color": Color(1.0, 0.6, 0.25, 1.0),
+				"speaker_color": Color(1.0, 0.65, 0.3, 1.0),
+				"pitch": 0.85
+			}
+		)
 	if npc.is_inside_tree():
 		npc.get_tree().create_timer(hint_delay).timeout.connect(func():
 			if is_instance_valid(npc) and npc.has_method("is_order_resolved") and not npc.is_order_resolved():

@@ -26,13 +26,14 @@ func _init() -> void:
 	trigger_day_served_count = 3
 	trigger_served_count = 0
 	trigger_once = true
+	custom_npc_scene = preload("res://scenes/events/static/RappiNPC.tscn")
 
 
 func apply(npc: CharacterBody3D) -> void:
-	if "custom_appearance" in npc:
-		npc.custom_appearance = true
 	if "speed" in npc:
 		npc.speed = moto_speed
+	if npc.has_node("Moto"):
+		return
 	var orange := StandardMaterial3D.new()
 	orange.albedo_color = Color(1.0, 0.36, 0.05, 1)
 	var dark := StandardMaterial3D.new()
@@ -187,3 +188,15 @@ func _set_current_order(npc: CharacterBody3D) -> void:
 			lines += "\nDespués: %s " % _order_text(orders[step + 1])
 		label.text = lines
 		label.modulate = Color(1.0, 0.6, 0.2, 1.0)
+	if npc.has_method("set_dialog"):
+		npc.set_dialog(
+			["¡Buenas! Vengo por el pedido Rappi [color=orange]#%d[/color] (%d/%d): [color=yellow]%s[/color]." % [npc.get_meta("rappi_code", 0), step + 1, orders.size(), _order_text(rec)]],
+			"Repartidor Rappi",
+			{
+				"bg_color": Color(0.08, 0.03, 0.01, 0.94),
+				"border_color": Color(1.0, 0.45, 0.15, 1.0),
+				"speaker_color": Color(1.0, 0.5, 0.2, 1.0),
+				"pitch": 1.15,
+				"char_delay": 0.018
+			}
+		)

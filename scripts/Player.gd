@@ -25,6 +25,12 @@ var held_item: Interactable = null
 var is_dead: bool = false
 
 var is_viewing_monitor: bool = false
+var is_in_dialog: bool = false
+var _dialog_npc: Node = null
+var _pre_dialog_cam_pos: Vector3 = Vector3(0.0, 1.6, 0.0)
+var _pre_dialog_cam_rot: Vector3 = Vector3.ZERO
+var _pre_dialog_cam_fov: float = BASE_FOV
+var _dialog_cam_tween: Tween = null
 
 # --- Efectos de temblor de cámara (Screen Shake) ---
 var _shake_timer: float = 0.0
@@ -45,7 +51,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_update_camera_shake(delta)
-	if not GameManager.can_player_act() or is_dead or is_viewing_monitor:
+	if not GameManager.can_player_act() or is_dead or is_viewing_monitor or is_in_dialog:
 		return
 	_handle_movement(delta)
 
@@ -94,9 +100,19 @@ func _update_camera_shake(delta: float) -> void:
 
 
 func _process(_delta: float) -> void:
+	if is_in_dialog:
+		if not is_instance_valid(_dialog_npc) or (_dialog_npc.has_method("can_talk") and not _dialog_npc.can_talk()):
+			_exit_npc_dialog()
+		if ui and ui.has_method("set_prompt"):
+			ui.set_prompt("", false)
+		if ui and ui.has_method("set_talk_prompt"):
+			ui.set_talk_prompt(false)
+		return
 	if not GameManager.can_player_act() or is_dead:
 		if ui and ui.has_method("set_prompt"):
 			ui.set_prompt("", false)
+		if ui and ui.has_method("set_talk_prompt"):
+			ui.set_talk_prompt(false)
 		return
 	_update_interaction_prompt()
 
@@ -179,6 +195,9 @@ func _update_interaction_prompt() -> void:
 	if not ui or not ui.has_method("set_prompt"):
 		return
 
+	if ui.has_method("set_talk_prompt"):
+		ui.set_talk_prompt(false)
+
 	if is_viewing_monitor:
 		var sec_script = load("res://scripts/SecurityMonitor.gd")
 		if sec_script and sec_script.active_monitor:
@@ -227,10 +246,15 @@ func _update_interaction_prompt() -> void:
 			ui.set_prompt("[E] Interactuar", true)
 			return
 
-	# Si miramos al cliente con las manos vacías, mostrar lo que pide
+	# Si miramos al cliente con las manos vacías, mostrar el indicador flotante grande [E] Hablar con cliente
 	var target_npc := _get_target_npc()
 	if target_npc != null and target_npc.requested_item != null:
-		ui.set_prompt(" Cliente pide: " + target_npc.requested_item.display_name, false)
+		if target_npc.has_method("can_talk") and target_npc.can_talk():
+			ui.set_prompt("", true)
+			if ui.has_method("set_talk_prompt"):
+				ui.set_talk_prompt(true, "Hablar con cliente")
+		else:
+			ui.set_prompt(" Cliente pide: " + target_npc.requested_item.display_name, false)
 		return
 
 	ui.set_prompt("", false)
@@ -260,6 +284,22 @@ func _get_target_npc() -> Node:
 
 func _input(event: InputEvent) -> void:
 	if not GameManager.can_player_act() or is_dead:
+		return
+
+	if is_in_dialog:
+		if event.is_action_pressed("ui_cancel"):
+			_exit_npc_dialog()
+			get_viewport().set_input_as_handled()
+			return
+		var advance_click: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
+		if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept") or advance_click:
+			if ui and ui.has_method("get_dialog_box"):
+				var box: DialogBoxHUD = ui.get_dialog_box()
+				if box == null or not box.advance_or_skip():
+					_exit_npc_dialog()
+			else:
+				_exit_npc_dialog()
+			get_viewport().set_input_as_handled()
 		return
 
 	# Rotar la vista con el ratón (360° horizontal, limitado vertical)
@@ -327,13 +367,22 @@ func _handle_interact() -> void:
 				held_item = collider as Interactable
 				ray.add_exception(held_item)
 				held_item.interact(self)
+				_update_interaction_prompt()
+				return
 			elif collider != null and collider.has_method("get_interaction_prompt"):
 				var info: Dictionary = collider.get_interaction_prompt(self)
 				if info.get("actionable", true):
 					collider.interact(self)
+					_update_interaction_prompt()
+					return
 			elif collider != null and collider.has_method("interact"):
 				collider.interact(self)
-			_update_interaction_prompt()
+				_update_interaction_prompt()
+				return
+
+		var target_npc := _get_target_npc()
+		if target_npc != null and target_npc.has_method("can_talk") and target_npc.can_talk():
+			_enter_npc_dialog(target_npc)
 		return
 
 	# Prioridad: Sosteniendo ítem -> Usar en estación o interactuable compatible
@@ -419,3 +468,63 @@ func fall_down() -> void:
 	tween.tween_property(camera, "rotation_degrees:x", -16.0, 0.45)\
 		.set_trans(Tween.TRANS_QUAD)\
 		.set_ease(Tween.EASE_OUT)
+
+
+## Enfoca la cámara hacia el cliente y abre la caja de diálogo HUD modular
+func _enter_npc_dialog(npc: Node) -> void:
+	if is_in_dialog or npc == null or camera == null:
+		return
+	var box: DialogBoxHUD = ui.get_dialog_box() if (ui and ui.has_method("get_dialog_box")) else null
+	if box == null:
+		return
+
+	is_in_dialog = true
+	_dialog_npc = npc
+	velocity = Vector3.ZERO
+
+	_pre_dialog_cam_pos = camera.position
+	_pre_dialog_cam_rot = camera.rotation
+	_pre_dialog_cam_fov = camera.fov
+
+	var focus_pos: Vector3 = npc.get_dialog_focus_position() if npc.has_method("get_dialog_focus_position") else (npc.global_position + Vector3(0.0, 1.6, 0.0))
+	var to_npc := focus_pos - camera.global_position
+	var dist := to_npc.length()
+	var dir := to_npc.normalized() if dist > 0.01 else -camera.global_transform.basis.z
+	var lean_dist := minf(0.45, maxf(0.0, dist - 1.1) * 0.45)
+	var target_world_pos := camera.global_position + dir * lean_dist
+	var look_basis := Basis.looking_at((focus_pos - target_world_pos).normalized(), Vector3.UP)
+	var target_local_pos := to_local(target_world_pos)
+	var target_local_quat := (global_transform.basis.inverse() * look_basis).get_rotation_quaternion()
+
+	if _dialog_cam_tween and _dialog_cam_tween.is_valid():
+		_dialog_cam_tween.kill()
+	_dialog_cam_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_dialog_cam_tween.tween_property(camera, "position", target_local_pos, 0.24)
+	_dialog_cam_tween.tween_property(camera, "quaternion", target_local_quat, 0.24)
+	_dialog_cam_tween.tween_property(camera, "fov", 50.0, 0.24)
+
+	var lines: Array = npc.get_dialog_lines() if npc.has_method("get_dialog_lines") else ["..."]
+	var opts: Dictionary = npc.get_dialog_options() if npc.has_method("get_dialog_options") else {}
+	box.open_dialog(lines, opts)
+
+
+## Cierra el diálogo HUD y devuelve la cámara suavemente a su posición original
+func _exit_npc_dialog() -> void:
+	if not is_in_dialog:
+		return
+	is_in_dialog = false
+	_dialog_npc = null
+
+	if ui and ui.has_method("get_dialog_box"):
+		var box: DialogBoxHUD = ui.get_dialog_box()
+		if box and box.is_open():
+			box.close_dialog()
+
+	if camera == null:
+		return
+	if _dialog_cam_tween and _dialog_cam_tween.is_valid():
+		_dialog_cam_tween.kill()
+	_dialog_cam_tween = create_tween().set_parallel(true).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_dialog_cam_tween.tween_property(camera, "position", _pre_dialog_cam_pos, 0.20)
+	_dialog_cam_tween.tween_property(camera, "rotation", _pre_dialog_cam_rot, 0.20)
+	_dialog_cam_tween.tween_property(camera, "fov", _pre_dialog_cam_fov, 0.20)

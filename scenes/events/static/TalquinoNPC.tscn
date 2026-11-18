@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cbjys6l3en4dd" path="res://scenes/NPC.tscn" id="1_npc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_poncho"]
+albedo_color = Color(0.45, 0.27, 0.14, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_straw"]
+albedo_color = Color(0.86, 0.74, 0.42, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_band"]
+albedo_color = Color(0.1, 0.08, 0.06, 1)
+
+[node name="TalquinoNPC" instance=ExtResource("1_npc")]
+custom_appearance = true
+
+[node name="BodyMesh" parent="." index="0"]
+material = SubResource("StandardMaterial3D_poncho")
+
+[node name="Chupalla" type="Node3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.82, 0)
+
+[node name="Brim" type="CSGCylinder3D" parent="Chupalla"]
+radius = 0.42
+height = 0.03
+sides = 16
+material = SubResource("StandardMaterial3D_straw")
+
+[node name="Crown" type="CSGCylinder3D" parent="Chupalla"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09, 0)
+radius = 0.2
+height = 0.16
+sides = 16
+material = SubResource("StandardMaterial3D_straw")
+
+[node name="Band" type="CSGCylinder3D" parent="Chupalla"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+radius = 0.205
+height = 0.04
+sides = 16
+material = SubResource("StandardMaterial3D_band")

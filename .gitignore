@@ -2,7 +2,11 @@
 .godot/
 /android/
 /export/
+/builds/
 Godot_v4.7.2-stable_mono_win64/
+
+# avances de alphas
+INFORME_ENTREGA_ALPHA.md
 
 # Configuraciones locales de editores
 .vscode/

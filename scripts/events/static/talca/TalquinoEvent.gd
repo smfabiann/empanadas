@@ -18,10 +18,13 @@ func _init() -> void:
 	trigger_day_served_count = 2
 	trigger_served_count = 0
 	trigger_once = true
+	custom_npc_scene = preload("res://scenes/events/static/TalquinoNPC.tscn")
 
 
 func apply(npc: CharacterBody3D) -> void:
-	# Manta café y chupalla (sombrero de paja) del huaso talquino
+	if npc.has_node("Chupalla"):
+		return
+	# Respaldo procedural si se aplica sobre un NPC genérico sin la escena TalquinoNPC.tscn
 	var body := npc.get_node_or_null("BodyMesh") as CSGCylinder3D
 	if body:
 		var poncho := StandardMaterial3D.new()
@@ -65,8 +68,22 @@ func on_arrive(npc: CharacterBody3D) -> void:
 	npc.patience_remaining = talquino_patience
 	var label := npc.get_node_or_null("Label3D") as Label3D
 	if label:
-		label.text = " ¡Wena compadre! Vengo de Talca.\nUn Italiano MOJADO, con el pan\nmojadito en la olla, como allá. "
+		label.text = " Quiero: Completo Italiano MOJADO\n(Palta + Mayo + pan mojado en la olla) "
 		label.modulate = Color(1.0, 0.85, 0.45, 1.0)
+	if npc.has_method("set_dialog"):
+		npc.set_dialog(
+			[
+				"¡Wena compadre! Vengo de [color=yellow]Talca[/color].",
+				"Quiero un Italiano [color=aqua]MOJADO[/color], con el pan mojadito en la olla, como allá."
+			],
+			"Cliente de Talca",
+			{
+				"bg_color": Color(0.06, 0.04, 0.02, 0.94),
+				"border_color": Color(1.0, 0.85, 0.45, 1.0),
+				"speaker_color": Color(1.0, 0.85, 0.45, 1.0),
+				"pitch": 0.95
+			}
+		)
 	GameManager.request_hint("Completo mojado: arma el completo y moja el pan en la OLLA de la cocina antes de entregarlo.")
 
 

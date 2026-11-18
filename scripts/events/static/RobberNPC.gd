@@ -167,6 +167,17 @@ func _update_robber_dialogue() -> void:
 	var progress := "[%d/%d]" % [current_step + 1, robber_recipes.size()]
 	label.text = " ¡Pasa ya: %s %s!" % [progress, requested_item.display_name]
 	label.modulate = Color(1.0, 0.25, 0.25, 1.0)
+	set_dialog(
+		["¡No te muevas! Dame %s [color=red]%s[/color] ahora mismo o disparo." % [progress, requested_item.display_name]],
+		"Asaltante",
+		{
+			"bg_color": Color(0.08, 0.01, 0.01, 0.95),
+			"border_color": Color(1.0, 0.2, 0.2, 1.0),
+			"speaker_color": Color(1.0, 0.3, 0.3, 1.0),
+			"pitch": 0.72,
+			"char_delay": 0.020
+		}
+	)
 
 
 ## Se ejecuta cuando el jugador le entrega un item
