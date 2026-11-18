@@ -282,7 +282,7 @@ func _input(event: InputEvent) -> void:
 			_exit_npc_dialog()
 			get_viewport().set_input_as_handled()
 			return
-		var advance_click := event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
+		var advance_click: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed
 		if event.is_action_pressed("interact") or event.is_action_pressed("ui_accept") or advance_click:
 			if ui and ui.has_method("get_dialog_box"):
 				var box: DialogBoxHUD = ui.get_dialog_box()
