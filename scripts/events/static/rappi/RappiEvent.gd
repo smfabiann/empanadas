@@ -26,13 +26,14 @@ func _init() -> void:
 	trigger_day_served_count = 3
 	trigger_served_count = 0
 	trigger_once = true
+	custom_npc_scene = preload("res://scenes/events/static/RappiNPC.tscn")
 
 
 func apply(npc: CharacterBody3D) -> void:
-	if "custom_appearance" in npc:
-		npc.custom_appearance = true
 	if "speed" in npc:
 		npc.speed = moto_speed
+	if npc.has_node("Moto"):
+		return
 	var orange := StandardMaterial3D.new()
 	orange.albedo_color = Color(1.0, 0.36, 0.05, 1)
 	var dark := StandardMaterial3D.new()

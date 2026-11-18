@@ -18,10 +18,13 @@ func _init() -> void:
 	trigger_day_served_count = 2
 	trigger_served_count = 0
 	trigger_once = true
+	custom_npc_scene = preload("res://scenes/events/static/TalquinoNPC.tscn")
 
 
 func apply(npc: CharacterBody3D) -> void:
-	# Manta café y chupalla (sombrero de paja) del huaso talquino
+	if npc.has_node("Chupalla"):
+		return
+	# Respaldo procedural si se aplica sobre un NPC genérico sin la escena TalquinoNPC.tscn
 	var body := npc.get_node_or_null("BodyMesh") as CSGCylinder3D
 	if body:
 		var poncho := StandardMaterial3D.new()

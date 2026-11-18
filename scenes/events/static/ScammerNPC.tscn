@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cbjys6l3en4dd" path="res://scenes/NPC.tscn" id="1_npc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_suit"]
+albedo_color = Color(0.16, 0.17, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_glasses"]
+albedo_color = Color(0.02, 0.02, 0.02, 1)
+roughness = 0.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_badge"]
+albedo_color = Color(0.95, 0.95, 0.9, 1)
+
+[node name="ScammerNPC" instance=ExtResource("1_npc")]
+custom_appearance = true
+
+[node name="BodyMesh" parent="." index="0"]
+material = SubResource("StandardMaterial3D_suit")
+
+[node name="Lentes" type="CSGBox3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.64, -0.22)
+size = Vector3(0.36, 0.08, 0.06)
+material = SubResource("StandardMaterial3D_glasses")
+
+[node name="Credencial" type="CSGBox3D" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, -0.21)
+size = Vector3(0.14, 0.18, 0.02)
+material = SubResource("StandardMaterial3D_badge")
+
+[node name="CredencialText" type="Label3D" parent="." index="8"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.15, -0.225)
+pixel_size = 0.004
+modulate = Color(0.1, 0.1, 0.4, 1)
+text = "INSPECTOR
+(trucho)"
+font_size = 9

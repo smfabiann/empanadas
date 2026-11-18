@@ -1,0 +1,69 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://cbjys6l3en4dd" path="res://scenes/NPC.tscn" id="1_npc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_orange"]
+albedo_color = Color(1, 0.36, 0.05, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dark"]
+albedo_color = Color(0.05, 0.05, 0.06, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_red"]
+albedo_color = Color(0.7, 0.08, 0.08, 1)
+
+[node name="RappiNPC" instance=ExtResource("1_npc")]
+speed = 5.0
+custom_appearance = true
+
+[node name="BodyMesh" parent="." index="0"]
+material = SubResource("StandardMaterial3D_orange")
+
+[node name="Casco" type="CSGSphere3D" parent="." index="6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.68, 0)
+radius = 0.27
+radial_segments = 12
+rings = 6
+material = SubResource("StandardMaterial3D_dark")
+
+[node name="Mochila" type="CSGBox3D" parent="." index="7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0.38)
+size = Vector3(0.5, 0.5, 0.4)
+material = SubResource("StandardMaterial3D_orange")
+
+[node name="MochilaLogo" type="Label3D" parent="." index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.18, 0.585)
+pixel_size = 0.004
+text = "rappi"
+font_size = 48
+
+[node name="Moto" type="Node3D" parent="." index="9"]
+
+[node name="WheelFront" type="CSGCylinder3D" parent="Moto"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.26, -0.55)
+radius = 0.26
+height = 0.1
+sides = 14
+material = SubResource("StandardMaterial3D_dark")
+
+[node name="WheelBack" type="CSGCylinder3D" parent="Moto"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0.26, 0.55)
+radius = 0.26
+height = 0.1
+sides = 14
+material = SubResource("StandardMaterial3D_dark")
+
+[node name="Frame" type="CSGBox3D" parent="Moto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+size = Vector3(0.18, 0.18, 1)
+material = SubResource("StandardMaterial3D_red")
+
+[node name="Handle" type="CSGBox3D" parent="Moto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.5)
+size = Vector3(0.6, 0.05, 0.05)
+material = SubResource("StandardMaterial3D_dark")
+
+[node name="Headlight" type="OmniLight3D" parent="Moto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, -0.7)
+light_color = Color(1, 0.95, 0.8, 1)
+light_energy = 1.2
+omni_range = 3.0
