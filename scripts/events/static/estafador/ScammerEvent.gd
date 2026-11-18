@@ -74,15 +74,20 @@ func on_arrive(npc: CharacterBody3D) -> void:
 	if label:
 		label.text = " Pide: $%s (Inspector) " % GameManager.format_money(scam_amount)
 		label.modulate = Color(1.0, 0.6, 0.25, 1.0)
-	if "dialog_speaker" in npc:
-		npc.dialog_speaker = "Inspector Sanitario (?)"
-	if "dialog_lines" in npc:
-		npc.dialog_lines = [
-			"¡Oiga! Soy inspector sanitario.",
-			"Sus vienesas tienen [color=orange]CHIP DE PERRO[/color]. Páseme [color=yellow]$%s[/color] o lo denuncio." % GameManager.format_money(scam_amount)
-		]
-	if "dialog_options" in npc:
-		npc.dialog_options = {"pitch": 0.85}
+	if npc.has_method("set_dialog"):
+		npc.set_dialog(
+			[
+				"¡Oiga! Soy inspector sanitario.",
+				"Sus vienesas tienen [color=orange]CHIP DE PERRO[/color]. Páseme [color=yellow]$%s[/color] o lo denuncio." % GameManager.format_money(scam_amount)
+			],
+			"Inspector Sanitario (?)",
+			{
+				"bg_color": Color(0.07, 0.04, 0.01, 0.94),
+				"border_color": Color(1.0, 0.6, 0.25, 1.0),
+				"speaker_color": Color(1.0, 0.65, 0.3, 1.0),
+				"pitch": 0.85
+			}
+		)
 	if npc.is_inside_tree():
 		npc.get_tree().create_timer(hint_delay).timeout.connect(func():
 			if is_instance_valid(npc) and npc.has_method("is_order_resolved") and not npc.is_order_resolved():

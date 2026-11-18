@@ -67,15 +67,20 @@ func on_arrive(npc: CharacterBody3D) -> void:
 	if label:
 		label.text = " Quiero: Completo Italiano MOJADO\n(Palta + Mayo + pan mojado en la olla) "
 		label.modulate = Color(1.0, 0.85, 0.45, 1.0)
-	if "dialog_speaker" in npc:
-		npc.dialog_speaker = "Cliente de Talca"
-	if "dialog_lines" in npc:
-		npc.dialog_lines = [
-			"¡Wena compadre! Vengo de [color=yellow]Talca[/color].",
-			"Quiero un Italiano [color=aqua]MOJADO[/color], con el pan mojadito en la olla, como allá."
-		]
-	if "dialog_options" in npc:
-		npc.dialog_options = {"pitch": 0.95}
+	if npc.has_method("set_dialog"):
+		npc.set_dialog(
+			[
+				"¡Wena compadre! Vengo de [color=yellow]Talca[/color].",
+				"Quiero un Italiano [color=aqua]MOJADO[/color], con el pan mojadito en la olla, como allá."
+			],
+			"Cliente de Talca",
+			{
+				"bg_color": Color(0.06, 0.04, 0.02, 0.94),
+				"border_color": Color(1.0, 0.85, 0.45, 1.0),
+				"speaker_color": Color(1.0, 0.85, 0.45, 1.0),
+				"pitch": 0.95
+			}
+		)
 	GameManager.request_hint("Completo mojado: arma el completo y moja el pan en la OLLA de la cocina antes de entregarlo.")
 
 

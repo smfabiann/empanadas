@@ -187,3 +187,15 @@ func _set_current_order(npc: CharacterBody3D) -> void:
 			lines += "\nDespués: %s " % _order_text(orders[step + 1])
 		label.text = lines
 		label.modulate = Color(1.0, 0.6, 0.2, 1.0)
+	if npc.has_method("set_dialog"):
+		npc.set_dialog(
+			["¡Buenas! Vengo por el pedido Rappi [color=orange]#%d[/color] (%d/%d): [color=yellow]%s[/color]." % [npc.get_meta("rappi_code", 0), step + 1, orders.size(), _order_text(rec)]],
+			"Repartidor Rappi",
+			{
+				"bg_color": Color(0.08, 0.03, 0.01, 0.94),
+				"border_color": Color(1.0, 0.45, 0.15, 1.0),
+				"speaker_color": Color(1.0, 0.5, 0.2, 1.0),
+				"pitch": 1.15,
+				"char_delay": 0.018
+			}
+		)

@@ -38,7 +38,7 @@ var active_event: NPCEvent = null
 
 # --- Diálogo HUD modular (al interactuar con [E]) ---
 var dialog_speaker: String = "Cliente"
-var dialog_lines: Array[String] = []
+var dialog_lines: Array = []
 var dialog_options: Dictionary = {}
 
 ## Recetas de completos interactivos (HU-11)
@@ -135,6 +135,16 @@ func _ready() -> void:
 
 	if active_event:
 		_apply_active_event()
+
+	if voice_player == null:
+		voice_player = AudioStreamPlayer3D.new()
+		voice_player.name = "VoicePlayer"
+		voice_player.position = Vector3(0.0, 1.6, 0.0)
+		voice_player.volume_db = -4.0
+		voice_player.unit_size = 3.0
+		voice_player.max_distance = 16.0
+		voice_player.max_polyphony = 3
+		add_child(voice_player)
 
 
 ## Determina si el material asignado en la escena debe preservarse (ej. si contiene texturas o shaders)
@@ -552,8 +562,17 @@ func get_dialog_focus_position() -> Vector3:
 	return global_position + Vector3(0.0, 1.6, 0.0)
 
 
+## Configura de forma segura las líneas, hablante y estilo/audio del diálogo HUD
+func set_dialog(lines: Array, speaker: String = "", options: Dictionary = {}) -> void:
+	dialog_lines = lines.duplicate()
+	if not speaker.is_empty():
+		dialog_speaker = speaker
+	if not options.is_empty():
+		dialog_options = options.duplicate()
+
+
 ## Devuelve las líneas de diálogo para la caja HUD (personalizables por eventos)
-func get_dialog_lines() -> Array[String]:
+func get_dialog_lines() -> Array:
 	if not dialog_lines.is_empty():
 		return dialog_lines
 	var order_name := String(order_recipe.get("name", "Completo"))

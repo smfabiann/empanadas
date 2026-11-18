@@ -433,12 +433,26 @@ func _look_at_counter(delta: float) -> void:
 
 func _arrive_at_counter() -> void:
 	super._arrive_at_counter()
+	var order_name := String(order_recipe.get("name", "Completo"))
+	var order_desc := String(order_recipe.get("desc", ""))
 	if label:
-		label.text = " ⟒⋔⌿⏃⋏⏃⎅⏃⌇... Saludos terrícola!\nQuiero: %s\n(%s)" % [
-			order_recipe.get("name", "Completo"),
-			order_recipe.get("desc", "")
-		]
+		label.text = " Quiero: %s\n(%s)" % [order_name, order_desc]
 		label.modulate = Color(0.25, 1.0, 0.45, 1.0)
+	set_dialog(
+		[
+			"[color=#40ff73]⟒⋔⌿⏃⋏⏃⎅⏃⌇...[/color] Saludos terrícola.",
+			"Requiero un [color=yellow]%s[/color] (%s) para mi viaje cósmico." % [order_name, order_desc]
+		],
+		"Visitante Espacial",
+		{
+			"bg_color": Color(0.01, 0.07, 0.03, 0.95),
+			"border_color": Color(0.2, 1.0, 0.45, 1.0),
+			"text_color": Color(0.8, 1.0, 0.86, 1.0),
+			"speaker_color": Color(0.25, 1.0, 0.45, 1.0),
+			"pitch": 1.48,
+			"char_delay": 0.022
+		}
+	)
 
 
 func _start_leaving() -> void:

@@ -100,7 +100,8 @@ func open_dialog(lines: Array, options: Dictionary = {}) -> void:
 	var text_col: Color = options.get("text_color", default_text_color)
 	var bg_col: Color = options.get("bg_color", default_bg_color)
 	var border_col: Color = options.get("border_color", default_border_color)
-	set_colors(text_col, bg_col, border_col)
+	var speaker_col: Color = options.get("speaker_color", speaker_color)
+	set_colors(text_col, bg_col, border_col, speaker_col)
 
 	var speaker_name: String = String(options.get("speaker", ""))
 	if speaker_label:
@@ -155,10 +156,13 @@ func is_open() -> bool:
 func set_colors(
 	text_color: Color,
 	bg_color: Color = default_bg_color,
-	border_color: Color = default_border_color
+	border_color: Color = default_border_color,
+	spk_color: Color = speaker_color
 ) -> void:
 	if rich_label:
 		rich_label.add_theme_color_override("default_color", text_color)
+	if speaker_label:
+		speaker_label.add_theme_color_override("font_color", spk_color)
 	if _panel_style:
 		_panel_style.bg_color = bg_color
 		_panel_style.border_color = border_color
