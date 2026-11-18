@@ -6,6 +6,8 @@ enum State { APPROACHING, WAITING, REACTING, LEAVING }
 @export var speed: float = 2.5
 ## Si es true, preserva los materiales y apariencia definidos en la escena del NPC
 @export var custom_appearance: bool = false
+## Sonido opcional (3D posicional) al entregar correctamente el pedido
+@export var correct_order_sound: AudioStream = null
 var SPEED: float:
 	get:
 		return speed
@@ -420,6 +422,10 @@ func receive_item(item_node: Interactable) -> void:
 		var payment: int = GameManager.calculate_completo_payment(patience_ratio, order_req_mojado)
 		GameManager.earn_money(payment, "Completo vendido")
 		SFXManager.play_cash()
+		if correct_order_sound != null and voice_player != null:
+			voice_player.stream = correct_order_sound
+			voice_player.pitch_scale = 1.0
+			voice_player.play()
 		label.text += "\n+$%s" % GameManager.format_money(payment)
 
 	await get_tree().create_timer(1.2).timeout
