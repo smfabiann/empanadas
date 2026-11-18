@@ -358,14 +358,18 @@ func _handle_interact() -> void:
 				held_item = collider as Interactable
 				ray.add_exception(held_item)
 				held_item.interact(self)
+				_update_interaction_prompt()
+				return
 			elif collider != null and collider.has_method("get_interaction_prompt"):
 				var info: Dictionary = collider.get_interaction_prompt(self)
 				if info.get("actionable", true):
 					collider.interact(self)
+					_update_interaction_prompt()
+					return
 			elif collider != null and collider.has_method("interact"):
 				collider.interact(self)
-			_update_interaction_prompt()
-			return
+				_update_interaction_prompt()
+				return
 
 		var target_npc := _get_target_npc()
 		if target_npc != null and target_npc.has_method("can_talk") and target_npc.can_talk():
