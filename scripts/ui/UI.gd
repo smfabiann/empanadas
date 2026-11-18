@@ -520,3 +520,24 @@ func show_hint(text: String) -> void:
 	_hint_tween.tween_interval(hint_duration)
 	_hint_tween.tween_property(hint_panel, "modulate:a", 0.0, 0.6)
 	_hint_tween.tween_callback(func(): hint_panel.visible = false)
+
+
+const DIALOG_BOX_SCENE := preload("res://scenes/ui/DialogBoxHUD.tscn")
+var _dialog_box: DialogBoxHUD = null
+
+
+## Devuelve (o instancia) la caja de diálogo HUD modular para NPCs
+func get_dialog_box() -> DialogBoxHUD:
+	if _dialog_box != null and is_instance_valid(_dialog_box):
+		return _dialog_box
+	var hud := get_node_or_null("HUD")
+	if hud == null:
+		return null
+	var existing := hud.get_node_or_null("DialogBoxHUD") as DialogBoxHUD
+	if existing:
+		_dialog_box = existing
+		return _dialog_box
+	_dialog_box = DIALOG_BOX_SCENE.instantiate() as DialogBoxHUD
+	if _dialog_box:
+		hud.add_child(_dialog_box)
+	return _dialog_box

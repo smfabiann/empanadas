@@ -16,6 +16,7 @@ var patience_drain_rate: float = 1.0
 var _is_order_resolved: bool = false
 
 @onready var label: Label3D = $Label3D
+@onready var voice_player: AudioStreamPlayer3D = get_node_or_null("VoicePlayer") as AudioStreamPlayer3D
 @onready var body_mesh: CSGCylinder3D = (get_node_or_null("BodyMesh") as CSGCylinder3D) if get_node_or_null("BodyMesh") else (get_node_or_null("ShipPivot/BodyMesh") as CSGCylinder3D)
 @onready var head: CSGSphere3D = (get_node_or_null("Head") as CSGSphere3D) if get_node_or_null("Head") else (get_node_or_null("ShipPivot/Head") as CSGSphere3D)
 @onready var patience_bar_bg: CSGBox3D = $PatienceBarPivot/PatienceBarBG
@@ -34,6 +35,11 @@ var is_at_counter: bool = false
 var is_leaving_cleanly: bool = false
 
 var active_event: NPCEvent = null
+
+# --- Diálogo HUD modular (al interactuar con [E]) ---
+var dialog_speaker: String = "Cliente"
+var dialog_lines: Array[String] = []
+var dialog_options: Dictionary = {}
 
 ## Recetas de completos interactivos (HU-11)
 const COMPLETO_RECIPES: Array[Dictionary] = [
@@ -532,3 +538,36 @@ func _fade_and_free() -> void:
 	var tween := create_tween()
 	tween.tween_property(self, "scale", Vector3(0.1, 0.1, 0.1), 0.25).set_ease(Tween.EASE_IN)
 	tween.tween_callback(queue_free)
+
+
+## true si el jugador puede acercarse a hablar con el cliente (en espera en el mostrador)
+func can_talk() -> bool:
+	return not _is_order_resolved and is_at_counter and state == State.WAITING
+
+
+## Devuelve la posición mundial hacia donde la cámara debe enfocar al hablar (cabeza del NPC)
+func get_dialog_focus_position() -> Vector3:
+	if head:
+		return head.global_position
+	return global_position + Vector3(0.0, 1.6, 0.0)
+
+
+## Devuelve las líneas de diálogo para la caja HUD (personalizables por eventos)
+func get_dialog_lines() -> Array[String]:
+	if not dialog_lines.is_empty():
+		return dialog_lines
+	var order_name := String(order_recipe.get("name", "Completo"))
+	var order_desc := String(order_recipe.get("desc", ""))
+	if order_desc.is_empty():
+		return ["Buenas... me das un [color=yellow]%s[/color], por favor." % order_name]
+	return ["Buenas... quiero un [color=yellow]%s[/color] (%s), porfa." % [order_name, order_desc]]
+
+
+## Devuelve las opciones de estilo y audio posicional para DialogBoxHUD
+func get_dialog_options() -> Dictionary:
+	var opts := dialog_options.duplicate()
+	if not opts.has("speaker"):
+		opts["speaker"] = dialog_speaker
+	if voice_player and not opts.has("voice_player_3d"):
+		opts["voice_player_3d"] = voice_player
+	return opts
